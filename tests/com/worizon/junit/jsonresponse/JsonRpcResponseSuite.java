@@ -17,7 +17,9 @@ import org.junit.runners.Suite.SuiteClasses;
 				JsonRpcLongArrayResponseTest.class,
 				JsonRpcObjectResponseTest.class,
 				JsonRpcObjectArrayResponseTest.class,
-				JsonRpcErrorResponseTest.class,
+				JsonRpcBooleanResponseTest.class,
+				JsonRpcBooleanArrayResponseTest.class,
+				JsonRpcErrorResponseTest.class,				
 				JsonRpcMixedTypesArrayResponseTest.class})
 public class JsonRpcResponseSuite {
 

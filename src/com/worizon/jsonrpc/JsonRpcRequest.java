@@ -22,13 +22,6 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 	private final String method;	
 	private Map<String, Object> params;
 	
-	public JsonRpcRequest( String method ){
-		
-		super("2.0", System.currentTimeMillis() );
-		this.params = new LinkedHashMap<String, Object>();
-		this.method = method; 
-
-	}
 	
 	public JsonRpcRequest( String method, Map<String, Object> params ){
 		
@@ -37,6 +30,25 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 		this.method = method;
 		
 	}
+	
+	public JsonRpcRequest( String method ){
+		
+		this(method, new LinkedHashMap<String, Object>());		
+
+	}
+
+	
+	public JsonRpcRequest( Map<String, Object> params ){
+		
+		this(Thread.currentThread().getStackTrace()[3].getMethodName(), params);
+		
+	}
+	
+	public JsonRpcRequest( ){
+		
+		this( Thread.currentThread().getStackTrace()[3].getMethodName() );
+	}
+	
 	
 	
 	public String getMethod() {

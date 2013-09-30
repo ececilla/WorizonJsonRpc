@@ -29,7 +29,7 @@ public class JsonRpcRequestTest {
 	}
 
 	@Test
-	public void testConstructor() {
+	public void testConstructor1() {
 		
 		JsonRpcRequest request = new JsonRpcRequest("test");
 		assertNotNull( request.getId() );
@@ -37,6 +37,33 @@ public class JsonRpcRequestTest {
 		assertEquals( request.getMethod(), "test");
 		assertNotNull( request.getParams());
 	}
+	
+	@Test
+	public void testConstructor2(){
+		
+		class RpcProxy{
+			
+			void call(){
+				
+				JsonRpcRequest req = new JsonRpcRequest();
+				assertEquals("remoteOperation", req.getMethod());
+			}
+		};
+		
+		class Service{
+			
+			void remoteOperation(){
+				
+				new RpcProxy().call();
+			}
+		}
+		new Service().remoteOperation();
+		
+		
+		
+	}
+	
+	
 	
 	@Test
 	public void testEquals(){

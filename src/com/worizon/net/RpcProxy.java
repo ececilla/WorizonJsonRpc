@@ -3,8 +3,8 @@ package com.worizon.net;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
 
+import com.worizon.jsonrpc.JsonRpcException;
 import com.worizon.jsonrpc.JsonRpcRequest;
 import com.worizon.jsonrpc.JsonRpcResponse;
 import com.worizon.net.HttpRequester;
@@ -19,16 +19,24 @@ import com.worizon.net.HttpRequester;
  * @author enric
  *
  */
-public class RpcService extends Observable {
+public class RpcProxy{
 	
+	private  HttpRequester http;			
 	
-	private  HttpRequester http;
-	private  Map<Long,JsonRpcResponse<?>> aResp = new HashMap<Long,JsonRpcResponse<?>>();
-		
-	
-	public RpcService( String endpoint ){
+	public RpcProxy( String endpoint ){
 		
 		this.http = new HttpRequester(endpoint);
+	}
+	
+	public synchronized <T> T call( Map<String, Object> params, Class<T> clazz ) throws IOException, InstantiationException, IllegalAccessException, InterruptedException, JsonRpcException{
+		
+		JsonRpcRequest req = new JsonRpcRequest(params);
+		String response = http.sendSyncPostRequest( req.toString() );//blocking call
+		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( response, clazz );
+		if(res.getError() != null)
+			throw new JsonRpcException( res.getError() );
+		else
+			return res.getResult();		
 	}
 		
 		
@@ -37,16 +45,6 @@ public class RpcService extends Observable {
 		String response = http.sendSyncPostRequest( req.toString() );		
 		return new JsonRpcResponse<T>( response, clazz );
 				
-	}
-	
-	
-	
-	public synchronized JsonRpcResponse<?> getResponseByid( Long id ){
-		
-		JsonRpcResponse<?> resp = aResp.get( id );
-		aResp.remove( id );
-		return resp;
-	}
-	
+	}			
 		
 }

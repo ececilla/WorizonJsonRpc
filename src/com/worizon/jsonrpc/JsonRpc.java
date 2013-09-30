@@ -14,7 +14,17 @@ import com.google.gson.GsonBuilder;
 public abstract class JsonRpc {
 	
 	private static BooleanTypeAdapter booleanTypeAdapter = new BooleanTypeAdapter(); 
-	private static ExclusionStrategy nonExposeStrategy = new NonExposeExclusionEstrategy();		
+	private static ExclusionStrategy nonExposeStrategy = new NonExposeExclusionEstrategy();	
+	private static GsonBuilder encodingBuilder = new GsonBuilder();
+	private static GsonBuilder decodingBuilder = new GsonBuilder();
+	static{
+		
+		encodingBuilder.setExclusionStrategies(nonExposeStrategy);
+		encodingBuilder.registerTypeAdapter(Boolean.class, booleanTypeAdapter);
+		encodingBuilder.registerTypeAdapter(boolean.class, booleanTypeAdapter);		
+		decodingBuilder.registerTypeAdapter(Boolean.class, booleanTypeAdapter);
+		decodingBuilder.registerTypeAdapter(boolean.class, booleanTypeAdapter);
+	}
 	
 	protected String jsonrpc = null;	
 	protected Long id = null;
@@ -29,21 +39,14 @@ public abstract class JsonRpc {
 		this.id = id;
 	}		
 	
-	public static Gson getEncodingGson(){
-		
-		GsonBuilder builder = new GsonBuilder();
-		builder.setExclusionStrategies(nonExposeStrategy);
-		builder.registerTypeAdapter(Boolean.class, booleanTypeAdapter);
-		builder.registerTypeAdapter(boolean.class, booleanTypeAdapter);
-		return builder.create();
+	protected Gson getEncodingGson(){
+				
+		return encodingBuilder.create();
 	}
 	
-	public static Gson getDecodingGson(){
-		
-		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(Boolean.class, booleanTypeAdapter);
-		builder.registerTypeAdapter(boolean.class, booleanTypeAdapter);
-		return builder.create();
+	protected Gson getDecodingGson(){
+				
+		return decodingBuilder.create();
 	}
 		
 	public String getVersion() {

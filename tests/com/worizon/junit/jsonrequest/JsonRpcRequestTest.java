@@ -15,18 +15,7 @@ import com.worizon.jsonrpc.JsonRpcRequest;
 import com.worizon.jsonrpc.NonExpose;
 
 public class JsonRpcRequestTest {
-
-	
-	
-	@Before
-	public void setUp() throws Exception {
-				
-	}
-
-	@After
-	public void tearDown() throws Exception {
-				
-	}
+		
 
 	@Test
 	public void testConstructor1() {
@@ -63,8 +52,7 @@ public class JsonRpcRequestTest {
 		
 	}
 	
-	
-	
+		
 	@Test
 	public void testEquals(){
 		

@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder;
 public abstract class JsonRpc {
 	
 	private static BooleanTypeAdapter booleanTypeAdapter = new BooleanTypeAdapter(); 
-	private static ExclusionStrategy nonExposeStrategy = new NonExposeExclusionEstrategy();	
+	private static ExclusionStrategy nonExposeStrategy = new NonExposeExclusionEstrategy();		
 	
 	protected String jsonrpc = null;	
 	protected Long id = null;

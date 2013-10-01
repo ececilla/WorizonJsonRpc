@@ -14,6 +14,7 @@ import com.worizon.jsonrpc.JsonRpcRequest;
 import com.worizon.jsonrpc.JsonRpcResponse;
 import com.worizon.jsonrpc.Remote;
 import com.worizon.jsonrpc.RemoteParams;
+import com.worizon.jsonrpc.RemoteProcName;
 import com.worizon.net.HttpRequester;
 
 /**
@@ -43,29 +44,34 @@ public class RpcProxy{
 	@SuppressWarnings("unchecked")
 	public <T> T create( Class<T> clazz ){
 						
-		if( clazz.isAnnotationPresent(Remote.class) ){
+		if( !clazz.isAnnotationPresent(Remote.class) ){
 			
-			return (T)Proxy.newProxyInstance(	
-					clazz.getClassLoader(), 
-					new Class[]{clazz},
-					new InvocationHandler() {
-						
-						@Override
-						public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-							
-							Map<String, Object > params = new LinkedHashMap<String, Object>();
-							String names[] = method.getAnnotation(RemoteParams.class).names();
-							for(int i=0; i< args.length; i++){
-								params.put(names[i], args[i]);
-							}
-							
-							Class<?> retClazz = method.getReturnType();							
-							return call( method.getName(), params, retClazz );
-						}
-			});
-		}else{
 			throw new IllegalArgumentException("This interface is not annotated as @Remote");
 		}
+		
+		return (T)Proxy.newProxyInstance(	
+				clazz.getClassLoader(), 
+				new Class[]{clazz},
+				new InvocationHandler() {
+					
+					@Override
+					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+						
+						if( !method.isAnnotationPresent(RemoteParams.class) )
+							throw new IllegalArgumentException("This method is not annotated with remote params");
+						
+						Map<String, Object > params = new LinkedHashMap<String, Object>();														
+						String names[] = method.getAnnotation(RemoteParams.class).names();
+						for(int i=0; i< args.length; i++){
+							params.put(names[i], args[i]);
+						}
+													
+						RemoteProcName annotation = method.getAnnotation(RemoteProcName.class);
+						String methodName = (annotation != null)?annotation.value():method.getName();
+						return call( methodName, params, method.getReturnType() );
+					}
+		});
+		
 	}
 	
 	public synchronized <T> T call( Map<String, Object> params, Class<T> clazz ) throws IOException, InstantiationException, IllegalAccessException, InterruptedException, JsonRpcException{

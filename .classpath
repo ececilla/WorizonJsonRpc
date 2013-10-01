@@ -7,5 +7,8 @@
 	<classpathentry kind="lib" path="libs/httpclient-4.2.3.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.2.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="libs/easymock-3.2.jar"/>
+	<classpathentry kind="lib" path="libs/objenesis-tck-1.2.jar"/>
+	<classpathentry kind="lib" path="libs/cglib-nodep-2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

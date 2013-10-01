@@ -39,12 +39,12 @@ public abstract class JsonRpc {
 		this.id = id;
 	}		
 	
-	protected Gson getEncodingGson(){
+	protected Gson getEncodingHelper(){
 				
 		return encodingBuilder.create();
 	}
 	
-	protected Gson getDecodingGson(){
+	protected Gson getDecodingHelper(){
 				
 		return decodingBuilder.create();
 	}

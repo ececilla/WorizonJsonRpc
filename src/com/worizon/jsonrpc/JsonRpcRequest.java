@@ -38,15 +38,15 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 	}
 
 	
-	public JsonRpcRequest( Map<String, Object> params ){
+	public JsonRpcRequest( int depth, Map<String, Object> params ){
 		
-		this(Thread.currentThread().getStackTrace()[3].getMethodName(), params);
+		this(Thread.currentThread().getStackTrace()[depth].getMethodName(), params);
 		
 	}
 	
-	public JsonRpcRequest( ){
+	public JsonRpcRequest( int depth ){
 		
-		this( Thread.currentThread().getStackTrace()[3].getMethodName() );
+		this( Thread.currentThread().getStackTrace()[depth].getMethodName() );
 	}
 	
 	
@@ -81,7 +81,7 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 	
 	public String toString(){
 		
-		Gson gson = getEncodingGson();		
+		Gson gson = getEncodingHelper();		
 		return gson.toJson(this);
 	}
 	

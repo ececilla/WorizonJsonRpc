@@ -36,7 +36,7 @@ public class JsonRpcResponse<T> extends JsonRpc {
 		if( !root.get("id").isJsonNull() )
 			id = root.get("id").getAsLong();
 		
-		Gson gson = getDecodingGson();
+		Gson gson = getDecodingHelper();
 		if( root.has("result") ){
 			if( !root.get("result").isJsonNull() ){ 
 				String result_str = gson.toJson(root.get("result"));					

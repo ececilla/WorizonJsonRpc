@@ -25,20 +25,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 
 public class HttpRequester {
-	
-	public static interface Listener{
-		
-		public void newLine( String data );
-	};
-	
+			
 	private String endpoint;
 	private int nretries = 2;
 	private final int DEFAULT_READ_TIMEOUT = 15000;
-	private final int DEFAULT_CONNECT_TIMEOUT = 10000;
-	private final static String SECRET  = "gritxt123";
-	private final static String AGENT_VERSION  = "0.1.0";
+	private final int DEFAULT_CONNECT_TIMEOUT = 10000;	
 	private HttpURLConnection conn = null;
-		
+	
+	public HttpRequester(){}
 	
 	public HttpRequester( String endpoint ){
 		
@@ -51,27 +45,7 @@ public class HttpRequester {
 		conn.disconnect();
 		conn = null;
 	}	
-		
-	public void sendAsyncPostRequest( String body, Listener listener ) throws MalformedURLException, IOException{
 				
-		try{ 
-			System.out.println("retries: " + nretries);
-			if(conn != null)
-				disconnect();
-			
-			readLine( connect(body, 0), listener );
-			
-		}catch(IOException ex){
-			
-			if(nretries-- > 0)
-				sendAsyncPostRequest(body, listener);
-			else
-				throw ex;
-			
-		}
-	}		
-	
-	
 	public String sendSyncPostRequest( String body, int readTimeout ) throws MalformedURLException, IOException, InterruptedException{
 							    
 	    try{
@@ -97,16 +71,7 @@ public class HttpRequester {
 	private InputStream connect( String body, int readTimeout) throws MalformedURLException, IOException {
 		
 		URL url = new URL( endpoint );
-		conn = (HttpURLConnection)url.openConnection();
-		String encodedBody = URLEncoder.encode(body,"UTF-8");
-		String encodedVersion = URLEncoder.encode(AGENT_VERSION,"UTF-8");
-		String postData = "request=" + encodedBody + "&version=" + encodedVersion;		
-		String key = "";
-		try{
-			MessageDigest md5 = MessageDigest.getInstance("MD5");
-			md5.update(new String(postData + SECRET).getBytes("UTF-8"));			
-			key = Base64.encodeToString(md5.digest(), Base64.NO_WRAP);		
-		}catch(NoSuchAlgorithmException nsa){}
+		conn = (HttpURLConnection)url.openConnection();		
 		
 		conn.setDoOutput( true );
 		conn.setDoInput(true);
@@ -115,12 +80,11 @@ public class HttpRequester {
 		conn.setReadTimeout(readTimeout);
 		conn.setRequestMethod("POST");		
 		conn.setRequestProperty("Content-Type", "application/json");
-		conn.setRequestProperty("Accept", "application/json");
-		conn.setRequestProperty("Authorization", "key=" + key);				 					
+		conn.setRequestProperty("Accept", "application/json");					 				
 		conn.connect();		
 		
 		OutputStreamWriter writer = new OutputStreamWriter( conn.getOutputStream() );		
-		writer.write( postData );		    													    
+		writer.write( body );		    													    
 	    writer.flush();
 	    try{
 	    	
@@ -131,9 +95,7 @@ public class HttpRequester {
 	    	return conn.getErrorStream();
 	    }
 	}
-		
-		
-	
+					
 	private String readResponse( InputStream is ) throws IOException{
 		
 		BufferedReader in = new BufferedReader( new InputStreamReader( is ) );		 		
@@ -148,16 +110,5 @@ public class HttpRequester {
 		return buffer.toString();
 		
 	}	
-	
-	private void readLine( InputStream is, Listener listener ) throws IOException {
 		
-		BufferedReader in  =  new BufferedReader(new InputStreamReader( is ));		
-		String line;		
-		while ((line = in.readLine()) != null) {   
-							    					    			
-			listener.newLine( line );			
-		    
-		}
-	}
-
 }

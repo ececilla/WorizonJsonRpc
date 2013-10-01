@@ -34,7 +34,7 @@ public class JsonRpcRequestTest {
 			
 			void call(){
 				
-				JsonRpcRequest req = new JsonRpcRequest();
+				JsonRpcRequest req = new JsonRpcRequest(3);
 				assertEquals("remoteOperation", req.getMethod());
 			}
 		};

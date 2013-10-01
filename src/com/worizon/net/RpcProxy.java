@@ -67,8 +67,8 @@ public class RpcProxy{
 						}
 													
 						RemoteProcName annotation = method.getAnnotation(RemoteProcName.class);
-						String methodName = (annotation != null)?annotation.value():method.getName();
-						return call( methodName, params, method.getReturnType() );
+						String remoteProcName = (annotation != null)?annotation.value():method.getName();
+						return call( remoteProcName, params, method.getReturnType() );
 					}
 		});
 		

@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.worizon.jsonrpc.Remote;
 import com.worizon.jsonrpc.RemoteParams;
+import com.worizon.jsonrpc.RemoteProcName;
 import com.worizon.net.HttpRequester;
 import com.worizon.net.RpcProxy;
 
@@ -21,6 +22,23 @@ public class RpcProxyTest {
 		RpcProxy proxy = new RpcProxy(http);
 		NonRemoteInterface remote = proxy.create(NonRemoteInterface.class);
 		
+	}
+	
+	@Remote
+	interface MyRemoteInterface{
+		public void test();
+	};
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testNonAnotattedParams() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
+		EasyMock.expect(requester.sendSyncPostRequest( (String)EasyMock.anyObject() )).andReturn("{\"jsonrpc\": \"2.0\", \"result\": 9, \"id\": 2}");
+		EasyMock.replay(requester);
+				
+		RpcProxy proxy = new RpcProxy(requester);
+		MyRemoteInterface remote = proxy.create(MyRemoteInterface.class);
+		remote.test();
 	}
 	
 	@Remote
@@ -60,7 +78,7 @@ public class RpcProxyTest {
 	}
 	@Remote
 	interface RemoteInterfaceWithObject{
-		
+				
 		@RemoteParams(names={"a"})		
 		public B op( A a );// A object -> Remote operation op -> B object
 		

@@ -2,7 +2,13 @@ package com.worizon.junit.rpc;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.easymock.Capture;
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.junit.Test;
 
 import com.worizon.jsonrpc.Remote;
@@ -42,9 +48,60 @@ public class RpcProxyTest {
 	}
 	
 	@Remote
+	interface MySecondRemoteInterface{
+		
+		@RemoteParams({"x","y","z"})
+		public void test(int x, int y);
+	};
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testAnnottedParamsNumberMismath() throws Exception{
+		
+		HttpRequester requester = new HttpRequester();										
+		RpcProxy proxy = new RpcProxy(requester);
+		MySecondRemoteInterface remote = proxy.create(MySecondRemoteInterface.class);
+		remote.test(1,2);
+	}
+	
+	@Remote
+	interface MyThirdRemoteInterface{
+		
+		@RemoteParams({"params"})
+		public Void test( Map<String, Object> params );
+	}
+		
+	@Test
+	public void testRemoteInterfaceWithHashMapParam() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{
+				
+				String request = requestCapture.getValue();					
+				assertTrue( request.startsWith("{\"method\":\"test\",\"params\":{\"x\":1,\"y\":\"test string\"},\"jsonrpc\":\"2.0\"") );
+				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				
+			}
+		})
+		.anyTimes();
+		EasyMock.replay(requester);
+		RpcProxy proxy = new RpcProxy(requester);
+		MyThirdRemoteInterface remote = proxy.create( MyThirdRemoteInterface.class);
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("x", 1);
+		params.put("y","test string");
+		remote.test(params);
+		
+	}
+	
+	
+	@Remote
 	interface RemoteInterface{
 		
-		@RemoteParams(names={"x","y"})		
+		@RemoteParams({"x","y"})		
 		public int sum( int x, int y);
 	}
 	
@@ -79,7 +136,7 @@ public class RpcProxyTest {
 	@Remote
 	interface RemoteInterfaceWithObject{
 				
-		@RemoteParams(names={"a"})		
+		@RemoteParams({"a"})		
 		public B op( A a );// A object -> Remote operation op -> B object
 		
 	}

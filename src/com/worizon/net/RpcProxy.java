@@ -60,10 +60,18 @@ public class RpcProxy{
 						if( !method.isAnnotationPresent(RemoteParams.class) )
 							throw new IllegalArgumentException("This method is not annotated with remote params");
 						
-						Map<String, Object > params = new LinkedHashMap<String, Object>();														
-						String names[] = method.getAnnotation(RemoteParams.class).names();
-						for(int i=0; i< args.length; i++){
-							params.put(names[i], args[i]);
+						String remoteParamNames[] = method.getAnnotation(RemoteParams.class).value();
+						if( remoteParamNames.length != args.length )
+							throw new IllegalArgumentException("Number of remote params and method params mismatch");
+						
+						Map<String, Object > params = null;
+						if( remoteParamNames.length == 1 && remoteParamNames[0].equals("params") && args[0] instanceof Map<?,?> ){
+							params = (Map<String, Object>)args[0];
+						}else{
+							params = new LinkedHashMap<String, Object>();																			
+							for(int i=0; i< args.length; i++){
+								params.put(remoteParamNames[i], args[i]);
+							}
 						}
 													
 						RemoteProcName annotation = method.getAnnotation(RemoteProcName.class);

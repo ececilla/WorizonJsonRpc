@@ -82,7 +82,7 @@ public class RpcProxyTest {
 				
 				String request = requestCapture.getValue();					
 				assertTrue( request.startsWith("{\"method\":\"test\",\"params\":{\"x\":1,\"y\":\"test string\"},\"jsonrpc\":\"2.0\"") );
-				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				return "{\"jsonrpc\": \"2.0\", \"result\":{} , \"id\": 2}";
 				
 			}
 		})

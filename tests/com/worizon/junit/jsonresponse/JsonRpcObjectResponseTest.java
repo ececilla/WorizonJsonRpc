@@ -15,6 +15,8 @@ public class JsonRpcObjectResponseTest {
 		String surname;
 		float height;
 		
+		public Foo(){}
+		
 		public Foo( int dni, String name, String surname, float height){
 			
 			this.dni = dni;
@@ -26,6 +28,14 @@ public class JsonRpcObjectResponseTest {
 		public boolean equals( Object obj ){
 			Foo foo = (Foo)obj;
 			return dni == foo.dni && name.equals(foo.name) && surname.equals(foo.surname) && height == foo.height;
+		}
+				
+	}
+	
+	class Bar extends Foo{
+		
+		public Bar(){
+			
 		}
 	}
 
@@ -39,8 +49,21 @@ public class JsonRpcObjectResponseTest {
 		Foo expected = new Foo(46579878,"Enric","Cecilla",1.72f);
 		
 		assertEquals( expected, result);
-		assertNull(res.getError());
+		assertNull(res.getError());		
 		
+	}
+	
+	@Test
+	public void testResultExtendedObject() throws Exception {
+		
+		String message = "{\"jsonrpc\": \"2.0\", \"result\": {\"dni\":46579878,\"name\":\"Enric\",\"surname\":\"Cecilla\",\"height\":1.72}, \"id\": 77684}";		
+		JsonRpcResponse<Foo> res = new JsonRpcResponse<Foo>(message, Bar.class);		
+		
+		Foo result = res.getResult();						
+		Foo expected = new Foo(46579878,"Enric","Cecilla",1.72f);		
+		assertEquals( expected, result);
+		assertNull(res.getError());	
+		assertTrue( result instanceof Bar );
 		
 	}
 	

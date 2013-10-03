@@ -6,7 +6,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ JsonRpcDoubleResponseTest.class,
-				JsonRpcDoubleArrayResponseTest.class,	
+				JsonRpcDoubleArrayResponseTest.class,
+				JsonRpcDoubleListResponseTest.class,
 				JsonRpcFloatResponseTest.class,
 				JsonRpcFloatArrayResponseTest.class,
 				JsonRpcIntegerResponseTest.class,
@@ -19,8 +20,11 @@ import org.junit.runners.Suite.SuiteClasses;
 				JsonRpcObjectArrayResponseTest.class,
 				JsonRpcBooleanResponseTest.class,
 				JsonRpcBooleanArrayResponseTest.class,
+				JsonRpcVoidResponseTest.class,
+				JsonRpcVoidArrayResponseTest.class,
 				JsonRpcErrorResponseTest.class,				
-				JsonRpcMixedTypesArrayResponseTest.class})
+				JsonRpcMixedTypesArrayResponseTest.class,
+				JsonRpcMapResponseTest.class})
 public class JsonRpcResponseSuite {
 
 }

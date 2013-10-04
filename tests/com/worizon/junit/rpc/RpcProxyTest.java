@@ -34,13 +34,26 @@ public class RpcProxyTest {
 	
 	@Remote
 	interface My1RemoteInterface{
-		public void test();
-	};
 		
+		public Void test();
+	};
+	
+	@Test	
 	public void testNonAnotattedParams() throws Exception{
 		
-		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
-		EasyMock.expect(requester.sendSyncPostRequest( (String)EasyMock.anyObject() )).andReturn("{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}");
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{
+				
+				String request = requestCapture.getValue();				
+				assertTrue( request.startsWith("{\"method\":\"test\",\"jsonrpc\":\"2.0\"") );
+				return "{\"jsonrpc\": \"2.0\", \"result\":{} , \"id\": 2}";
+				
+			}
+		});
 		EasyMock.replay(requester);
 				
 		RpcProxy proxy = new RpcProxy(requester);

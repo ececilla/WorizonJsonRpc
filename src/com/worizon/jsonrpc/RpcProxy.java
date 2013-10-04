@@ -60,7 +60,7 @@ public class RpcProxy{
 						Object params = null;
 						if( !method.isAnnotationPresent(RemoteParams.class)  ){
 							
-							params = Arrays.asList(args);							
+							params = (args != null)?Arrays.asList(args):null;							
 						}else{
 							
 							String remoteParamNames[] = method.getAnnotation(RemoteParams.class).value();

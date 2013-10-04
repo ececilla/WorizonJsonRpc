@@ -1,4 +1,4 @@
-package com.worizon.jsonrpc;
+package com.worizon.jsonrpc.gson;
 
 import java.lang.reflect.Type;
 
@@ -10,12 +10,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class BooleanTypeAdapter implements JsonSerializer<Boolean>, JsonDeserializer<Boolean> {
-
-	public JsonElement serialize(Boolean arg0, Type arg1, JsonSerializationContext arg2) {
-		
-		return new JsonPrimitive( arg0?1:0);
-	}
+public class BooleanTypeAdapter implements JsonDeserializer<Boolean> {
+	
 	
 	public Boolean deserialize(JsonElement arg0, Type arg1,	JsonDeserializationContext arg2) throws JsonParseException {
 		

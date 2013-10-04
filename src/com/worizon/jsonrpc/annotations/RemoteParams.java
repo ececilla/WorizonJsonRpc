@@ -1,12 +1,13 @@
-package com.worizon.jsonrpc;
+package com.worizon.jsonrpc.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface NonExpose {
-
+@Retention(RetentionPolicy.RUNTIME )
+@Target(ElementType.METHOD)
+public @interface RemoteParams {
+		
+	String[] value();
 }

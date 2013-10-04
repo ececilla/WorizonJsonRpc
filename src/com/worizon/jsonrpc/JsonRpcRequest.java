@@ -2,6 +2,7 @@ package com.worizon.jsonrpc;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -19,43 +20,39 @@ import com.google.gson.GsonBuilder;
 public class JsonRpcRequest extends JsonRpc implements Serializable {
 			
 
-	private final String method;	
-	private Map<String, Object> params;
+	private final String method;		
+	private Object params;
 	
-	
-	public JsonRpcRequest( String method, Map<String, Object> params ){
+	JsonRpcRequest( String method, Object params){
 		
-		super("2.0", System.currentTimeMillis() );		
-		this.params = params;
+		super("2.0",System.currentTimeMillis());
 		this.method = method;
-		
+		this.params = params;
 	}
 	
 	public JsonRpcRequest( String method ){
 		
-		this(method, new LinkedHashMap<String, Object>());		
-
-	}
-
-	
-	public JsonRpcRequest( int depth, Map<String, Object> params ){
-		
-		this(Thread.currentThread().getStackTrace()[depth].getMethodName(), params);
-		
-	}
-	
-	public JsonRpcRequest( int depth ){
-		
-		this( Thread.currentThread().getStackTrace()[depth].getMethodName() );
+		this(method, (Object)null);
 	}
 	
 	
+	public JsonRpcRequest( String method, Map<String, Object> params  ){
+		
+		this(method, (Object)params);
+	}
+	
+	public JsonRpcRequest( String method, List<Object> params){
+		
+		this(method, (Object)params);
+	}			
+			
 	
 	public String getMethod() {
 		
 		return method;
 	}
-		
+	
+	/*
 	public Map<String, Object> getParams() {
 		
 		return params;
@@ -66,6 +63,7 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 		
 		params.put(key, value);
 	}
+	*/
 	
 	@Override
 	public boolean equals( Object obj ){

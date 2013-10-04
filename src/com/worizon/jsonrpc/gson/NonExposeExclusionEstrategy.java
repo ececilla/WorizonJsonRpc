@@ -1,4 +1,4 @@
-package com.worizon.jsonrpc;
+package com.worizon.jsonrpc.gson;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;

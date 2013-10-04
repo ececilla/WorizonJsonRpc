@@ -16,9 +16,7 @@ public class JsonRpcVoidArrayResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": [{},{},{},{},{}], \"id\": 2}";		
 		JsonRpcResponse<Void[]> res = new JsonRpcResponse<Void[]>(message, Void[].class);
-		
-		System.out.println( res.getResult()[0] );
-		//assertTrue(Arrays.equals(new boolean[]{true,true,false,true,false}, res.getResult()));		
+								
 		assertEquals( 2, res.getId().longValue() );				
 		assertEquals("2.0",res.getVersion());
 		assertNull(res.getError());				

@@ -1,4 +1,4 @@
-package com.worizon.jsonrpc;
+package com.worizon.jsonrpc.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -4,8 +4,9 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.worizon.jsonrpc.BooleanTypeAdapter;
 import com.worizon.jsonrpc.JsonRpcResponse;
+import com.worizon.jsonrpc.gson.BooleanTypeAdapter;
+
 import static org.junit.Assert.*;
 
 public class BooleanTypeAdapterTest {

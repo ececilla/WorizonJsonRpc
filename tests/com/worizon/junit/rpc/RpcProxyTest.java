@@ -2,8 +2,10 @@ package com.worizon.junit.rpc;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.easymock.Capture;
@@ -11,11 +13,11 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Test;
 
-import com.worizon.jsonrpc.Remote;
-import com.worizon.jsonrpc.RemoteParams;
-import com.worizon.jsonrpc.RemoteProcName;
+import com.worizon.jsonrpc.RpcProxy;
+import com.worizon.jsonrpc.annotations.Remote;
+import com.worizon.jsonrpc.annotations.RemoteParams;
+import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
-import com.worizon.net.RpcProxy;
 
 public class RpcProxyTest {
 	
@@ -31,24 +33,23 @@ public class RpcProxyTest {
 	}
 	
 	@Remote
-	interface MyRemoteInterface{
+	interface My1RemoteInterface{
 		public void test();
 	};
-	
-	@Test(expected=IllegalArgumentException.class)
+		
 	public void testNonAnotattedParams() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
-		EasyMock.expect(requester.sendSyncPostRequest( (String)EasyMock.anyObject() )).andReturn("{\"jsonrpc\": \"2.0\", \"result\": 9, \"id\": 2}");
+		EasyMock.expect(requester.sendSyncPostRequest( (String)EasyMock.anyObject() )).andReturn("{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}");
 		EasyMock.replay(requester);
 				
 		RpcProxy proxy = new RpcProxy(requester);
-		MyRemoteInterface remote = proxy.create(MyRemoteInterface.class);
+		My1RemoteInterface remote = proxy.create(My1RemoteInterface.class);
 		remote.test();
 	}
 	
 	@Remote
-	interface MySecondRemoteInterface{
+	interface My2RemoteInterface{
 		
 		@RemoteParams({"x","y","z"})
 		public void test(int x, int y);
@@ -59,19 +60,19 @@ public class RpcProxyTest {
 		
 		HttpRequester requester = new HttpRequester();										
 		RpcProxy proxy = new RpcProxy(requester);
-		MySecondRemoteInterface remote = proxy.create(MySecondRemoteInterface.class);
+		My2RemoteInterface remote = proxy.create(My2RemoteInterface.class);
 		remote.test(1,2);
 	}
 	
 	@Remote
-	interface MyThirdRemoteInterface{
+	interface My3RemoteInterface{
 		
 		@RemoteParams({"params"})
 		public Void test( Map<String, Object> params );
 	}
 		
 	@Test
-	public void testRemoteInterfaceWithHashMapParam() throws Exception{
+	public void testRemoteInterfaceWithHashMapParamAnnotatedWithParamsName() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
 		final Capture<String> requestCapture = new Capture<String>();
@@ -85,11 +86,11 @@ public class RpcProxyTest {
 				return "{\"jsonrpc\": \"2.0\", \"result\":{} , \"id\": 2}";
 				
 			}
-		})
-		.anyTimes();
+		});
+		
 		EasyMock.replay(requester);
 		RpcProxy proxy = new RpcProxy(requester);
-		MyThirdRemoteInterface remote = proxy.create( MyThirdRemoteInterface.class);
+		My3RemoteInterface remote = proxy.create( My3RemoteInterface.class);
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("x", 1);
 		params.put("y","test string");
@@ -97,26 +98,103 @@ public class RpcProxyTest {
 		
 	}
 	
+	@Remote
+	interface My4RemoteInterface{
+		
+		@RemoteParams({"params"})
+		public Void test( List<Object> params );
+	}
+		
+	@Test
+	public void testRemoteInterfaceWithListParamAnnotatedWithParamsName() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{
+				
+				String request = requestCapture.getValue();					
+				assertTrue( request.startsWith("{\"method\":\"test\",\"params\":[1,\"test string\"],\"jsonrpc\":\"2.0\"") );
+				return "{\"jsonrpc\": \"2.0\", \"result\":{} , \"id\": 2}";
+				
+			}
+		});
+		
+		EasyMock.replay(requester);
+		RpcProxy proxy = new RpcProxy(requester);
+		My4RemoteInterface remote = proxy.create( My4RemoteInterface.class);
+		List<Object> params = new ArrayList<Object>();
+		params.add(1);
+		params.add("test string");
+		remote.test(params);
+		
+	}
+	
 	
 	@Remote
-	interface RemoteInterface{
+	interface My5RemoteInterface{
 		
 		@RemoteParams({"x","y"})		
 		public int sum( int x, int y);
 	}
 	
 	@Test
-	public void testRemoteInterface() throws Exception{
+	public void testRemoteInterfaceWithNamedParameters() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
-		EasyMock.expect(requester.sendSyncPostRequest( (String)EasyMock.anyObject() )).andReturn("{\"jsonrpc\": \"2.0\", \"result\": 9, \"id\": 2}");
+		final Capture<String> requestCapture = new Capture<String>();		
+		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{
+				
+				String request = requestCapture.getValue();					
+				assertTrue( request.startsWith("{\"method\":\"sum\",\"params\":{\"x\":5,\"y\":4},\"jsonrpc\":\"2.0\"") );
+				return "{\"jsonrpc\": \"2.0\", \"result\":9 , \"id\": 2}";
+				
+			}
+		});
 		EasyMock.replay(requester);
 				
 		RpcProxy proxy = new RpcProxy(requester);
-		RemoteInterface remote = proxy.create(RemoteInterface.class);
+		My5RemoteInterface remote = proxy.create(My5RemoteInterface.class);
 				
 		assertEquals(9, remote.sum(5, 4));
 	}
+	
+	@Remote
+	interface My6RemoteInterface{
+					
+		public int sum( int x, int y);
+	}
+	
+	@Test
+	public void testRemoteInterfaceWithNumberedParameters() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
+		final Capture<String> requestCapture = new Capture<String>();		
+		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{
+				
+				String request = requestCapture.getValue();					
+				assertTrue( request.startsWith("{\"method\":\"sum\",\"params\":[5,4],\"jsonrpc\":\"2.0\"") );
+				return "{\"jsonrpc\": \"2.0\", \"result\":9 , \"id\": 2}";
+				
+			}
+		});
+		EasyMock.replay(requester);
+				
+		RpcProxy proxy = new RpcProxy(requester);
+		My6RemoteInterface remote = proxy.create(My6RemoteInterface.class);
+				
+		assertEquals(9, remote.sum(5, 4));
+	}	
+	
+	
 	
 	class A{
 		int x;
@@ -134,7 +212,7 @@ public class RpcProxyTest {
 		}
 	}
 	@Remote
-	interface RemoteInterfaceWithObject{
+	interface My7RemoteInterface{
 				
 		@RemoteParams({"a"})		
 		public B op( A a );// A object -> Remote operation op -> B object
@@ -142,14 +220,58 @@ public class RpcProxyTest {
 	}
 	
 	@Test
-	public void testRemoteInterfaceWithObjects() throws Exception{
+	public void testRemoteInterfaceWithNamedObjectParameters() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
-		EasyMock.expect(requester.sendSyncPostRequest( (String)EasyMock.anyObject() )).andReturn("{\"jsonrpc\": \"2.0\", \"result\": {\"z\":\"test\",\"f\":23.45}, \"id\": 2}");
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{
+				
+				String request = requestCapture.getValue();					
+				assertTrue( request.startsWith("{\"method\":\"op\",\"params\":{\"a\":{\"x\":2,\"y\":3}},\"jsonrpc\":\"2.0\"") );
+				return "{\"jsonrpc\": \"2.0\", \"result\": {\"z\":\"test\",\"f\":23.45}, \"id\": 2}";
+				
+			}
+		});		
 		EasyMock.replay(requester);
 				
 		RpcProxy proxy = new RpcProxy(requester);
-		RemoteInterfaceWithObject remote = proxy.create(RemoteInterfaceWithObject.class);
+		My7RemoteInterface remote = proxy.create(My7RemoteInterface.class);
+		
+		A a = new A(2,3);
+		B expected = new B("test",23.45f);
+		assertEquals(expected, remote.op(a));
+	}
+	
+	@Remote
+	interface My8RemoteInterface{
+							
+		public B op( A a );// A object -> Remote operation op -> B object
+		
+	}
+	
+	@Test
+	public void testRemoteInterfaceWithNnumberedObjectParameters() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{
+				
+				String request = requestCapture.getValue();					
+				assertTrue( request.startsWith("{\"method\":\"op\",\"params\":[{\"x\":2,\"y\":3}],\"jsonrpc\":\"2.0\"") );
+				return "{\"jsonrpc\": \"2.0\", \"result\": {\"z\":\"test\",\"f\":23.45}, \"id\": 2}";
+				
+			}
+		});		
+		EasyMock.replay(requester);
+				
+		RpcProxy proxy = new RpcProxy(requester);
+		My8RemoteInterface remote = proxy.create(My8RemoteInterface.class);
 		
 		A a = new A(2,3);
 		B expected = new B("test",23.45f);

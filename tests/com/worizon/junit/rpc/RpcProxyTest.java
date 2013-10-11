@@ -18,6 +18,8 @@ import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
+import com.worizon.net.HttpRequesterBuilder;
+import com.worizon.net.HttpRequester.TransformerContext;
 
 public class RpcProxyTest {
 	
@@ -43,7 +45,7 @@ public class RpcProxyTest {
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
 		final Capture<String> requestCapture = new Capture<String>();
-		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{
@@ -89,7 +91,7 @@ public class RpcProxyTest {
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
 		final Capture<String> requestCapture = new Capture<String>();
-		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{
@@ -123,7 +125,7 @@ public class RpcProxyTest {
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
 		final Capture<String> requestCapture = new Capture<String>();
-		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{
@@ -158,7 +160,7 @@ public class RpcProxyTest {
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
 		final Capture<String> requestCapture = new Capture<String>();		
-		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{
@@ -188,7 +190,7 @@ public class RpcProxyTest {
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
 		final Capture<String> requestCapture = new Capture<String>();		
-		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{
@@ -237,7 +239,7 @@ public class RpcProxyTest {
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
 		final Capture<String> requestCapture = new Capture<String>();
-		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{
@@ -270,7 +272,7 @@ public class RpcProxyTest {
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
 		final Capture<String> requestCapture = new Capture<String>();
-		EasyMock.expect(requester.sendSyncPostRequest( EasyMock.capture(requestCapture) ))
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{
@@ -289,6 +291,33 @@ public class RpcProxyTest {
 		A a = new A(2,3);
 		B expected = new B("test",23.45f);
 		assertEquals(expected, remote.op(a));
+	}
+	
+	@Test
+	public void testDummy(){
+		
+		HttpRequesterBuilder builder = new HttpRequesterBuilder(null);		
+		builder.addTransformer(new HttpRequester.ITransformer() {
+			
+			@Override
+			public void transform(TransformerContext ctx) {
+				
+				
+			}
+		})
+		.addTransformer(new HttpRequester.ITransformer() {
+			
+			@Override
+			public void transform(TransformerContext ctx) {
+				
+				
+			}
+		})
+		.payloadURLEncoding()
+		.continueIfTrue(true)
+		.skipNextIfTrue(false)
+		.payloadConcat("ksdlñdf");
+		HttpRequester requester = builder.build();		
 	}
 
 }

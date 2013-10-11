@@ -90,7 +90,7 @@ public class RpcProxy{
 	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws IOException, InstantiationException, IllegalAccessException, InterruptedException, JsonRpcException{
 		
 		JsonRpcRequest req = new JsonRpcRequest(method, params);		
-		String response = http.sendSyncPostRequest( req.toString() );//blocking call
+		String response = http.request( req.toString() );//blocking call
 		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( response, clazz );		
 		if(res.getError() != null)
 			throw new JsonRpcException( res.getError() );

@@ -51,6 +51,16 @@ public class HttpRequester {
 		
 	}
 	
+	public String getEndpoint(){
+		
+		return endpoint;
+	}
+	
+	public void setEndpoint( String endpoint ){
+		
+		this.endpoint = endpoint;
+	}
+	
 	void addTransformers( List<ITransformer> transformers ){
 		
 		this.transformers.addAll(transformers);
@@ -84,10 +94,10 @@ public class HttpRequester {
 		return request(body, DEFAULT_READ_TIMEOUT);
 	}
 	
-	private InputStream connectAndWriteRequest( String payload, int readTimeout) throws MalformedURLException, IOException {
+	private InputStream connectAndWriteRequest( String body, int readTimeout) throws MalformedURLException, IOException {
 		
 		//Transform payload and headers by delegating on transformers
-		ctx.setPayload(payload);
+		ctx.setBody(body);
 		for( ITransformer transformer:transformers ){
 			
 			if(ctx.skipNext())
@@ -122,7 +132,7 @@ public class HttpRequester {
 		conn.connect();		
 		
 		OutputStreamWriter writer = new OutputStreamWriter( conn.getOutputStream() );		
-		writer.write( ctx.getPayload() );		    													    
+		writer.write( ctx.getBody() );		    													    
 	    writer.flush();
 	    try{
 	    	
@@ -154,7 +164,7 @@ public class HttpRequester {
 	 */
 	public class TransformerContext{
 		
-		private String payload;
+		private String body;
 		private Map<String,String> headers = new HashMap<String,String>();
 		private boolean shouldContinue = true;
 		private boolean skipNext = false;
@@ -169,14 +179,14 @@ public class HttpRequester {
 			return headers.get(headerKey);
 		}
 		
-		public String getPayload(){
+		public String getBody(){
 			
-			return payload;
+			return body;
 		}
 		
-		public void setPayload( String payload ){
+		public void setBody( String body ){
 			
-			this.payload = payload;
+			this.body = body;
 		}
 		
 		public boolean skipNext(){
@@ -202,11 +212,11 @@ public class HttpRequester {
 	}
 	
 	/**
-	 * 
+	 * Transformer interface
 	 */
 	public interface ITransformer{
 		
-		public void transform( TransformerContext ctx );
+		public void transform( TransformerContext ctx ) throws IOException;
 		
 	}
 		

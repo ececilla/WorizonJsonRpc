@@ -1,5 +1,7 @@
 package com.worizon.net;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,29 +9,48 @@ import com.worizon.net.HttpRequester.ITransformer;
 import com.worizon.net.HttpRequester.TransformerContext;
 
 /**
- * 
+ * Builder pattern to construct HttpRequester objects.
  */
-public class HttpRequesterBuilder {
+final public class HttpRequesterBuilder {
 	
 	private  HttpRequester requester;
 	private String endpoint;
 	private  List<ITransformer> transformers = new LinkedList<ITransformer>();
-	
-	public HttpRequesterBuilder( String endpoint ){
 		
-		this.endpoint = endpoint; 
+	
+	public HttpRequesterBuilder( HttpRequester requester ){
+		
+		this.requester = requester;		
 	}
 	
-	public HttpRequesterBuilder payloadURLEncoding(){
+	public HttpRequesterBuilder(){
+				
+		/*URI uri = new URI(
+    	"http", 
+    	"search.barnesandnoble.com", 
+    	"/booksearch/first book.pdf",
+    	null);
+		URL url = uri.toURL();*/
+	}
+	
+	/**
+	 * Set the endpoint for the HttpRequester object.
+	 */
+	public HttpRequesterBuilder endpoint( String endpoint ){
+		
+		this.endpoint = endpoint;
+		return this;
+	}
+	
+	public HttpRequesterBuilder payloadURLEncode(){
 		
 		return addTransformer(new ITransformer() {
 			
 			@Override
-			public void transform( TransformerContext ctx ) {
+			public void transform( TransformerContext ctx ) throws UnsupportedEncodingException {
 				
-				String payloadString = ctx.getPayload();				
-				//DO URL encoding
-				ctx.setPayload(payloadString);
+				String body = ctx.getBody();							
+				ctx.setBody( URLEncoder.encode(body, "UTF-8") );
 			}
 		});
 		
@@ -42,13 +63,27 @@ public class HttpRequesterBuilder {
 			@Override
 			public void transform( TransformerContext ctx ) {
 				
-				String payload = ctx.getPayload();
-				ctx.setPayload( payload.concat( trailingString ));
+				String body = ctx.getBody();
+				ctx.setBody( body.concat( trailingString ));
 				
 			}
-		});
-		
+		});		
 	}
+	
+	public HttpRequesterBuilder payloadPrepend( final String leadingString ){
+		
+		return addTransformer(new ITransformer() {
+			
+			@Override
+			public void transform( TransformerContext ctx ) {
+				
+				String body = ctx.getBody();
+				ctx.setBody( leadingString.concat(body) );
+				
+			}
+		});		
+	}
+	
 	
 	public HttpRequesterBuilder continueIfTrue( final boolean condition ){
 		
@@ -82,7 +117,15 @@ public class HttpRequesterBuilder {
 	
 	public HttpRequester build(){
 		
-		requester = new HttpRequester(endpoint);
+		if( requester == null ){
+			if( endpoint == null )
+				throw new IllegalStateException("endpoint not set");			
+			requester = new HttpRequester(endpoint);
+		}else if( endpoint != null )
+			requester.setEndpoint(endpoint);
+		else if( requester.getEndpoint() == null )
+			throw new IllegalStateException("endpoint not set");								
+		
 		requester.addTransformers(transformers);
 		return requester;
 	}

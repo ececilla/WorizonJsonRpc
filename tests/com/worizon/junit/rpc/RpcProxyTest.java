@@ -313,7 +313,7 @@ public class RpcProxyTest {
 				
 			}
 		})
-		.payloadURLEncoding()
+		.payloadURLEncode()
 		.continueIfTrue(true)
 		.skipNextIfTrue(false)
 		.payloadConcat("ksdlñdf");

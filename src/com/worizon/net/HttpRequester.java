@@ -33,10 +33,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class HttpRequester {
 			
+	private static final int DEFAULT_READ_TIMEOUT = 15000;
+	private static final int DEFAULT_CONNECT_TIMEOUT = 10000;
+	private static final int DEFAULT_CONNECT_RETRIES = 2;
+	
 	private String endpoint;
-	private int nretries = 2;
-	private final int DEFAULT_READ_TIMEOUT = 15000;
-	private final int DEFAULT_CONNECT_TIMEOUT = 10000;	
+	private int nretries = DEFAULT_CONNECT_RETRIES;	
+	private int readTimeout = DEFAULT_READ_TIMEOUT;	
+	private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
 	private HttpURLConnection conn = null;
 	private TransformerContext ctx  = this.new TransformerContext();
 	private List<ITransformer> transformers = new LinkedList<ITransformer>();
@@ -49,6 +53,36 @@ public class HttpRequester {
 		
 		this.endpoint = endpoint;
 		
+	}
+	
+	public void setConnectRetries( int nretries ){
+		
+		this.nretries = nretries;
+	}
+	
+	public int getConnectRetries(){
+		
+		return this.nretries;
+	}
+	
+	public void setReadTimeout( int readTimeout ){
+		
+		this.readTimeout = readTimeout;
+	}
+	
+	public int getReadTimeout(){
+		
+		return this.readTimeout;
+	}
+	
+	public void setConnectTimeout( int connectTimeout ){
+		
+		this.connectTimeout = connectTimeout;
+	}
+	
+	public int getConnectTimeout(){
+		
+		return connectTimeout;
 	}
 	
 	public String getEndpoint(){
@@ -72,29 +106,25 @@ public class HttpRequester {
 		conn = null;
 	}	
 				
-	public String request( String body, int readTimeout ) throws MalformedURLException, IOException, InterruptedException{
+	public String request( String body  ) throws MalformedURLException, IOException, InterruptedException{
 							    
 	    try{
-	    	return readResponse( connectAndWriteRequest(body, readTimeout) );
+	    	return readResponse( connectAndWriteRequest(body) );
 	    }catch(IOException ex){
 	    	
 	    	disconnect();
 	    	if( !Thread.interrupted() ){
 		    	if(nretries-- > 0)
-		    		return request(body, readTimeout);
+		    		return request(body);
 		    	else
 		    		throw ex;
 	    	}else
 	    		throw new InterruptedException();
 	    }
 	}
+		
 	
-	public String request( String body ) throws MalformedURLException, IOException, InterruptedException{
-				
-		return request(body, DEFAULT_READ_TIMEOUT);
-	}
-	
-	private InputStream connectAndWriteRequest( String body, int readTimeout) throws MalformedURLException, IOException {
+	private InputStream connectAndWriteRequest( String body ) throws MalformedURLException, IOException {
 		
 		//Transform payload and headers by delegating on transformers
 		ctx.setBody(body);
@@ -112,17 +142,17 @@ public class HttpRequester {
 		//Prepare connection
 		URL url = new URL( endpoint );
 		conn = (HttpURLConnection)url.openConnection();				
-		conn.setDoOutput( true );
-		conn.setDoInput(true);
+		conn.setDoOutput( true );		
 		conn.setUseCaches(false);
 		conn.setAllowUserInteraction(false);
 		conn.setDefaultUseCaches(false);
 		conn.setUseCaches(false);
-		conn.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT);
+		conn.setConnectTimeout(connectTimeout);
 		conn.setReadTimeout(readTimeout);
 		conn.setRequestMethod("POST");		
 		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setRequestProperty("Accept", "application/json");
+		conn.setRequestProperty("Connection", "close");
 				
 		//Set HTTP headers
 		for( Entry<String,String> entry: ctx.headers.entrySet() ){

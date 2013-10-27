@@ -10,5 +10,9 @@
 	<classpathentry kind="lib" path="libs/easymock-3.2.jar"/>
 	<classpathentry kind="lib" path="libs/objenesis-tck-1.2.jar"/>
 	<classpathentry kind="lib" path="libs/cglib-nodep-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/spring-aop-3.2.4.RELEASE.jar"/>
+	<classpathentry kind="lib" path="libs/spring-core-3.2.4.RELEASE.jar"/>
+	<classpathentry kind="lib" path="libs/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="libs/commons-logging-1.1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

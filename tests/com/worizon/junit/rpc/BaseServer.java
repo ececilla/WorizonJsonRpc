@@ -14,6 +14,8 @@ public abstract class BaseServer extends Thread {
 				
 	protected ServerSocket serverSocket = null;
 	protected Socket clientSocket  = null;
+	protected int idleTime;
+	
 	
 	public BaseServer( int port ) throws IOException {
 				
@@ -32,9 +34,14 @@ public abstract class BaseServer extends Thread {
 	public void finish() throws IOException {
 						
 		interrupt();		
-		if( clientSocket.isConnected() )
+		if( clientSocket != null && clientSocket.isConnected() )
 			clientSocket.close();
 		serverSocket.close();			
+	}
+	
+	public void setIdleTime( int idleTime ){
+		
+		this.idleTime = idleTime;
 	}
 	
 	protected abstract void readStream( InputStream is ) throws IOException;
@@ -42,13 +49,18 @@ public abstract class BaseServer extends Thread {
 	@Override
 	public void run(){
 		try{														
-			while( !isInterrupted() ){
-												
+			while( !isInterrupted() ){							
 				clientSocket = serverSocket.accept();				
-				if( clientSocket != null )																										
-					readStream(  clientSocket.getInputStream()  );																								
+				if( clientSocket != null ){																										
+					
+					sleep(idleTime);
+					readStream(  clientSocket.getInputStream()  );
+				}
 			}						        				
-        }catch( Exception e ){
+        }catch( SocketException se ){
+        	        	
+        }catch( InterruptedException ie){
+        }catch(Exception e){
         	
         	e.printStackTrace();
         }

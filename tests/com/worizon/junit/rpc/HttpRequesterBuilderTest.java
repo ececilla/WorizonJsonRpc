@@ -1,8 +1,5 @@
 package com.worizon.junit.rpc;
 
-import org.easymock.Capture;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.After;
 import static org.junit.Assert.*;
 
@@ -14,49 +11,45 @@ import com.worizon.net.HttpRequesterBuilder;
 
 public class HttpRequesterBuilderTest {
 	
-	/*
+	private TestServer server;
+	private HttpRequester http;
 	private HttpRequesterBuilder builder;
-	private String request;
-	private HttpRequester requester;
 	
 	@Before
 	public void setUp() throws Exception{
 		
-		requester = EasyMock.createNiceMock(HttpRequester.class);				
-		final Capture<String> requestCapture = new Capture<String>();
-		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
-		.andAnswer(new IAnswer<String>() {
-			
-			public String answer() throws Throwable{
-				
-				request = requestCapture.getValue();				
-				return "";				
-			}
-		});
-		EasyMock.replay(requester);
-		builder = new HttpRequesterBuilder( requester );
+		server = new TestServer(4444);		
+		http = (HttpRequester)server.createTestRequester(new HttpRequester(), "request");
+		builder = new HttpRequesterBuilder(http);
 	}
-	
-	@After
-	public void tearDown(){
 		
-		builder = null;
-		request = null;
-		requester = null;
-	}
-	*/
-	
+		
 	@Test
 	public void testEndpoint() throws Exception{
-		
-		HttpRequesterBuilder builder = new HttpRequesterBuilder();
-		HttpRequester requester = builder.endpoint("http://test.com/rpc").build();
-		assertEquals("http://test.com/rpc", requester.getEndpoint());
-				
+						
+		http = builder.endpoint("http://localhost:4444/rpc").build();
+		server.finish();
+		assertEquals("http://localhost:4444/rpc", http.getEndpoint());				
 	}
 	
 	@Test
-	public void testPayloadConcat() throws Exception{
+	public void testRequest() throws Exception{
+				
+		http = builder.endpoint("http://localhost:4444/rpc").build();
+		http.request("test");
+		assertEquals("test", server.getBody());
+		assertEquals("application/json", server.getHeaders().get("Content-Type"));
+		assertEquals("application/json", server.getHeaders().get("Accept"));		
+		assertEquals("no-cache", server.getHeaders().get("Cache-Control"));
+		assertEquals("no-cache", server.getHeaders().get("Pragma"));
+		assertEquals("localhost:4444", server.getHeaders().get("Host"));
+		assertEquals("close", server.getHeaders().get("Connection"));
+		assertEquals("5", server.getHeaders().get("Content-Length"));
+		
+	}
+	
+	@Test
+	public void testTransformers(){
 		
 		
 	}

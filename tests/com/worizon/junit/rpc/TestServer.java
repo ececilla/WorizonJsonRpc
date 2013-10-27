@@ -4,21 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.net.MalformedURLException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.worizon.net.HttpRequester;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.aop.framework.ProxyFactory;
 
 
 /**
@@ -29,13 +22,13 @@ public class TestServer extends BaseServer {
 	private Map<String,String> headers = new LinkedHashMap<String,String>();
 	private IRequester adapter;
 	private String body;
-	private String command;
+	private String command;	
 	
 	public TestServer( int port ) throws IOException {
 				
 		super( port );
 		start();
-	}
+	}		
 	
 	/**
 	 * Get the request's body payload sent.
@@ -71,6 +64,15 @@ public class TestServer extends BaseServer {
 		
 		return headers;
 	}
+	
+	/**
+	 * Set the requester adapter for this server. 
+	 */	
+	public void setAdapter( IRequester adapter ){
+		
+		this.adapter = adapter;
+	}
+	
 				
 	/**
 	 * Build the wrapped version of the adapter to make the request.
@@ -87,14 +89,41 @@ public class TestServer extends BaseServer {
 		
 		return this.new NonResponseReadRequester();
 	}
+		
 	
 	/**
-	 * Set the requester adapter for this server. 
-	 */	
-	public void setAdapter( IRequester adapter ){
+	 * Build proxied version of the requester and intercept requestMethod to mute network errors.
+	 */
+	public Object createTestRequester(Object obj, final String requestMethod){
 		
-		this.adapter = adapter;
-	}	
+		ProxyFactory pf = new ProxyFactory(obj);
+		pf.addAdvice(new MethodInterceptor() {
+			
+			@Override
+			public Object invoke(MethodInvocation mi) throws Throwable {
+				
+				Object retval = null;
+				if( mi.getMethod().getName().equals(requestMethod) ){					
+					try{
+						String body = (String)mi.getArguments()[0];
+						if(!body.endsWith("\n")){
+							body += "\n";
+							mi.getArguments()[0] = body;
+						}
+						retval = mi.proceed();
+					
+					}catch(Exception ex){
+					}finally{
+						try{ join(); }catch(InterruptedException ie){}
+					}
+				}else
+					retval = mi.proceed();
+				return retval;
+			}
+		});		
+		
+		return pf.getProxy();
+	}
 		
 	
 	@Override
@@ -128,7 +157,7 @@ public class TestServer extends BaseServer {
 	public interface IRequester{
 		
 		public void setEndpoint(String endpoint);
-		public void request(String body) throws Exception;
+		public void doRequest(String body) throws Exception;
 	}
 	
 	/**
@@ -154,12 +183,12 @@ public class TestServer extends BaseServer {
 			adapter.setEndpoint(endpoint);
 		}
 		
-		public void request( String body ){
+		public void doRequest( String body ){
 			
 			try{
 				if( !body.endsWith("\n") )
 					body += "\n";					
-				adapter.request(body); 
+				adapter.doRequest(body); 
 			}catch(Exception ex){}
 			finally{
 				

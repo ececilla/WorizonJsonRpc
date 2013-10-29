@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.worizon.net.HttpRequester;
+import com.worizon.test.TestServer;
 
 public class HttpRequesterTest {
 	

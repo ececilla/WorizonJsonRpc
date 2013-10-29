@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.worizon.net.HttpRequester;
 import com.worizon.net.HttpRequesterBuilder;
+import com.worizon.test.TestServer;
 
 public class HttpRequesterBuilderTest {
 	

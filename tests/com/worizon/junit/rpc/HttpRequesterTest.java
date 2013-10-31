@@ -69,7 +69,7 @@ public class HttpRequesterTest {
 	public void testRequestConnectionRefused() throws Exception{
 		
 		HttpRequester requester = new HttpRequester("http://localhost:5555");
-		requester.setConnectRetries(1);
+		requester.setRequestRetries(1);
 		requester.setConnectTimeout(1000);
 		requester.request("test");
 	}
@@ -79,7 +79,7 @@ public class HttpRequesterTest {
 		
 		server.setIdleTime(2000);
 		HttpRequester requester = new HttpRequester("http://localhost:4444");
-		requester.setConnectRetries(0);
+		requester.setRequestRetries(0);
 		requester.setReadTimeout(1000);
 		requester.request("test");			
 	}

@@ -1,5 +1,7 @@
 package com.worizon.junit.rpc;
 
+import java.io.IOException;
+
 import org.junit.After;
 import static org.junit.Assert.*;
 
@@ -8,6 +10,7 @@ import org.junit.Test;
 
 import com.worizon.net.HttpRequester;
 import com.worizon.net.HttpRequesterBuilder;
+import com.worizon.net.HttpRequester.TransformerContext;
 import com.worizon.test.TestServer;
 
 public class HttpRequesterBuilderTest {
@@ -23,8 +26,14 @@ public class HttpRequesterBuilderTest {
 		http = (HttpRequester)server.createTestRequester(new HttpRequester(), "request");
 		builder = new HttpRequesterBuilder(http);
 	}
+	
+	//finish server in case any test fails and server is not stopped implicitly
+	@After
+	public void tearDown() throws Exception{
 		
-		
+		server.finish();
+	}
+				
 	@Test
 	public void testEndpoint() throws Exception{
 						
@@ -50,8 +59,88 @@ public class HttpRequesterBuilderTest {
 	}
 	
 	@Test
-	public void testTransformers(){
+	public void testAddTransformer() throws Exception{
+		http = builder
+				.endpoint("http://localhost:4444/rpc")				
+				.addTransformer(new HttpRequester.ITransformer() {
+					
+					@Override
+					public void transform(TransformerContext ctx) throws Exception {						
+						
+						ctx.setBody("foo\n");
+					}
+				}).build();		
+		http.request("bar");
+		assertEquals("foo", server.getBody());
 		
+	}
+	
+	@Test
+	public void testConcatTransformers() throws Exception{
+		
+		http = builder
+				.endpoint("http://localhost:4444/rpc")				
+				.addTransformer(new HttpRequester.ITransformer() {
+					
+					@Override
+					public void transform(TransformerContext ctx) throws Exception {						
+						
+						ctx.setBody("foo\n");
+					}
+				})
+				.addTransformer(new HttpRequester.ITransformer() {
+					
+					@Override
+					public void transform(TransformerContext ctx) throws Exception {
+							
+						assertEquals("foo\n",ctx.getBody());
+						ctx.putHeader("Content-type", "text/xml");
+					}
+				})
+				.build();		
+		http.request("bar");
+		assertEquals("foo", server.getBody());
+		assertEquals("text/xml", server.getHeaders().get("Content-Type"));
+		
+	}
+	
+	@Test
+	public void testSkipNextIfTrueTransformer() throws Exception{
+		
+		http = builder
+				.endpoint("http://localhost:4444/rpc")								
+				.skipNextIfTrue(true)
+				.addTransformer(new HttpRequester.ITransformer() {
+					
+					@Override
+					public void transform(TransformerContext ctx) throws Exception {
+							
+						throw new RuntimeException();					
+					}
+				}).build();		
+		http.request("bar");
+		assertEquals("bar", server.getBody());
+		assertEquals("application/json", server.getHeaders().get("Content-Type"));
+		
+	}
+	
+	@Test
+	public void testContinueIfTrueTransformer() throws Exception{
+		
+		http = builder
+				.endpoint("http://localhost:4444/rpc")								
+				.continueIfTrue(false)
+				.addTransformer(new HttpRequester.ITransformer() {
+					
+					@Override
+					public void transform(TransformerContext ctx) throws Exception {
+							
+						assertTrue(false);						
+					}
+				}).build();		
+		http.request("bar");
+		assertEquals("bar", server.getBody());
+		assertEquals("application/json", server.getHeaders().get("Content-Type"));
 		
 	}
 

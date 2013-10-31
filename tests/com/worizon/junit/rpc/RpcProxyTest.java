@@ -291,33 +291,6 @@ public class RpcProxyTest {
 		A a = new A(2,3);
 		B expected = new B("test",23.45f);
 		assertEquals(expected, remote.op(a));
-	}
-	
-	@Test
-	public void testDummy(){
-		
-		HttpRequesterBuilder builder = new HttpRequesterBuilder(null);		
-		builder.addTransformer(new HttpRequester.ITransformer() {
-			
-			@Override
-			public void transform(TransformerContext ctx) {
-				
-				
-			}
-		})
-		.addTransformer(new HttpRequester.ITransformer() {
-			
-			@Override
-			public void transform(TransformerContext ctx) {
-				
-				
-			}
-		})
-		.payloadURLEncode()
-		.continueIfTrue(true)
-		.skipNextIfTrue(false)
-		.payloadConcat("ksdlñdf");
-		HttpRequester requester = builder.build();		
-	}
+	}		
 
 }

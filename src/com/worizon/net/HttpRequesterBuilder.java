@@ -56,7 +56,7 @@ final public class HttpRequesterBuilder {
 		
 	}
 	
-	public HttpRequesterBuilder payloadConcat( final String trailingString ){
+	public HttpRequesterBuilder bodyConcat( final String trailingString ){
 		
 		return addTransformer(new ITransformer() {
 			
@@ -64,13 +64,13 @@ final public class HttpRequesterBuilder {
 			public void transform( TransformerContext ctx ) {
 				
 				String body = ctx.getBody();
-				ctx.setBody( body.concat( trailingString ));
+				ctx.setBody( body.concat( trailingString ) );
 				
 			}
 		});		
 	}
 	
-	public HttpRequesterBuilder payloadPrepend( final String leadingString ){
+	public HttpRequesterBuilder bodyPrepend( final String leadingString ){
 		
 		return addTransformer(new ITransformer() {
 			

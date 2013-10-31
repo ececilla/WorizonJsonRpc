@@ -142,18 +142,41 @@ public class HttpRequesterBuilderTest {
 		assertEquals("bar", server.getBody());
 		assertEquals("application/json", server.getHeaders().get("Content-Type"));
 		
-	}
+	}	
 	
-	public void testPayloadConcatTransformer() throws Exception{
+	@Test
+	public void testBodyConcatTransformer() throws Exception{
 		
 		http = builder
-				.endpoint("http://localhost:4444/rpc")								
-				.payloadConcat("test2")
+				.endpoint("http://localhost:4444/rpc")	
+				.addTransformer(new HttpRequester.ITransformer() {
+					
+					@Override
+					public void transform(TransformerContext ctx) throws Exception {
+						
+						ctx.setBody( ctx.getBody().trim() );
+					}
+				})
+				.bodyConcat("test2\n")
 				.build();		
 		http.request("bar");
 		assertEquals("bartest2", server.getBody());
 		assertEquals("application/json", server.getHeaders().get("Content-Type"));
 	}
+		
+	@Test
+	public void testBodyPreprendTransformer() throws Exception{
+		
+		http = builder
+				.endpoint("http://localhost:4444/rpc")					
+				.bodyPrepend("test2")
+				.build();		
+		http.request("bar");
+		assertEquals("test2bar", server.getBody());
+		assertEquals("application/json", server.getHeaders().get("Content-Type"));
+	}
+	
+	
 	
 
 }

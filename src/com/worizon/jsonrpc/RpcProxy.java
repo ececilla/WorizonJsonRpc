@@ -87,7 +87,7 @@ public class RpcProxy{
 		
 	}
 	
-	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws IOException, InstantiationException, IllegalAccessException, InterruptedException, JsonRpcException{
+	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws Exception{
 		
 		JsonRpcRequest req = new JsonRpcRequest(method, params);		
 		String response = http.request( req.toString() );//blocking call
@@ -98,12 +98,12 @@ public class RpcProxy{
 			return res.getResult();	
 	}
 			
-	public synchronized <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws IOException, InstantiationException, IllegalAccessException, InterruptedException, JsonRpcException{
+	public synchronized <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws Exception{
 		
 		return call(method, (Object)params, clazz);
 	}
 	
-	public synchronized <T> T call(String method, List<Object> params, Class<T> clazz ) throws IOException, InstantiationException, IllegalAccessException, InterruptedException, JsonRpcException{
+	public synchronized <T> T call(String method, List<Object> params, Class<T> clazz ) throws Exception{
 		
 		return call(method, (Object)params, clazz);
 	}

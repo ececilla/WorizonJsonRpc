@@ -139,8 +139,7 @@ public class HttpRequesterBuilderTest {
 					}
 				}).build();		
 		http.request("bar");
-		assertEquals("bar", server.getBody());
-		assertEquals("application/json", server.getHeaders().get("Content-Type"));
+		assertEquals("bar", server.getBody());		
 		
 	}	
 	
@@ -160,8 +159,7 @@ public class HttpRequesterBuilderTest {
 				.bodyConcat("test2\n")
 				.build();		
 		http.request("bar");
-		assertEquals("bartest2", server.getBody());
-		assertEquals("application/json", server.getHeaders().get("Content-Type"));
+		assertEquals("bartest2", server.getBody());		
 	}
 		
 	@Test
@@ -172,11 +170,21 @@ public class HttpRequesterBuilderTest {
 				.bodyPrepend("test2")
 				.build();		
 		http.request("bar");
-		assertEquals("test2bar", server.getBody());
-		assertEquals("application/json", server.getHeaders().get("Content-Type"));
+		assertEquals("test2bar", server.getBody());		
 	}
 	
-	
+	@Test
+	public void testBodyURLEncodeTransformer() throws Exception{
+		
+		http = builder
+				.endpoint("http://localhost:4444/rpc")					
+				.bodyTrim()
+				.bodyURLEncode()
+				.bodyConcat("\n")
+				.build();		
+		http.request("{test:1}");			
+		assertArrayEquals(new char[]{'%','7','B','t','e','s','t','%','3','A','1','%','7','D'}, server.getBody().toCharArray());		
+	}
 	
 
 }

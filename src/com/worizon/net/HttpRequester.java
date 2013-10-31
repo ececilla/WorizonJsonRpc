@@ -42,7 +42,7 @@ public class HttpRequester {
 	private int readTimeout = DEFAULT_READ_TIMEOUT;	
 	private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
 	private HttpURLConnection conn = null;
-	private TransformerContext ctx  = this.new TransformerContext();
+	private TransformerContext ctx = this.new TransformerContext();
 	private List<ITransformer> transformers = new LinkedList<ITransformer>();
 	
 	public HttpRequester(){
@@ -55,12 +55,12 @@ public class HttpRequester {
 		
 	}
 	
-	public void setConnectRetries( int nretries ){
+	public void setRequestRetries( int nretries ){
 		
 		this.nretries = nretries;
 	}
 	
-	public int getConnectRetries(){
+	public int getRequestRetries(){
 		
 		return this.nretries;
 	}
@@ -104,9 +104,14 @@ public class HttpRequester {
 		
 		conn.disconnect();
 		conn = null;
-	}	
+	}
+	
+	public String request() throws Exception{
+		
+		return request(null);
+	}
 				
-	public String request( String body  ) throws MalformedURLException, IOException, InterruptedException{
+	public String request( String body  ) throws Exception{
 							    
 	    try{
 	    	return readResponse( connectAndWriteRequest(body) );
@@ -124,12 +129,12 @@ public class HttpRequester {
 	}
 		
 	
-	private InputStream connectAndWriteRequest( String body ) throws MalformedURLException, IOException {
+	private InputStream connectAndWriteRequest( String body ) throws Exception {
 		
 		//Transform payload and headers by delegating on transformers
-		ctx.setBody(body);
+		ctx.setBody(body);					
 		for( ITransformer transformer:transformers ){
-			
+					
 			if(ctx.skipNext())
 				continue;
 			
@@ -138,6 +143,10 @@ public class HttpRequester {
 			if( !ctx.shouldContinue() )
 				break;
 		}
+		
+		//Check body not null
+		if(ctx.getBody() == null )
+			throw new IllegalStateException("body not set");
 		
 		//Prepare connection
 		URL url = new URL( endpoint );
@@ -215,8 +224,9 @@ public class HttpRequester {
 		}
 		
 		public void setBody( String body ){
-			
+													
 			this.body = body;
+			
 		}
 		
 		public boolean skipNext(){
@@ -246,7 +256,7 @@ public class HttpRequester {
 	 */
 	public interface ITransformer{
 		
-		public void transform( TransformerContext ctx ) throws IOException;
+		public void transform( TransformerContext ctx ) throws Exception;
 		
 	}
 		

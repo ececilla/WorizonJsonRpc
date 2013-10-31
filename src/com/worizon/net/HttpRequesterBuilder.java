@@ -42,7 +42,7 @@ final public class HttpRequesterBuilder {
 		return this;
 	}
 	
-	public HttpRequesterBuilder payloadURLEncode(){
+	public HttpRequesterBuilder bodyURLEncode(){
 		
 		return addTransformer(new ITransformer() {
 			
@@ -54,6 +54,18 @@ final public class HttpRequesterBuilder {
 			}
 		});
 		
+	}
+	
+	public HttpRequesterBuilder bodyTrim(){
+		
+		return addTransformer(new ITransformer() {
+			
+			@Override
+			public void transform(TransformerContext ctx) throws Exception {
+				
+				ctx.setBody( ctx.getBody().trim() );
+			}
+		});
 	}
 	
 	public HttpRequesterBuilder bodyConcat( final String trailingString ){

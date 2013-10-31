@@ -143,5 +143,17 @@ public class HttpRequesterBuilderTest {
 		assertEquals("application/json", server.getHeaders().get("Content-Type"));
 		
 	}
+	
+	public void testPayloadConcatTransformer() throws Exception{
+		
+		http = builder
+				.endpoint("http://localhost:4444/rpc")								
+				.payloadConcat("test2")
+				.build();		
+		http.request("bar");
+		assertEquals("bartest2", server.getBody());
+		assertEquals("application/json", server.getHeaders().get("Content-Type"));
+	}
+	
 
 }

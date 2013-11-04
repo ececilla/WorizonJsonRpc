@@ -47,19 +47,23 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 		this(method, (Object)params);
 	}			
 			
-	
+	/**
+	 * Returns remote method name at which the call will be targeted.
+	 */
 	public String getMethod() {
 		
 		return method;
 	}
 	
-	/*
+	/**
+	 * Returns params container, may be Map or List.
+	 */
 	public Object getParams() {
 		
 		return params;
 	}
 	
-	
+	/*
 	public void addParam(String key, Object value){
 		
 		params.put(key, value);
@@ -97,14 +101,18 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 		}
 		
 		return retval;
-			
-						
-			 
+												 
 	}
 	
+	/**
+	 * Creates JsonRpcRequest object from String.
+	 */
 	public static JsonRpcRequest parse( String request ){
 		
 		JsonRpcRequest req = getDecodingHelper().fromJson(request, JsonRpcRequest.class);
+		if(req.getId() == null || req.getMethod() == null || req.getVersion() == null)
+			throw new IllegalArgumentException("Missing fields in this request");
+		
 		return req;
 	}
 	

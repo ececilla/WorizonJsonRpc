@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -70,12 +71,36 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 		try{
 			
 			JsonRpcRequest req = (JsonRpcRequest)obj;
-			return req.id.longValue() == id.longValue();
+			boolean retval = req.method.equals(this.method);
+			if(!retval)
+				return false;
+			
+			retval =  req.id.longValue() == id.longValue();
+			if(!retval)
+				return false;
+			
+			if( params instanceof Map){
+				for( Object key: ((Map)params).keySet() ){
+					
+					retval = ((Map) params).get(key).equals( ((Map)req.params).get(key) );
+					if(!retval)
+						return false;
+				}
+			}
+			
+			return retval;
+			
+						
 		}catch( ClassCastException cce){
 			return false;
 		}		 
 	}
 	
+	public static JsonRpcRequest parse( String request ){
+		
+		JsonRpcRequest req = getDecodingHelper().fromJson(request, JsonRpcRequest.class);
+		return req;
+	}
 	
 	public String toString(){
 		

@@ -1,18 +1,14 @@
 package com.worizon.jsonrpc;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 
 
 /**
- * 
+ * Object representation of a json rpc request. 
  * 
  * @author enric
  *
@@ -109,7 +105,7 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 	 */
 	public static JsonRpcRequest parse( String request ){
 		
-		JsonRpcRequest req = getDecodingHelper().fromJson(request, JsonRpcRequest.class);
+		JsonRpcRequest req = getDeserializeHelper().fromJson(request, JsonRpcRequest.class);
 		if(req.getId() == null || req.getMethod() == null || req.getVersion() == null)
 			throw new IllegalArgumentException("Missing fields in this request");
 		
@@ -118,7 +114,7 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 	
 	public String toString(){
 		
-		Gson gson = getEncodingHelper();		
+		Gson gson = getSerializeHelper();		
 		return gson.toJson(this);
 	}
 	

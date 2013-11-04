@@ -64,44 +64,89 @@ public class JsonRpcRequestTest {
 				
 	}
 	
-	
+	class A{
+		int x;
+		String y;
+		public A( int x, String y){
+			
+			this.x = x;
+			this.y = y;
+		}
+	}	
+	@Test
 	public void testObjectToString(){
 		
-		class A{
-			int x;
-			String y;
-			public A( int x, String y){
-				
-				this.x = x;
-				this.y = y;
-			}
-		}
+		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("a", new A(5,"test"));
 		JsonRpcRequest request = new JsonRpcRequest("test",params);
 		request.setId(1000L);
 		
-		assertEquals(request.toString(), "{\"method\":\"test\",\"params\":{\"a\":{\"x\":5,\"y\":\"test\"}},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		assertEquals("{\"method\":\"test\",\"params\":{\"a\":{\"x\":5,\"y\":\"test\"}},\"jsonrpc\":\"2.0\",\"id\":1000}", request.toString());
 	}
 	
-	public void testObjectNonExposeFieldToString(){
-		
-		class A{
-			int x;
-			@NonExpose String y;
-			public A( int x, String y){
-				
-				this.x = x;
-				this.y = y;
-			}
+	class B{
+		int x;
+		@NonExpose String y;
+		public B( int x, String y){
+			
+			this.x = x;
+			this.y = y;
 		}
 		
+		@Override
+		public boolean equals( Object obj ){
+			
+			return ((B)obj).x == x && ((B)obj).y.equals(y); 
+		}
+	}
+	@Test
+	public void testObjectNonExposeFieldToString(){
+						
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
-		params.put("a", new A(5,"test"));
-		JsonRpcRequest request = new JsonRpcRequest("test");
+		params.put("b", new B(5,"test"));
+		JsonRpcRequest request = new JsonRpcRequest("test", params);
 		request.setId(1000L);
 		
-		assertEquals(request.toString(), "{\"method\":\"test\",\"params\":{\"a\":{\"x\":5}},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		assertEquals("{\"method\":\"test\",\"params\":{\"b\":{\"x\":5}},\"jsonrpc\":\"2.0\",\"id\":1000}", request.toString());
+	}
+	
+	@Test
+	public void testParseNumbers(){
+		
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"x\":5,\"y\":10.0},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("x", 5.0);
+		params.put("y", 10.0);
+		JsonRpcRequest expected = new JsonRpcRequest("test", params);
+		expected.setId(1000L);
+		assertEquals(expected, req);
+	}
+	
+	@Test
+	public void testParseStrings(){
+		
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"x\":\"foo\",\"y\":\"bar\"},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("x", "foo");
+		params.put("y", "bar");
+		JsonRpcRequest expected = new JsonRpcRequest("test", params);
+		expected.setId(1000L);
+		assertEquals(expected, req);
+	}
+	
+	@Test
+	public void testParseArray(){
+		
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"x\":[1,2,3]},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("x", new Double[]{1d,2d,3d});		
+		JsonRpcRequest expected = new JsonRpcRequest("test", params);
+		expected.setId(1000L);
+		assertEquals(expected, req);
 	}
 	
 

@@ -32,20 +32,21 @@ public class HttpRequesterBuilderTest {
 	public void tearDown() throws Exception{
 		
 		server.finish();
-	}
+	}	
 				
 	@Test
 	public void testEndpoint() throws Exception{
 						
-		http = builder.endpoint("http://localhost:4444/rpc").build();
-		server.finish();
+		http = builder.endpoint("http://localhost:4444/rpc").build();				
 		assertEquals("http://localhost:4444/rpc", http.getEndpoint());				
 	}
+		
 	
 	@Test
 	public void testRequest() throws Exception{
 				
 		http = builder.endpoint("http://localhost:4444/rpc").build();
+			
 		http.request("test");
 		assertEquals("test", server.getBody());
 		assertEquals("application/json", server.getHeaders().get("Content-Type"));

@@ -106,6 +106,14 @@ public class TestServer extends BaseServer {
 	}
 	
 	/**
+	 * Transform body into object with a string-to-object mapper.
+	 */
+	protected Object getBodyTransform(){
+		
+		return body;
+	}
+	
+	/**
 	 * Gets the request's command sent.
 	 */
 	public String getCommand(){

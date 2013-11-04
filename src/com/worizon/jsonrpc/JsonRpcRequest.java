@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 
 
 /**
- * Clase que representa una request de JSON-RPC version 2.0
+ * 
  * 
  * @author enric
  *
@@ -54,7 +54,7 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 	}
 	
 	/*
-	public Map<String, Object> getParams() {
+	public Object getParams() {
 		
 		return params;
 	}
@@ -68,32 +68,38 @@ public class JsonRpcRequest extends JsonRpc implements Serializable {
 	
 	@Override
 	public boolean equals( Object obj ){
-		try{
+		
+		if(obj == null)
+			return false;
+		else if(obj == this)
+			return true;
+		else if( !(obj instanceof JsonRpcRequest) )
+			return false;
+		
+		
 			
-			JsonRpcRequest req = (JsonRpcRequest)obj;
-			boolean retval = req.method.equals(this.method);
-			if(!retval)
-				return false;
-			
-			retval =  req.id.longValue() == id.longValue();
-			if(!retval)
-				return false;
-			
-			if( params instanceof Map){
-				for( Object key: ((Map)params).keySet() ){
-					
-					retval = ((Map) params).get(key).equals( ((Map)req.params).get(key) );
-					if(!retval)
-						return false;
-				}
+		JsonRpcRequest req = (JsonRpcRequest)obj;
+		boolean retval = req.method.equals(this.method);
+		if(!retval)
+			return false;
+		
+		retval =  req.id.longValue() == id.longValue();
+		if(!retval)
+			return false;
+		
+		if( params instanceof Map){
+			for( Object key: ((Map)params).keySet() ){
+				
+				retval = ((Map) params).get(key).equals( ((Map)req.params).get(key) );
+				if(!retval)
+					return false;
 			}
-			
-			return retval;
+		}
+		
+		return retval;
 			
 						
-		}catch( ClassCastException cce){
-			return false;
-		}		 
+			 
 	}
 	
 	public static JsonRpcRequest parse( String request ){

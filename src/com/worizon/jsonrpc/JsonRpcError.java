@@ -1,9 +1,15 @@
 package com.worizon.jsonrpc;
 
+/**
+ * This class encapsulates a json rpc error.Errors can be jsonrpc level or domain level errors.
+ * 
+ * @author ececilla
+ */
 public class JsonRpcError {
 	
 	private int code;
 	private String message;
+	private Object data;
 	
 	public int getCode() {
 		
@@ -23,6 +29,11 @@ public class JsonRpcError {
 	public void setMessage(String message) {
 		
 		this.message = message;
+	}
+	
+	public Object getData(){
+		
+		return data;
 	}
 
 	public JsonRpcError( int code, String message ){

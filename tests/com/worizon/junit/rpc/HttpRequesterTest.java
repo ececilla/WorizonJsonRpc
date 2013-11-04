@@ -66,6 +66,31 @@ public class HttpRequesterTest {
 		
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseVersionMissing() throws Exception{
+		
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"id\":1000}");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseMethodMissing() throws Exception{
+		
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"jsonrpc\":\"2.0\",\"id\":1000}");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseIdMissing() throws Exception{
+		
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"jsonrpc\":\"2.0\"}");
+	}
+	
+	@Test
+	public void testParseOK() throws Exception{
+		
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		assertNotNull(req);
+	}
+	
 	@Test
 	public void testRequestJson() throws Exception{
 		

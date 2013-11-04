@@ -2,6 +2,7 @@ package com.worizon.junit.jsonrequest;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -114,12 +115,12 @@ public class JsonRpcRequestTest {
 	@Test
 	public void testParseNumbers(){
 		
-		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"x\":5,\"y\":10.0},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test_numbers\",\"params\":{\"x\":5,\"y\":10.0},\"jsonrpc\":\"2.0\",\"id\":1000}");
 		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("x", 5.0);
 		params.put("y", 10.0);
-		JsonRpcRequest expected = new JsonRpcRequest("test", params);
+		JsonRpcRequest expected = new JsonRpcRequest("test_numbers", params);
 		expected.setId(1000L);
 		assertEquals(expected, req);
 	}
@@ -127,12 +128,12 @@ public class JsonRpcRequestTest {
 	@Test
 	public void testParseStrings(){
 		
-		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"x\":\"foo\",\"y\":\"bar\"},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test_strings\",\"params\":{\"x\":\"foo\",\"y\":\"bar\"},\"jsonrpc\":\"2.0\",\"id\":1000}");
 		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("x", "foo");
 		params.put("y", "bar");
-		JsonRpcRequest expected = new JsonRpcRequest("test", params);
+		JsonRpcRequest expected = new JsonRpcRequest("test_strings", params);
 		expected.setId(1000L);
 		assertEquals(expected, req);
 	}
@@ -140,14 +141,18 @@ public class JsonRpcRequestTest {
 	@Test
 	public void testParseArray(){
 		
-		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"x\":[1,2,3]},\"jsonrpc\":\"2.0\",\"id\":1000}");
+		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test_array\",\"params\":{\"x\":[1,2,3]},\"jsonrpc\":\"2.0\",\"id\":1000}");
 		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
-		params.put("x", new Double[]{1d,2d,3d});		
-		JsonRpcRequest expected = new JsonRpcRequest("test", params);
+		ArrayList<Double> values = new ArrayList<Double>();
+		values.add(1.0d);
+		values.add(2.0d);
+		values.add(3.0d);
+		params.put("x", values);		
+		JsonRpcRequest expected = new JsonRpcRequest("test_array", params);
 		expected.setId(1000L);
 		assertEquals(expected, req);
 	}
-	
+		
 
 }

@@ -8,7 +8,7 @@ import com.worizon.jsonrpc.gson.NonExposeExclusionEstrategy;
 
 /**
  * 
- * Clase base para las clases request y response del protocolo json-rpc.
+ * Base class for JsonRpc request and response objects. 
  * 
  * @author enric
  *
@@ -41,12 +41,12 @@ public abstract class JsonRpc {
 		this.id = id;
 	}		
 	
-	protected static Gson getEncodingHelper(){
+	protected static Gson getSerializeHelper(){
 				
 		return encodingBuilder.create();
 	}
 	
-	protected static Gson getDecodingHelper(){
+	protected static Gson getDeserializeHelper(){
 				
 		return decodingBuilder.create();
 	}

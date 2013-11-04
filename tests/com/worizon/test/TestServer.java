@@ -79,6 +79,14 @@ public class TestServer extends BaseServer {
 	private String body;
 	private String command;
 	private int idleTime;
+	private IMapper mapper = new IMapper() {
+		
+		@Override
+		public Object map(String obj) {
+			
+			return obj;
+		}
+	};
 	
 	/**
 	 * Constructor
@@ -105,12 +113,17 @@ public class TestServer extends BaseServer {
 		return body;
 	}
 	
+	public void setBodyMapper( IMapper mapper ){
+		
+		this.mapper = mapper;
+	}
+	
 	/**
 	 * Transform body into object with a string-to-object mapper.
 	 */
-	protected Object getBodyTransform(){
+	public Object getBodyAsObject(){
 		
-		return body;
+		return mapper.map(body);
 	}
 	
 	/**
@@ -181,7 +194,7 @@ public class TestServer extends BaseServer {
 				if( mi.getMethod().getName().equals(requestMethod) ){					
 					try{
 						String body = (String)mi.getArguments()[0];//body is expected as first parameter
-						if(!body.endsWith("\n")){//make request end with \n if it doesn't as the server reads lines ended with \n or \r or \n\r
+						if(!body.endsWith("\n")){//make request, make body end with \n if it doesn't since the server reads lines ended with \n or \r or \n\r
 							body += "\n";
 							mi.getArguments()[0] = body;
 						}
@@ -243,6 +256,11 @@ public class TestServer extends BaseServer {
 			    }
 			}
 		}					
+	}
+	
+	public interface IMapper{
+		
+		public Object map( String str );
 	}
 	
 	/**

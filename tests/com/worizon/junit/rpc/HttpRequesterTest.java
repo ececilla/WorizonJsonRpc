@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.worizon.jsonrpc.JsonRpcRequest;
 import com.worizon.net.HttpRequester;
 import com.worizon.test.TestServer;
 
@@ -65,6 +66,26 @@ public class HttpRequesterTest {
 		
 	}
 	
+	@Test
+	public void testRequestJson() throws Exception{
+		
+		server.setBodyMapper(new TestServer.IMapper() {
+			
+			@Override
+			public Object map(String str) {
+				
+				return JsonRpcRequest.parse(str);
+			}
+		});
+		http.doRequest("{\"method\":\"test\",\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"jsonrpc\":\"2.0\",\"id\":1000}");						
+		JsonRpcRequest req = (JsonRpcRequest)server.getBodyAsObject();
+		assertNotNull(req);
+		assertEquals("test", req.getMethod());
+		assertEquals("2.0",req.getVersion());
+		assertEquals(1000d, req.getId().longValue(),0.001);		
+		
+	}
+	
 	@Test(expected=ConnectException.class)
 	public void testRequestConnectionRefused() throws Exception{
 		
@@ -83,6 +104,7 @@ public class HttpRequesterTest {
 		requester.setReadTimeout(1000);
 		requester.request("test");			
 	}
+		
 	
 	
 

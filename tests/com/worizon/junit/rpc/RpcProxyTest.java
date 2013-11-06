@@ -13,6 +13,8 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Test;
 
+import com.worizon.jsonrpc.JsonRpcException;
+import com.worizon.jsonrpc.RemoteException;
 import com.worizon.jsonrpc.RpcProxy;
 import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
@@ -291,6 +293,169 @@ public class RpcProxyTest {
 		A a = new A(2,3);
 		B expected = new B("test",23.45f);
 		assertEquals(expected, remote.op(a));
-	}		
+	}	
+	
+	@Remote
+	interface My9RemoteInterface{
+							
+		public Void op();// A object -> Remote operation op -> B object
+		
+	}
+	
+	@Test
+	public void testJsonRpcExceptionParseError() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-32700,\"message\":\"Parse error\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		RpcProxy proxy = new RpcProxy(requester);						
+		try{
+			proxy.create(My9RemoteInterface.class).op();
+			assertTrue(false);
+		}catch(JsonRpcException ex){
+			
+			assertEquals(-32700,ex.getCode());
+			assertEquals("Parse error",ex.getMessage());
+		}
+	}	
+	
+	@Test
+	public void testJsonRpcExceptionInvalidRequest() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-32600,\"message\":\"Invalid request\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		RpcProxy proxy = new RpcProxy(requester);						
+		try{
+			proxy.create(My9RemoteInterface.class).op();
+			assertTrue(false);
+		}catch(JsonRpcException ex){
+			
+			assertEquals(-32600,ex.getCode());
+			assertEquals("Invalid request",ex.getMessage());
+		}
+	}
+	
+	@Test
+	public void testJsonRpcExceptionMethodNotFound() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-32601,\"message\":\"Method not found\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		RpcProxy proxy = new RpcProxy(requester);						
+		try{
+			proxy.create(My9RemoteInterface.class).op();
+			assertTrue(false);
+		}catch(JsonRpcException ex){
+			
+			assertEquals(-32601,ex.getCode());
+			assertEquals("Method not found",ex.getMessage());
+		}
+	}
+	
+	@Test
+	public void testJsonRpcExceptionInvalidParams() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-32602,\"message\":\"Invalid params\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		RpcProxy proxy = new RpcProxy(requester);						
+		try{
+			proxy.create(My9RemoteInterface.class).op();
+			assertTrue(false);
+		}catch(JsonRpcException ex){
+			
+			assertEquals(-32602,ex.getCode());
+			assertEquals("Invalid params",ex.getMessage());
+		}
+	}
+	
+	@Test
+	public void testJsonRpcExceptionInternalError() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-32603,\"message\":\"Internal error\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		RpcProxy proxy = new RpcProxy(requester);						
+		try{
+			proxy.create(My9RemoteInterface.class).op();
+			assertTrue(false);
+		}catch(JsonRpcException ex){
+			
+			assertEquals(-32603,ex.getCode());
+			assertEquals("Internal error",ex.getMessage());
+		}
+	}
+	
+	@Test
+	public void testRemoteException() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-5,\"message\":\"Domain error\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		RpcProxy proxy = new RpcProxy(requester);						
+		try{
+			proxy.create(My9RemoteInterface.class).op();
+			assertTrue(false);
+		}catch(RemoteException ex){
+			
+			assertEquals(-5,ex.getCode());
+			assertEquals("Domain error",ex.getMessage());
+		}
+	}
 
 }

@@ -10,22 +10,22 @@ import com.worizon.jsonrpc.gson.NonExposeExclusionEstrategy;
  * 
  * Base class for JsonRpc request and response objects. 
  * 
- * @author enric
+ * @author Enric Cecilla
  *
  */
 public abstract class JsonRpc {
 	
 	private static BooleanTypeAdapter booleanTypeAdapter = new BooleanTypeAdapter(); 
 	private static ExclusionStrategy nonExposeStrategy = new NonExposeExclusionEstrategy();	
-	private static GsonBuilder encodingBuilder = new GsonBuilder();
-	private static GsonBuilder decodingBuilder = new GsonBuilder();
+	private static GsonBuilder serializeBuilder = new GsonBuilder();
+	private static GsonBuilder deserializeBuilder = new GsonBuilder();
 	static{
 		
-		encodingBuilder.setExclusionStrategies(nonExposeStrategy);
-		encodingBuilder.registerTypeAdapter(Boolean.class, booleanTypeAdapter);
-		encodingBuilder.registerTypeAdapter(boolean.class, booleanTypeAdapter);		
-		decodingBuilder.registerTypeAdapter(Boolean.class, booleanTypeAdapter);
-		decodingBuilder.registerTypeAdapter(boolean.class, booleanTypeAdapter);
+		serializeBuilder.setExclusionStrategies(nonExposeStrategy);
+		serializeBuilder.registerTypeAdapter(Boolean.class, booleanTypeAdapter);
+		serializeBuilder.registerTypeAdapter(boolean.class, booleanTypeAdapter);		
+		deserializeBuilder.registerTypeAdapter(Boolean.class, booleanTypeAdapter);
+		deserializeBuilder.registerTypeAdapter(boolean.class, booleanTypeAdapter);
 	}
 	
 	protected String jsonrpc = null;	
@@ -43,12 +43,12 @@ public abstract class JsonRpc {
 	
 	protected static Gson getSerializeHelper(){
 				
-		return encodingBuilder.create();
+		return serializeBuilder.create();
 	}
 	
 	protected static Gson getDeserializeHelper(){
 				
-		return decodingBuilder.create();
+		return deserializeBuilder.create();
 	}
 		
 	public String getVersion() {

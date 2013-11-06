@@ -1,13 +1,9 @@
 package com.worizon.jsonrpc;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +12,8 @@ import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
+
+import static com.worizon.jsonrpc.Consts.*;
 
 /**
  * 
@@ -90,11 +88,20 @@ public class RpcProxy{
 	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws Exception{
 		
 		JsonRpcRequest req = new JsonRpcRequest(method, params);		
-		String response = http.request( req.toString() );//blocking call
-		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( response, clazz );		
-		if(res.getError() != null)
-			throw new JsonRpcException( res.getError() );
-		else
+		String respStr = http.request( req.toString() );//blocking call
+		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( respStr, clazz );		
+		if(res.getError() != null){
+			switch( res.getError().getCode() ){
+				
+				case INVALID_REQUEST_CODE:
+				case METHOD_NOT_FOUND_CODE:
+				case INVALID_PARAMS_CODE:
+				case INTERNAL_ERROR_CODE:
+				case PARSE_ERROR_CODE:	
+					throw new JsonRpcException( res.getError() ); 
+			}
+			throw new RemoteException( res.getError() );
+		}else
 			return res.getResult();	
 	}
 			

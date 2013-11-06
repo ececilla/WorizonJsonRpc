@@ -1,5 +1,14 @@
 package com.worizon.jsonrpc;
 
+/**
+ * Constants for JSONRPC low level code errors. The error object contains two fields: code and message.
+ * JSONRPC spec has several code numbers reserved to signal different transport errors and 
+ * server implementations which honors JSONRPC 2.0 SPEC must use these error codes.
+ * 
+ * 
+ * @see <a href="http://www.jsonrpc.org/specification#error_object">jsonrpc error codes</a>
+ * @author Enric Cecilla
+ */
 public final class Consts {
 	
 	private Consts(){}

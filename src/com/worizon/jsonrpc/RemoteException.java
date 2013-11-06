@@ -36,10 +36,10 @@ public class RemoteException extends RuntimeException {
 			return error.getCode();
 		}
 		
+		@Override
 		public String getMessage(){
 			
 			return error.getMessage();
-		}
-		
+		}		
 		
 }

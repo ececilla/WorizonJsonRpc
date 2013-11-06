@@ -1,7 +1,7 @@
 package com.worizon.jsonrpc;
 
 @SuppressWarnings("serial")
-public class JsonRpcException extends Exception {
+public class JsonRpcException extends RuntimeException {
 	
 		private JsonRpcError error = null;
 	
@@ -31,5 +31,15 @@ public class JsonRpcException extends Exception {
 			super( cause );
 		}
 		
+		public int getCode(){
+			
+			return error.getCode();
+		}
+		
+		@Override
+		public String getMessage(){
+			
+			return error.getMessage();
+		}		
 		
 }

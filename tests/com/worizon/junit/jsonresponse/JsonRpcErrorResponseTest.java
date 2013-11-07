@@ -32,6 +32,31 @@ public class JsonRpcErrorResponseTest {
 		assertEquals("{code:-100, message:'test error'}", res.getError().toString() );
 		assertNull(res.getResult());		
 	}
+	
+	@Test
+	public void testIsCustomErrorTrue() throws Exception{
+		
+		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-100, \"message\":\"test error\"}, \"id\": 2}";		
+		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
+		assertEquals( -100, res.getError().getCode() );
+		assertEquals("test error", res.getError().getMessage());
+		assertEquals("{code:-100, message:'test error'}", res.getError().toString() );
+		assertTrue(res.getError().isCustomError());
+		assertNull(res.getResult());		
+	}
+	
+	@Test
+	public void testIsCustomErrorFalse() throws Exception{
+		
+		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-32601, \"message\":\"method not found\"}, \"id\": 2}";		
+		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
+		assertEquals( -32601, res.getError().getCode() );
+		assertEquals("method not found", res.getError().getMessage());
+		assertEquals("{code:-32601, message:'method not found'}", res.getError().toString() );
+		assertFalse(res.getError().isCustomError());
+		assertNull(res.getResult());		
+	}
+	
 		
 	@Test
 	public void testErrorWithCodeMessageNull() throws Exception{

@@ -18,6 +18,7 @@ public class JsonRpcErrorResponseTest {
 		assertEquals( -100, res.getError().getCode() );
 		assertEquals("test error", res.getError().getMessage());	
 		assertEquals("foo", (String)res.getError().getData());
+		assertEquals("{code:-100, message:'test error', data:foo}", res.getError().toString() );
 		assertNull(res.getResult());		
 	}
 	
@@ -27,7 +28,8 @@ public class JsonRpcErrorResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-100, \"message\":\"test error\"}, \"id\": 2}";		
 		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
 		assertEquals( -100, res.getError().getCode() );
-		assertEquals("test error", res.getError().getMessage());		
+		assertEquals("test error", res.getError().getMessage());
+		assertEquals("{code:-100, message:'test error'}", res.getError().toString() );
 		assertNull(res.getResult());		
 	}
 		
@@ -38,6 +40,7 @@ public class JsonRpcErrorResponseTest {
 		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
 		assertEquals( -100, res.getError().getCode() );
 		assertNull(res.getError().getMessage());				
+		assertEquals("{code:-100, message:'null'}", res.getError().toString() );
 		assertNull(res.getResult());		
 	}
 	

@@ -3,6 +3,7 @@ package com.worizon.jsonrpc;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -50,10 +51,10 @@ public class JsonRpcResponse<T> extends JsonRpc {
 		}else if( root.has("error") ){
 			if(!root.get("error").isJsonNull()){
 				
-				JsonObject jsonError = root.get("error").getAsJsonObject();
-				if( jsonError.has("code") && jsonError.has("message")){
+				JsonElement errorJsonElement = root.get("error");				
+				if( errorJsonElement.getAsJsonObject().has("code") && errorJsonElement.getAsJsonObject().has("message")){
 					
-					String error_str = gson.toJson(root.get("error"));
+					String error_str = gson.toJson( errorJsonElement );
 					error = gson.fromJson(error_str, JsonRpcError.class);
 				}else{
 					throw new JsonRpcException("Error code or message not found");

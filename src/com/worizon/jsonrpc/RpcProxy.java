@@ -91,7 +91,7 @@ public class RpcProxy{
 		String respStr = http.request( req.toString() );//blocking call
 		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( respStr, clazz );		
 		if(res.getError() != null){
-			if(res.getError().isDomainError())
+			if(res.getError().isCustomError())
 				throw new RemoteException( res.getError() );
 			else
 				throw new JsonRpcException( res.getError() );			

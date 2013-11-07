@@ -97,9 +97,9 @@ public class JsonRpcError {
 	public String toString(){
 		
 		if(data == null)
-			return "{code:" + code + ", message:" + message + "}";
+			return "{code:" + code + ", message:'" + message + "'}";
 		else
-			return "{code:" + code + ", message:" + message + ", data:" + data +"}";
+			return "{code:" + code + ", message:'" + message + "', data:" + data +"}";
 	}
 
 }

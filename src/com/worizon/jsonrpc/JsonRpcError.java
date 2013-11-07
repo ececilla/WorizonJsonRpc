@@ -42,7 +42,7 @@ public class JsonRpcError {
 	 * Checks if this error object is a domain level error.
 	 * @return true if the error is a domain level error.
 	 */
-	public boolean isDomainError(){
+	public boolean isCustomError(){
 		
 		switch( getCode() ){			
 			case INVALID_REQUEST_CODE:

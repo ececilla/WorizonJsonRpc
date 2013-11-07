@@ -91,16 +91,10 @@ public class RpcProxy{
 		String respStr = http.request( req.toString() );//blocking call
 		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( respStr, clazz );		
 		if(res.getError() != null){
-			switch( res.getError().getCode() ){
-				
-				case INVALID_REQUEST_CODE:
-				case METHOD_NOT_FOUND_CODE:
-				case INVALID_PARAMS_CODE:
-				case INTERNAL_ERROR_CODE:
-				case PARSE_ERROR_CODE:	
-					throw new JsonRpcException( res.getError() ); 
-			}
-			throw new RemoteException( res.getError() );
+			if(res.getError().isDomainError())
+				throw new RemoteException( res.getError() );
+			else
+				throw new JsonRpcException( res.getError() );			
 		}else
 			return res.getResult();	
 	}

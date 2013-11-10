@@ -17,12 +17,63 @@ import static com.worizon.jsonrpc.Consts.*;
 
 /**
  * 
- * Interfaz de servicio para llamadas remotas sobre HTTP. En el contexto de este proyecto 
- * las llamadas remotas se haran sobre el protocolo HTTP, pasando dichas invocaciones como
- * mensajes XML, Json u otro mensaje en forma de texto..
+ * Proxy utility to make remote procedure calls to JSON-RPC servers. To use the proxy method to make
+ * rpc calls your interface must be annotated with @Remote. Some examples using this class.
  * 
+ * Ex1:
  * 
- * @author enric
+ * <pre>
+ * @Remote
+ * interface MyRemoteInterface{
+ *		
+ *		public Void doTask();
+ * };
+ * 
+ * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
+ * MyRemoteInterface service = proxy.create(MyRemoteInterface.class);
+ * service.doTask(); ==> remote procedure
+ * </pre>	
+ * Ex2:
+ * <pre>
+ * @Remote
+ * interface MyRemoteInterface{
+ * 		
+ * 		public int sum(int x, y);
+ * }
+ * 
+ * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
+ * MyRemoteInterface service = proxy.create(MyRemoteInterface.class);
+ * int result = service.sum(3,4); ==> parameters ordered by position {params:[3,4]}
+ * </pre>
+ * Ex3:
+ * <pre>
+ * @Remote
+ * interface MyRemoteInterface{
+ * 		
+ * 		@RemoteParams({"x","y"})
+ * 		public int  sum(int x, int y);
+ * }
+ * 
+ * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
+ * MyRemoteInterface service = proxy.create(MyRemoteInterface.class);
+ * int result = service.sum(3,4); ==> parameters ordered by name {params:{x:3,y:4}}
+ * </pre>
+ * Ex4:
+ * 
+ * @Remote
+ * interface MyRemoteInterface{
+ * 		
+ * 		@RemoteProcName("my_sum")
+ * 		public int sum(int x, int y);
+ * }
+ * 
+ * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
+ * MyRemoteInterface service = proxy.create(MyRemoteInterface.class);
+ * int result = service.sum(3,4); ==> parameters ordered by position {method:"my_sum",params:[3,4]}
+ * </pre>
+ * 
+ * @author Enric Cecilla
+ * @since 1.0.0
  *
  */
 public class RpcProxy{

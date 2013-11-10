@@ -55,14 +55,7 @@ public class JsonRpcError {
 				return true;
 		}
 	}
-	
-	/**
-	 * Sets the code of the error.
-	 */
-	public void setCode(int code) {
 		
-		this.code = code;
-	}
 	
 	/**
 	 * Gets the message of this error.
@@ -71,14 +64,7 @@ public class JsonRpcError {
 		
 		return message;
 	}
-
-	/**
-	 * Sets the message of this error.
-	 */
-	public void setMessage(String message) {
-		
-		this.message = message;
-	}
+	
 	
 	/**
 	 * Gets the data of this error. This field is optional for error responses.

@@ -3,7 +3,6 @@ package com.worizon.junit.rpc;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +19,7 @@ import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
-import com.worizon.net.HttpRequesterBuilder;
-import com.worizon.net.HttpRequester.TransformerContext;
+
 
 public class RpcProxyTest {
 	
@@ -297,6 +295,37 @@ public class RpcProxyTest {
 	
 	@Remote
 	interface My9RemoteInterface{
+		
+		@RemoteProcName("dummy")
+		public Void op();
+		
+	}
+	
+	@Test
+	public void testRemoteInterfaceProcName() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{
+				
+				String request = requestCapture.getValue();				
+				assertTrue( request.startsWith("{\"method\":\"dummy\",\"jsonrpc\":\"2.0\"") );
+				return "{\"jsonrpc\": \"2.0\", \"result\": null, \"id\": 2}";
+				
+			}
+		});		
+		EasyMock.replay(requester);
+				
+		RpcProxy proxy = new RpcProxy(requester);
+		My9RemoteInterface remote = proxy.create(My9RemoteInterface.class);
+		remote.op();						
+	}	
+	
+	@Remote
+	interface My10RemoteInterface{
 							
 		public Void op();// A object -> Remote operation op -> B object
 		
@@ -319,7 +348,7 @@ public class RpcProxyTest {
 		EasyMock.replay(requester);				
 		RpcProxy proxy = new RpcProxy(requester);						
 		try{
-			proxy.create(My9RemoteInterface.class).op();
+			proxy.create(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -345,7 +374,7 @@ public class RpcProxyTest {
 		EasyMock.replay(requester);				
 		RpcProxy proxy = new RpcProxy(requester);						
 		try{
-			proxy.create(My9RemoteInterface.class).op();
+			proxy.create(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -371,7 +400,7 @@ public class RpcProxyTest {
 		EasyMock.replay(requester);				
 		RpcProxy proxy = new RpcProxy(requester);						
 		try{
-			proxy.create(My9RemoteInterface.class).op();
+			proxy.create(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -397,7 +426,7 @@ public class RpcProxyTest {
 		EasyMock.replay(requester);				
 		RpcProxy proxy = new RpcProxy(requester);						
 		try{
-			proxy.create(My9RemoteInterface.class).op();
+			proxy.create(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -423,7 +452,7 @@ public class RpcProxyTest {
 		EasyMock.replay(requester);				
 		RpcProxy proxy = new RpcProxy(requester);						
 		try{
-			proxy.create(My9RemoteInterface.class).op();
+			proxy.create(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -449,7 +478,7 @@ public class RpcProxyTest {
 		EasyMock.replay(requester);				
 		RpcProxy proxy = new RpcProxy(requester);						
 		try{
-			proxy.create(My9RemoteInterface.class).op();
+			proxy.create(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(RemoteException ex){
 			

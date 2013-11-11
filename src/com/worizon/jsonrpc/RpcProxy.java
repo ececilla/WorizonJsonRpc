@@ -1,13 +1,17 @@
 package com.worizon.jsonrpc;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.worizon.jsonrpc.annotations.LocalException;
+import com.worizon.jsonrpc.annotations.LocalExceptions;
 import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
@@ -72,13 +76,15 @@ import static com.worizon.jsonrpc.Consts.*;
  * int result = service.sum(3,4); ==> parameters ordered by position {method:"my_sum",params:[3,4]}
  * </pre>
  * 
+ * 
  * @author Enric Cecilla
  * @since 1.0.0
  *
  */
 public class RpcProxy{
 	
-	private  HttpRequester http;			
+	private  HttpRequester http;	
+	private Map<Integer, Class<? extends Throwable>> exceptions = new HashMap<Integer, Class<? extends Throwable>>();
 	
 	public RpcProxy( String endpoint ){
 		
@@ -96,6 +102,14 @@ public class RpcProxy{
 		if( !clazz.isAnnotationPresent(Remote.class) ){
 			
 			throw new IllegalArgumentException("This interface is not annotated as @Remote");
+		}
+		
+		if( clazz.isAnnotationPresent(LocalExceptions.class) ){
+			
+			LocalException exceptionAnnotations[] = clazz.getAnnotation(LocalExceptions.class).value();
+			for( LocalException exceptionAnnotation:exceptionAnnotations){
+				exceptions.put(exceptionAnnotation.code(), exceptionAnnotation.exception());
+			}
 		}
 		
 		return (T)Proxy.newProxyInstance(	
@@ -136,26 +150,33 @@ public class RpcProxy{
 		
 	}
 	
-	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws Exception{
+	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws Throwable{
 		
 		JsonRpcRequest req = new JsonRpcRequest(method, params);		
 		String respStr = http.request( req.toString() );//blocking call
 		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( respStr, clazz );		
 		if(res.getError() != null){
-			if(res.getError().isCustomError())
-				throw new RemoteException( res.getError() );
-			else
+			if(res.getError().isCustomError()){
+				Class<? extends Throwable> exceptionClass = exceptions.get(res.getError().getCode());
+				if( exceptionClass != null ){
+					
+					throw exceptionClass.getConstructor(String.class)
+										.newInstance(res.getError().getMessage());
+					
+				}else
+					throw new RemoteException( res.getError() );
+			}else
 				throw new JsonRpcException( res.getError() );			
 		}else
 			return res.getResult();	
 	}
 			
-	public synchronized <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws Exception{
+	public synchronized <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws Throwable{
 		
 		return call(method, (Object)params, clazz);
 	}
 	
-	public synchronized <T> T call(String method, List<Object> params, Class<T> clazz ) throws Exception{
+	public synchronized <T> T call(String method, List<Object> params, Class<T> clazz ) throws Throwable{
 		
 		return call(method, (Object)params, clazz);
 	}

@@ -15,6 +15,8 @@ import org.junit.Test;
 import com.worizon.jsonrpc.JsonRpcException;
 import com.worizon.jsonrpc.RemoteException;
 import com.worizon.jsonrpc.RpcProxy;
+import com.worizon.jsonrpc.annotations.LocalException;
+import com.worizon.jsonrpc.annotations.LocalExceptions;
 import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
@@ -486,5 +488,83 @@ public class RpcProxyTest {
 			assertEquals("Domain error",ex.getMessage());
 		}
 	}
+	
+	public static class MyDummyException extends RuntimeException{
+		
+		public MyDummyException(){
+			super();
+		}
+		
+		public MyDummyException(String message){
+			super(message);
+		}
+	}
+	
+	@Remote
+	@LocalExceptions({@LocalException(code=-5,exception=MyDummyException.class)})
+	interface My11RemoteInterface{
+							
+		public Void op();// A object -> Remote operation op -> B object		
+	}
+	
+	@Test
+	public void testRemoteExceptionMapedLocalException() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-5,\"message\":\"Domain error\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		RpcProxy proxy = new RpcProxy(requester);						
+		try{
+			proxy.create(My11RemoteInterface.class).op();
+			assertTrue(false);
+		}catch(MyDummyException ex){
+						
+			assertEquals("Domain error",ex.getMessage());
+		}
+	}
+	
+	@Remote
+	@LocalExceptions({@LocalException(code=-5,exception=MyDummyException.class)})
+	interface My12RemoteInterface{
+							
+		public Void op();// A object -> Remote operation op -> B object		
+	}
+	
+	@Test
+	public void testRemoteExceptionMapedLocalExceptionFailure() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-6,\"message\":\"Domain error\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		RpcProxy proxy = new RpcProxy(requester);						
+		try{
+			proxy.create(My12RemoteInterface.class).op();
+			assertTrue(false);
+		}catch(RemoteException ex){
+						
+			assertEquals(-6, ex.getCode());
+			assertEquals("Domain error",ex.getMessage());
+			
+		}
+	}
+	
 
 }

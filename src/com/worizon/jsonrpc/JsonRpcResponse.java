@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 
@@ -28,7 +29,7 @@ public class JsonRpcResponse<T> extends JsonRpc {
 	private T result = null;
 	private JsonRpcError error = null;	
 	
-	public JsonRpcResponse( String json_str, Class<? extends T> clazz ) throws InstantiationException, IllegalAccessException, JsonRpcException {
+	public JsonRpcResponse( String json_str, Class<? extends T> clazz ) throws InstantiationException, IllegalAccessException {
 				
 		JsonParser parser = new JsonParser();
 		JsonObject root = parser.parse(json_str).getAsJsonObject();				
@@ -44,8 +45,9 @@ public class JsonRpcResponse<T> extends JsonRpc {
 		Gson gson = getDeserializeHelper();
 		if( root.has("result") ){
 			if( !root.get("result").isJsonNull() ){ 
-				
+								
 				result = gson.fromJson(root.get("result"), clazz);
+				
 			}else
 				result = null;			
 		}else if( root.has("error") ){

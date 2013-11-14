@@ -75,5 +75,35 @@ public class BooleanTypeAdapterTest {
 		assertEquals(false, b.resultPri);
 		assertEquals(false, b.resultObj);
 	}
+	
+	@Test
+	public void testParseWithSpaces() throws Exception{
+		
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Boolean.class, new BooleanTypeAdapter());
+		builder.registerTypeAdapter(boolean.class, new BooleanTypeAdapter());
+		String message = "{\"resultPri\":0,\"resultObj\":           0}";
+		Gson gson = builder.create();
+		Foo b = (Foo)gson.fromJson(message, Foo.class);
+		
+		
+		assertEquals(false, b.resultPri);
+		assertEquals(false, b.resultObj);
+	}
+	
+	@Test
+	public void testParseWithSpacesAndTabs() throws Exception{
+		
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Boolean.class, new BooleanTypeAdapter());
+		builder.registerTypeAdapter(boolean.class, new BooleanTypeAdapter());
+		String message = "{		\"resultPri\"	:	0,      \"resultObj\"    :						0}";
+		Gson gson = builder.create();
+		Foo b = (Foo)gson.fromJson(message, Foo.class);
+		
+		
+		assertEquals(false, b.resultPri);
+		assertEquals(false, b.resultObj);
+	}
 
 }

@@ -21,6 +21,7 @@
  * public int sum(int x, int y); sum(76,23); ==> {jsonrpc:"2.0", method:"sum", params:{x:76,y:23}, id:88678}
  * 
  * 
- *  
+ * @author Enric Cecilla
+ * @since 1.0.0 
  */
 package com.worizon.jsonrpc.annotations;

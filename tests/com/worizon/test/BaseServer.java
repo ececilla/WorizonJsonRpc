@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 
 /**
@@ -43,7 +42,9 @@ public abstract class BaseServer extends Thread {
 		interrupt();		
 		if( clientSocket != null && clientSocket.isConnected() )
 			clientSocket.close();
-		serverSocket.close();			
+		serverSocket.close();
+		if(isAlive())
+			try{ join(); }catch(InterruptedException ie){}
 	}	
 	
 	/**

@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.worizon.jsonrpc.TransformerException;
 import com.worizon.net.HttpRequester;
 import com.worizon.net.HttpRequesterBuilder;
 import com.worizon.net.HttpRequester.TransformerContext;
@@ -73,6 +74,27 @@ public class HttpRequesterBuilderTest {
 				}).build();		
 		http.request("bar");
 		assertEquals("foo", server.getBody());
+		
+	}
+	
+	@Test
+	public void testAddTransformerWithException() throws Throwable{
+		http = builder
+				.endpoint("http://localhost:4444/rpc")				
+				.addTransformer(new HttpRequester.ITransformer() {
+					
+					@Override
+					public void transform(TransformerContext ctx) throws Throwable{						
+						
+						throw new IllegalStateException("Illegal state to apply this transformer");
+					}
+				}).build();		
+		try{
+			http.request("bar");
+		}catch(TransformerException re){
+			
+			assertTrue( re.getCause() instanceof IllegalStateException );
+		}
 		
 	}
 	

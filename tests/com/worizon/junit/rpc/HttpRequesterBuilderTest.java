@@ -66,7 +66,7 @@ public class HttpRequesterBuilderTest {
 				.addTransformer(new HttpRequester.ITransformer() {
 					
 					@Override
-					public void transform(TransformerContext ctx) throws Exception {						
+					public void transform(TransformerContext ctx)  {						
 						
 						ctx.setBody("foo\n");
 					}
@@ -84,7 +84,7 @@ public class HttpRequesterBuilderTest {
 				.addTransformer(new HttpRequester.ITransformer() {
 					
 					@Override
-					public void transform(TransformerContext ctx) throws Exception {						
+					public void transform(TransformerContext ctx){						
 						
 						ctx.setBody("foo\n");
 					}
@@ -92,7 +92,7 @@ public class HttpRequesterBuilderTest {
 				.addTransformer(new HttpRequester.ITransformer() {
 					
 					@Override
-					public void transform(TransformerContext ctx) throws Exception {
+					public void transform(TransformerContext ctx) {
 							
 						assertEquals("foo\n",ctx.getBody());
 						ctx.putHeader("Content-type", "text/xml");
@@ -114,7 +114,7 @@ public class HttpRequesterBuilderTest {
 				.addTransformer(new HttpRequester.ITransformer() {
 					
 					@Override
-					public void transform(TransformerContext ctx) throws Exception {
+					public void transform(TransformerContext ctx) {
 							
 						throw new RuntimeException();					
 					}
@@ -134,7 +134,7 @@ public class HttpRequesterBuilderTest {
 				.addTransformer(new HttpRequester.ITransformer() {
 					
 					@Override
-					public void transform(TransformerContext ctx) throws Exception {
+					public void transform(TransformerContext ctx){
 							
 						assertTrue(false);						
 					}
@@ -152,7 +152,7 @@ public class HttpRequesterBuilderTest {
 				.addTransformer(new HttpRequester.ITransformer() {
 					
 					@Override
-					public void transform(TransformerContext ctx) throws Exception {
+					public void transform(TransformerContext ctx) {
 						
 						ctx.setBody( ctx.getBody().trim() );
 					}

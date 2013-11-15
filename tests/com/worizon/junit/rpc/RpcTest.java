@@ -3,6 +3,7 @@ package com.worizon.junit.rpc;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import org.junit.Test;
 
 import com.worizon.jsonrpc.JsonRpcException;
 import com.worizon.jsonrpc.RemoteException;
-import com.worizon.jsonrpc.RpcProxy;
+import com.worizon.jsonrpc.Rpc;
 import com.worizon.jsonrpc.annotations.LocalException;
 import com.worizon.jsonrpc.annotations.LocalExceptions;
 import com.worizon.jsonrpc.annotations.Remote;
@@ -23,7 +24,7 @@ import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
 
 
-public class RpcProxyTest {
+public class RpcTest {
 	
 	interface NonRemoteInterface{};
 	
@@ -31,8 +32,8 @@ public class RpcProxyTest {
 	public void testNonRemoteInterface(){
 		
 		HttpRequester http = new HttpRequester("http://localhost:8080/rpc");
-		RpcProxy proxy = new RpcProxy(http);
-		NonRemoteInterface remote = proxy.create(NonRemoteInterface.class);
+		Rpc proxy = new Rpc(http);
+		NonRemoteInterface remote = proxy.createProxy(NonRemoteInterface.class);
 		
 	}
 	
@@ -60,8 +61,8 @@ public class RpcProxyTest {
 		});
 		EasyMock.replay(requester);
 				
-		RpcProxy proxy = new RpcProxy(requester);
-		My1RemoteInterface remote = proxy.create(My1RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My1RemoteInterface remote = proxy.createProxy(My1RemoteInterface.class);
 		remote.test();
 	}
 	
@@ -76,8 +77,8 @@ public class RpcProxyTest {
 	public void testAnnottedParamsNumberMismath() throws Exception{
 		
 		HttpRequester requester = new HttpRequester();										
-		RpcProxy proxy = new RpcProxy(requester);
-		My2RemoteInterface remote = proxy.create(My2RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My2RemoteInterface remote = proxy.createProxy(My2RemoteInterface.class);
 		remote.test(1,2);
 	}
 	
@@ -106,8 +107,8 @@ public class RpcProxyTest {
 		});
 		
 		EasyMock.replay(requester);
-		RpcProxy proxy = new RpcProxy(requester);
-		My3RemoteInterface remote = proxy.create( My3RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My3RemoteInterface remote = proxy.createProxy( My3RemoteInterface.class);
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("x", 1);
 		params.put("y","test string");
@@ -140,8 +141,8 @@ public class RpcProxyTest {
 		});
 		
 		EasyMock.replay(requester);
-		RpcProxy proxy = new RpcProxy(requester);
-		My4RemoteInterface remote = proxy.create( My4RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My4RemoteInterface remote = proxy.createProxy( My4RemoteInterface.class);
 		List<Object> params = new ArrayList<Object>();
 		params.add(1);
 		params.add("test string");
@@ -175,8 +176,8 @@ public class RpcProxyTest {
 		});
 		EasyMock.replay(requester);
 				
-		RpcProxy proxy = new RpcProxy(requester);
-		My5RemoteInterface remote = proxy.create(My5RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My5RemoteInterface remote = proxy.createProxy(My5RemoteInterface.class);
 				
 		assertEquals(9, remote.sum(5, 4));
 	}
@@ -205,8 +206,8 @@ public class RpcProxyTest {
 		});
 		EasyMock.replay(requester);
 				
-		RpcProxy proxy = new RpcProxy(requester);
-		My6RemoteInterface remote = proxy.create(My6RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My6RemoteInterface remote = proxy.createProxy(My6RemoteInterface.class);
 				
 		assertEquals(9, remote.sum(5, 4));
 	}	
@@ -254,8 +255,8 @@ public class RpcProxyTest {
 		});		
 		EasyMock.replay(requester);
 				
-		RpcProxy proxy = new RpcProxy(requester);
-		My7RemoteInterface remote = proxy.create(My7RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My7RemoteInterface remote = proxy.createProxy(My7RemoteInterface.class);
 		
 		A a = new A(2,3);
 		B expected = new B("test",23.45f);
@@ -287,8 +288,8 @@ public class RpcProxyTest {
 		});		
 		EasyMock.replay(requester);
 				
-		RpcProxy proxy = new RpcProxy(requester);
-		My8RemoteInterface remote = proxy.create(My8RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My8RemoteInterface remote = proxy.createProxy(My8RemoteInterface.class);
 		
 		A a = new A(2,3);
 		B expected = new B("test",23.45f);
@@ -321,8 +322,8 @@ public class RpcProxyTest {
 		});		
 		EasyMock.replay(requester);
 				
-		RpcProxy proxy = new RpcProxy(requester);
-		My9RemoteInterface remote = proxy.create(My9RemoteInterface.class);
+		Rpc proxy = new Rpc(requester);
+		My9RemoteInterface remote = proxy.createProxy(My9RemoteInterface.class);
 		remote.op();						
 	}	
 	
@@ -348,9 +349,9 @@ public class RpcProxyTest {
 		});
 				
 		EasyMock.replay(requester);				
-		RpcProxy proxy = new RpcProxy(requester);						
+		Rpc proxy = new Rpc(requester);						
 		try{
-			proxy.create(My10RemoteInterface.class).op();
+			proxy.createProxy(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -374,9 +375,9 @@ public class RpcProxyTest {
 		});
 				
 		EasyMock.replay(requester);				
-		RpcProxy proxy = new RpcProxy(requester);						
+		Rpc proxy = new Rpc(requester);						
 		try{
-			proxy.create(My10RemoteInterface.class).op();
+			proxy.createProxy(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -400,9 +401,9 @@ public class RpcProxyTest {
 		});
 				
 		EasyMock.replay(requester);				
-		RpcProxy proxy = new RpcProxy(requester);						
+		Rpc proxy = new Rpc(requester);						
 		try{
-			proxy.create(My10RemoteInterface.class).op();
+			proxy.createProxy(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -426,9 +427,9 @@ public class RpcProxyTest {
 		});
 				
 		EasyMock.replay(requester);				
-		RpcProxy proxy = new RpcProxy(requester);						
+		Rpc proxy = new Rpc(requester);						
 		try{
-			proxy.create(My10RemoteInterface.class).op();
+			proxy.createProxy(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -452,9 +453,9 @@ public class RpcProxyTest {
 		});
 				
 		EasyMock.replay(requester);				
-		RpcProxy proxy = new RpcProxy(requester);						
+		Rpc proxy = new Rpc(requester);						
 		try{
-			proxy.create(My10RemoteInterface.class).op();
+			proxy.createProxy(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
@@ -478,9 +479,9 @@ public class RpcProxyTest {
 		});
 				
 		EasyMock.replay(requester);				
-		RpcProxy proxy = new RpcProxy(requester);						
+		Rpc proxy = new Rpc(requester);						
 		try{
-			proxy.create(My10RemoteInterface.class).op();
+			proxy.createProxy(My10RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(RemoteException ex){
 			
@@ -504,7 +505,7 @@ public class RpcProxyTest {
 	@LocalExceptions({@LocalException(code=-5,exception=MyDummyException.class)})
 	interface My11RemoteInterface{
 							
-		public Void op();// A object -> Remote operation op -> B object		
+		public Void op();		
 	}
 	
 	@Test
@@ -522,9 +523,9 @@ public class RpcProxyTest {
 		});
 				
 		EasyMock.replay(requester);				
-		RpcProxy proxy = new RpcProxy(requester);						
+		Rpc proxy = new Rpc(requester);						
 		try{
-			proxy.create(My11RemoteInterface.class).op();
+			proxy.createProxy(My11RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(MyDummyException ex){
 						
@@ -554,14 +555,75 @@ public class RpcProxyTest {
 		});
 				
 		EasyMock.replay(requester);				
-		RpcProxy proxy = new RpcProxy(requester);						
+		Rpc proxy = new Rpc(requester);						
 		try{
-			proxy.create(My12RemoteInterface.class).op();
+			proxy.createProxy(My12RemoteInterface.class).op();
 			assertTrue(false);
 		}catch(RemoteException ex){
 						
 			assertEquals(-6, ex.getCode());
 			assertEquals("Domain error",ex.getMessage());
+			
+		}
+	}
+	
+	@Remote	
+	interface My13RemoteInterface{
+							
+		public Void op();		
+	}
+	
+	@Test
+	public void testCall1() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-6,\"message\":\"Domain error\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);						
+		try{
+			
+			rpc.call("op" ,Void.class);
+			assertTrue(false);
+		}catch(RemoteException ex){
+						
+			assertEquals(-6, ex.getCode());
+			assertEquals("Domain error",ex.getMessage());
+			
+		}
+	}
+	
+	@Test
+	public void testCall2() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-6,\"message\":\"Domain exception\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);						
+		try{
+			rpc.addRuntimeExceptionMapping(-6, ArithmeticException.class);
+			rpc.call("op" ,Void.class);
+			assertTrue(false);
+		}catch(ArithmeticException ex){
+									
+			assertEquals("Domain exception",ex.getMessage());
 			
 		}
 	}

@@ -1,35 +1,26 @@
 package com.worizon.net;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import com.worizon.jsonrpc.TransformerException;
 
 /**
  * 
+ * @author Enric Cecilla
+ * @since 1.0.0
  */
 public class HttpRequester {
 			
@@ -137,8 +128,12 @@ public class HttpRequester {
 					
 			if(ctx.skipNext())
 				continue;
-			
-			transformer.transform( ctx );
+			try{
+				transformer.transform( ctx );
+			}catch(Throwable t){
+				
+				throw new TransformerException(t);
+			}
 			
 			if( !ctx.shouldContinue() )
 				break;
@@ -256,7 +251,7 @@ public class HttpRequester {
 	 */
 	public interface ITransformer{
 		
-		public void transform( TransformerContext ctx );
+		public void transform( TransformerContext ctx ) throws Throwable;
 		
 	}
 		

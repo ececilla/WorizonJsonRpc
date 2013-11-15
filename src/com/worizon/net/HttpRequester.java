@@ -111,7 +111,7 @@ public class HttpRequester {
 		return request(null);
 	}
 				
-	public String request( String body  ) throws Exception{
+	public String request( String body  ) throws InterruptedException, IOException{
 							    
 	    try{
 	    	return readResponse( connectAndWriteRequest(body) );
@@ -129,7 +129,7 @@ public class HttpRequester {
 	}
 		
 	
-	private InputStream connectAndWriteRequest( String body ) throws Exception {
+	private InputStream connectAndWriteRequest( String body ) throws MalformedURLException, IOException {
 		
 		//Transform payload and headers by delegating on transformers
 		ctx.setBody(body);					
@@ -183,7 +183,7 @@ public class HttpRequester {
 	    }
 	}
 					
-	private String readResponse( InputStream is ) throws IOException{
+	private String readResponse( InputStream is ) throws IOException {
 		
 		BufferedReader in = new BufferedReader( new InputStreamReader( is ) );		 		
 		StringBuffer buffer = new StringBuffer();
@@ -256,7 +256,7 @@ public class HttpRequester {
 	 */
 	public interface ITransformer{
 		
-		public void transform( TransformerContext ctx ) throws Exception;
+		public void transform( TransformerContext ctx );
 		
 	}
 		

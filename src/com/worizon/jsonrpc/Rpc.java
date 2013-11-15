@@ -1,7 +1,9 @@
 package com.worizon.jsonrpc;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -81,23 +83,43 @@ import static com.worizon.jsonrpc.Consts.*;
  * @since 1.0.0
  *
  */
-public class RpcProxy{
+public class Rpc{
 	
+	/**
+	 * Requester to make HTTP requests.
+	 */
 	private  HttpRequester http;	
-	private Map<Integer, Class<? extends Throwable>> exceptions = new HashMap<Integer, Class<? extends Throwable>>();
 	
-	public RpcProxy( String endpoint ){
+	/**
+	 * Map that maps from int to Throwable.
+	 */
+	private Map<Integer, Class<? extends RuntimeException>> exceptions = new HashMap<Integer, Class<? extends RuntimeException>>();
+	
+	public Rpc( String endpoint ){
 		
 		this.http = new HttpRequester(endpoint);
 	}
 	
-	public RpcProxy( HttpRequester http ){
+	public Rpc( HttpRequester http ){
 		
 		this.http = http;
 	}
 	
+	/**
+	 * Creates a proxied interface to call remote procedures.
+	 * ex:
+	 * <pre>
+	 * @Remote
+	 * public interface ICalculator{
+	 * 		int sum(int x, int y);
+	 * }
+	 * ICalculator calculator = Rpc.createProxy(Icalculator.class);
+	 * int result = calculator.sum(4,6);//blocking call
+	 * </pre>
+	 * @param clazz The interface to be proxied.
+	 */
 	@SuppressWarnings("unchecked")
-	public <T> T create( Class<T> clazz ){
+	public <T> T createProxy( Class<T> clazz ){
 						
 		if( !clazz.isAnnotationPresent(Remote.class) ){
 			
@@ -150,19 +172,30 @@ public class RpcProxy{
 		
 	}
 	
-	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws Throwable{
+	/**
+	 * 
+	 */
+	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws IOException, InterruptedException {
 		
 		JsonRpcRequest req = new JsonRpcRequest(method, params);		
 		String respStr = http.request( req.toString() );//blocking call
 		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( respStr, clazz );		
 		if(res.getError() != null){
 			if(res.getError().isCustomError()){
-				Class<? extends Throwable> exceptionClass = exceptions.get(res.getError().getCode());
+				Class<? extends RuntimeException> exceptionClass = exceptions.get(res.getError().getCode());
 				if( exceptionClass != null ){
-					
-					throw exceptionClass.getConstructor(String.class)
-										.newInstance(res.getError().getMessage());
-					
+					try{					
+						throw exceptionClass.getConstructor(String.class)
+											.newInstance(res.getError().getMessage());							
+					}catch(NoSuchMethodException nsm){
+						throw new RemoteException( res.getError() );
+					}catch(InvocationTargetException ite){
+						throw new RemoteException( res.getError() );
+					}catch(IllegalAccessException iae){
+						throw new RemoteException( res.getError() );
+					}catch(InstantiationException ie){
+						throw new RemoteException( res.getError() );
+					}
 				}else
 					throw new RemoteException( res.getError() );
 			}else
@@ -170,15 +203,48 @@ public class RpcProxy{
 		}else
 			return res.getResult();	
 	}
-			
-	public synchronized <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws Throwable{
+	
+	/**
+	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz.
+	 * @param method The remote procedure name to be invoked.
+	 * @param params The params that will be passed into the remote procedure as a JSON object.
+	 * @param clazz The class to turn itno the result field.
+	 */
+	public <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws IOException, InterruptedException {
 		
 		return call(method, (Object)params, clazz);
 	}
 	
-	public synchronized <T> T call(String method, List<Object> params, Class<T> clazz ) throws Throwable{
+	/**
+	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz.
+	 * @param method The remote procedure name to be invoked.
+	 * @param params The params that will be passed into the remote procedure as a JSON array.
+	 * @param clazz The class to turn into the result field.
+	 */
+	public <T> T call(String method, List<Object> params, Class<T> clazz ) throws IOException, InterruptedException{
 		
 		return call(method, (Object)params, clazz);
+	}
+	
+	/**
+	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz.
+	 * @param method The remote procedure name to be invoked.
+	 * @param clazz The class to turn into the result field.
+	 */
+	public <T> T call(String method, Class<T> clazz ) throws IOException, InterruptedException{
+		
+		return call(method, (Object)null, clazz);
+	}
+	
+	/**
+	 * Adds a mapping between exception class and error code. When this code error arrives the mapped
+	 * exception will be thrown.
+	 * @param code The JSON-RPC code error.
+	 * @param exception The exception to be thrown, this exception must extend RuntimeException.
+	 */
+	public void addRuntimeExceptionMapping( int code, Class<? extends RuntimeException> exception){
+		
+		exceptions.put(code, exception);
 	}
 			
 }

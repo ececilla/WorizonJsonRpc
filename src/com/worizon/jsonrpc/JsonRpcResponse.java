@@ -29,7 +29,7 @@ public class JsonRpcResponse<T> extends JsonRpc {
 	private T result = null;
 	private JsonRpcError error = null;	
 	
-	public JsonRpcResponse( String json_str, Class<? extends T> clazz ) throws InstantiationException, IllegalAccessException {
+	public JsonRpcResponse( String json_str, Class<? extends T> clazz ) {
 				
 		JsonParser parser = new JsonParser();
 		JsonObject root = parser.parse(json_str).getAsJsonObject();				

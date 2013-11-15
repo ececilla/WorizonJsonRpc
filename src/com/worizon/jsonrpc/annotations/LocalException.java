@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
 public @interface LocalException {
 
 	int code();
-	Class<? extends Throwable> exception(); 
+	Class<? extends RuntimeException> exception(); 
 }

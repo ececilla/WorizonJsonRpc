@@ -8,8 +8,8 @@ import com.worizon.jsonrpc.gson.NonExposeExclusionEstrategy;
 
 /**
  * 
- * Base class for JsonRpc request and response objects. Common fields for both request and response 
- * objects are defined here as well as static helpers methods.
+ * Base class for JsonRpcRequest and JsonRpcResponse classes. Common fields for both request and response 
+ * objects are defined here as well as static helpers methods to serialize and deserialize.
  * 
  * @author Enric Cecilla
  *

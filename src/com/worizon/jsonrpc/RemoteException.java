@@ -1,5 +1,12 @@
 package com.worizon.jsonrpc;
 
+/**
+ * High level exception of a remote procedure call. Error codes specified at the JSONRPC spec are mapped as 
+ * a JsonRpcException. Error codes different from the spec are mapped and thrown as a RemoteException.
+ * 
+ * @author Enric Cecilla
+ * @since 1.0.0
+ */
 @SuppressWarnings("serial")
 public class RemoteException extends RuntimeException {
 	

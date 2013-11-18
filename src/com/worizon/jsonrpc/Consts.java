@@ -6,8 +6,9 @@ package com.worizon.jsonrpc;
  * server implementations which honors JSONRPC 2.0 SPEC must use these error codes.
  * 
  * 
- * @see <a href="http://www.jsonrpc.org/specification#error_object">jsonrpc error codes</a>
+ * @see <a href="http://www.jsonrpc.org/specification#error_object">JSONRPC 2.0 error codes</a>
  * @author Enric Cecilla
+ * @since 1.0.0
  */
 public final class Consts {
 	

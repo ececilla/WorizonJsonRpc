@@ -111,13 +111,20 @@ public class HttpRequesterTest {
 		
 	}
 	
-	@Test(expected=ConnectException.class)
-	public void testRequestConnectionRefused() throws Exception{
+	@Test
+	public void testRequestConnectionFailed() throws Exception{
 		
 		HttpRequester requester = new HttpRequester("http://localhost:5555");
 		requester.setRequestRetries(1);
-		requester.setConnectTimeout(1000);
-		requester.request("test");
+		requester.setConnectTimeout(1000);		
+		try{
+			requester.request("test");
+			fail();
+		}catch(ConnectException ce){
+			
+		}catch(SocketTimeoutException ste){
+			
+		}
 	}
 	
 	@Test(expected=SocketTimeoutException.class)

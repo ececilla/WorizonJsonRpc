@@ -173,7 +173,7 @@ public class Rpc{
 	}
 	
 	/**
-	 * 
+	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz.
 	 */
 	private synchronized <T> T call(String method, Object params, Class<T> clazz ) throws IOException, InterruptedException {
 		
@@ -209,6 +209,7 @@ public class Rpc{
 	 * @param method The remote procedure name to be invoked.
 	 * @param params The params that will be passed into the remote procedure as a JSON object.
 	 * @param clazz The class to turn itno the result field.
+	 * @return The result field deserialized as a T object.
 	 */
 	public <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws IOException, InterruptedException {
 		
@@ -220,6 +221,7 @@ public class Rpc{
 	 * @param method The remote procedure name to be invoked.
 	 * @param params The params that will be passed into the remote procedure as a JSON array.
 	 * @param clazz The class to turn into the result field.
+	 * @return The result field deserialized as a T object.
 	 */
 	public <T> T call(String method, List<Object> params, Class<T> clazz ) throws IOException, InterruptedException{
 		
@@ -230,6 +232,7 @@ public class Rpc{
 	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz.
 	 * @param method The remote procedure name to be invoked.
 	 * @param clazz The class to turn into the result field.
+	 * @return The result field deserialized as a T object.
 	 */
 	public <T> T call(String method, Class<T> clazz ) throws IOException, InterruptedException{
 		
@@ -237,14 +240,284 @@ public class Rpc{
 	}
 	
 	/**
-	 * Adds a mapping between exception class and error code. When this code error arrives the mapped
-	 * exception will be thrown.
+	 * Calls the remote procedure with void as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 */
+	public void callVoid( String method ) throws IOException,InterruptedException {
+		
+		call(method, Void.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with void as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 */
+	public void callVoid( String method, Object... args) throws IOException, InterruptedException{
+				
+		call(method, Arrays.asList(args), Void.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with int as result an with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as integer.
+	 */
+	public int callInteger( String method ) throws IOException, InterruptedException{
+		
+		return call(method, Integer.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with int as the result.
+	 * @param method The remote procedure name to be invoked.
+	 * @params args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as integer.
+	 */
+	public int callInteger( String method, Object... args) throws IOException, InterruptedException{
+		
+		return call(method, Arrays.asList(args), Integer.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with an array of ints as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The precedure return value as an array of integers.
+	 */
+	public int[] callIntegerArray( String method ) throws IOException, InterruptedException{
+		
+		Integer result[] =  call(method, Integer[].class);
+		int resultPrimitive[] = new int[result.length];
+		for(int i = 0; i < result.length; i++)
+			resultPrimitive[i] = result[i].intValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with an array of ints as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as an array of integers.
+	 */
+	public int[] callIntegerArray( String method, Object...args ) throws IOException, InterruptedException{
+		
+		Integer result[] =  call(method,Arrays.asList(args), Integer[].class);
+		int resultPrimitive[] = new int[result.length];
+		for(int i = 0; i < result.length; i++)
+			resultPrimitive[i] = result[i].intValue();
+		
+		return resultPrimitive;
+	}
+	
+	
+	/**
+	 * Calls the remote procedure with double as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as double.
+	 */
+	public double callDouble( String method ) throws IOException, InterruptedException{
+		
+		return call(method, Double.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with double as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as double.
+	 */
+	public double callDouble( String method, Object... args ) throws IOException, InterruptedException{
+		
+		return call(method,Arrays.asList(args), Double.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with an array of doubles as a result.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as an array of doubles.
+	 */
+	public double[] callDoubleArray(String method) throws IOException, InterruptedException{
+		
+		Double result[] = call(method, Double[].class);
+		double resultPrimitive[] = new double[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].doubleValue();
+		
+		return resultPrimitive;
+	}
+
+	/**
+	 * Calls the remote procedure with an array of doubles as a result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as an array of doubles.
+	 */
+	public double[] callDoubleArray(String method, Object...args) throws IOException, InterruptedException{
+		
+		Double result[] = call(method, Arrays.asList(args), Double[].class);
+		double resultPrimitive[] = new double[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].doubleValue();
+		
+		return resultPrimitive;
+	}
+
+	/**
+	 * Calls the remote procedure with float as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as float.
+	 */
+	public float callFloat( String method ) throws IOException, InterruptedException{
+		
+		return call(method, Float.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with float as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as float.
+	 */
+	public float callFloat( String method, Object... args ) throws IOException, InterruptedException{
+		
+		return call(method, Arrays.asList(args), Float.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with an array of floats as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as an array of floats.
+	 */
+	public float[] callFloatArray(String method) throws IOException, InterruptedException{
+		
+		Float result[] = call(method, Float[].class);
+		float resultPrimitive[] = new float[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].floatValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with an array of floats as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as an array of floats.
+	 */
+	public float[] callFloatArray(String method, Object...args) throws IOException, InterruptedException{
+		
+		Float result[] = call(method, Arrays.asList(args), Float[].class);
+		float resultPrimitive[] = new float[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].floatValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with String as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as String.
+	 */
+	public String callString( String method ) throws IOException, InterruptedException{
+		
+		return call(method, String.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with String as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as String.
+	 */
+	public String callString( String method, Object... args ) throws IOException, InterruptedException{
+		
+		return call(method,Arrays.asList(args), String.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with an array of Strings as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as an array of Strings.
+	 */
+	public String[] callStringArray(String method) throws IOException, InterruptedException{
+		
+		return call(method, String[].class);		
+	}
+	
+	/**
+	 * Calls the remote procedure with an array of Strings as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as an array of Strings.
+	 */
+	public String[] callStringArray(String method, Object... args) throws IOException, InterruptedException{
+		
+		return call(method, Arrays.asList(args), String[].class);		
+	}
+	
+	/**
+	 * Calls the remote procedure with boolean as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as boolean.
+	 */
+	public boolean callBoolean( String method ) throws IOException, InterruptedException{
+		
+		return call(method, Boolean.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with boolean as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as boolean.
+	 */
+	public boolean callBoolean( String method, Object... args ) throws IOException, InterruptedException{
+		
+		return call(method,Arrays.asList(args), Boolean.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with boolean as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as an array of booleans.
+	 */
+	public boolean[] callBooleanArray( String method ) throws IOException, InterruptedException{
+		
+		Boolean[] result =  call(method, Boolean[].class);
+		boolean resultPrimitive[] = new boolean[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].booleanValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with boolean as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as an array of booleans.
+	 */
+	public boolean[] callBooleanArray( String method, Object... args ) throws IOException, InterruptedException{
+		
+		Boolean[] result =  call(method, Arrays.asList(args), Boolean[].class);
+		boolean resultPrimitive[] = new boolean[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].booleanValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Adds a mapping between exception class and error code. When the code error <i>code</i> arrives the 
+	 * exception <i>exception</i>will be thrown.
 	 * @param code The JSON-RPC code error.
 	 * @param exception The exception to be thrown, this exception must extend RuntimeException.
 	 */
 	public void addRuntimeExceptionMapping( int code, Class<? extends RuntimeException> exception){
 		
 		exceptions.put(code, exception);
-	}
+	}		
 			
 }

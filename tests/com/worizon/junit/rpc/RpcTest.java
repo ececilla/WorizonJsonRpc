@@ -582,6 +582,25 @@ public class RpcTest {
 			
 			public String answer() throws Throwable{												
 				
+				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		rpc.callVoid("op");		
+	}
+	
+	@Test
+	public void testCall2() throws Exception{
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
 				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-6,\"message\":\"Domain error\"}, \"id\": 2}";
 				
 			}
@@ -602,7 +621,7 @@ public class RpcTest {
 	}
 	
 	@Test
-	public void testCall2() throws Exception{
+	public void testCall3() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
 		EasyMock.expect(requester.request( EasyMock.anyString() ))		

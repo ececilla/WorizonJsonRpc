@@ -69,7 +69,7 @@ public abstract class JsonRpc {
 
 	/**
 	 * Sets the version of the request or reponse.
-	 * @param jsonrpc: 
+	 * @param jsonrpc jsonrpc version. 
 	 */
 	public void setVersion( String jsonrpc ) {
 		

@@ -29,10 +29,10 @@ import static com.worizon.jsonrpc.Consts.*;
  * Ex1:
  * 
  * <pre>
- * @Remote
+ * {@literal @}Remote
  * interface MyRemoteInterface{
  *		
- *		public Void doTask();
+ *	public Void doTask();
  * };
  * 
  * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
@@ -41,10 +41,10 @@ import static com.worizon.jsonrpc.Consts.*;
  * </pre>	
  * Ex2:
  * <pre>
- * @Remote
+ * {@literal @}Remote
  * interface MyRemoteInterface{
  * 		
- * 		public int sum(int x, y);
+ * 	public int sum(int x, y);
  * }
  * 
  * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
@@ -53,11 +53,11 @@ import static com.worizon.jsonrpc.Consts.*;
  * </pre>
  * Ex3:
  * <pre>
- * @Remote
+ * {@literal @}Remote
  * interface MyRemoteInterface{
  * 		
- * 		@RemoteParams({"x","y"})
- * 		public int  sum(int x, int y);
+ * 	{@literal @}RemoteParams({"x","y"})
+ * 	public int  sum(int x, int y);
  * }
  * 
  * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
@@ -65,12 +65,12 @@ import static com.worizon.jsonrpc.Consts.*;
  * int result = service.sum(3,4); ==> parameters ordered by name {params:{x:3,y:4}}
  * </pre>
  * Ex4:
- * 
- * @Remote
+ * <pre>
+ * {@literal @}Remote
  * interface MyRemoteInterface{
  * 		
- * 		@RemoteProcName("my_sum")
- * 		public int sum(int x, int y);
+ * 	{@literal @}RemoteProcName("my_sum")
+ *  public int sum(int x, int y);
  * }
  * 
  * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
@@ -109,7 +109,7 @@ public class Rpc{
 	 * Creates a proxied interface to call remote procedures.
 	 * ex:
 	 * <pre>
-	 * @Remote
+	 * _@Remote
 	 * public interface ICalculator{
 	 * 		int sum(int x, int y);
 	 * }
@@ -271,7 +271,7 @@ public class Rpc{
 	/**
 	 * Calls the remote procedure with int as the result.
 	 * @param method The remote procedure name to be invoked.
-	 * @params args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
 	 * @return The procedure return value as integer.
 	 */
 	public int callInteger( String method, Object... args) throws IOException, InterruptedException{
@@ -428,7 +428,7 @@ public class Rpc{
 	/**
 	 * Calls the remote procedure with String as result.
 	 * @param method The remote procedure name to be invoked.
-	 * @param The arguments to get into the remote procedure serialized as an ordered list.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
 	 * @return The procedure return value as String.
 	 */
 	public String callString( String method, Object... args ) throws IOException, InterruptedException{

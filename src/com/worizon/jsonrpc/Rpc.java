@@ -1,11 +1,11 @@
 package com.worizon.jsonrpc;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -541,6 +541,18 @@ public class Rpc{
 	public void addRuntimeExceptionMapping( int code, Class<? extends RuntimeException> exception){
 		
 		exceptions.put(code, exception);
-	}		
+	}	
+	
+	/**
+	 * Helper factory method to create a parameter (name, value) pair.
+	 * @param paramName Name of this parameter.
+	 * @param paramValue Value of this parameter.
+	 * @return The pair of (paramName, paramValue) as an object of type AbstractMap.SimpleEntry
+	 */
+	public static AbstractMap.SimpleEntry<String, Object> Map(String paramName, Object  paramValue){
+		
+		return new AbstractMap.SimpleEntry<String, Object>(paramName,paramValue);
+	}
+	
 			
 }

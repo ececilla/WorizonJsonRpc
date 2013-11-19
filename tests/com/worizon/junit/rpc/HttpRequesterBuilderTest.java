@@ -2,12 +2,15 @@ package com.worizon.junit.rpc;
 
 import java.io.IOException;
 
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.junit.After;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.worizon.jsonrpc.Rpc;
 import com.worizon.jsonrpc.TransformerException;
 import com.worizon.net.HttpRequester;
 import com.worizon.net.HttpRequesterBuilder;
@@ -208,6 +211,5 @@ public class HttpRequesterBuilderTest {
 		http.request("{test:1}");			
 		assertArrayEquals(new char[]{'%','7','B','t','e','s','t','%','3','A','1','%','7','D'}, server.getBody().toCharArray());		
 	}
-	
-
+			
 }

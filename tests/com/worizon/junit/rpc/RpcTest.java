@@ -3,6 +3,7 @@ package com.worizon.junit.rpc;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
+import com.worizon.test.TestServer;
 
 
 public class RpcTest {
@@ -645,6 +647,685 @@ public class RpcTest {
 			assertEquals("Domain exception",ex.getMessage());
 			
 		}
+	}
+	
+	@Test
+	public void testCallVoid() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		rpc.callVoid("op");		
+		
+	}
+	
+	@Test
+	public void testCallVoidParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[1.5,\"test\"],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		rpc.callVoid("op",1.5,"test");		
+		
+	}
+	
+	@Test
+	public void testCallInteger() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": 10, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		int result = rpc.callInteger("op");		
+		assertTrue( result == 10 );
+	}
+	
+	@Test
+	public void testCallIntegerParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[false,\"test\"],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": 10, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		int result = rpc.callInteger("op",false,"test");		
+		assertTrue( result == 10 );
+	}
+	
+	@Test
+	public void testCallIntegerArray() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10,34,23], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		int[] result = rpc.callIntegerArray("op");		
+		assertArrayEquals(new int[]{10,34,23}, result);
+	}
+	
+	@Test
+	public void testCallIntegerArrayParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"mult10\",\"params\":[true,[1,2,3]],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10,20,30], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		int[] result = rpc.callIntegerArray("mult10",true,new int[]{1,2,3});		
+		assertArrayEquals(new int[]{10,20,30}, result);
+	}
+	
+	@Test
+	public void testCallDouble() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": 1000000, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		double result = rpc.callDouble("op");		
+		assertTrue( result == 1000000 );
+	}
+	
+	@Test
+	public void testCallDoubleParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[true],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": 1000000, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		double result = rpc.callDouble("op",true);		
+		assertTrue( result == 1000000 );
+	}
+	
+	@Test
+	public void testCallDoubleArray() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10.1,34.4,23.5], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		double[] result = rpc.callDoubleArray("op");		
+		assertArrayEquals(new double[]{10.1,34.4,23.5}, result, 0.000001);
+		
+	}
+	
+	@Test
+	public void testCallDoubleArrayParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[null],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10.1,34.4,23.5], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		double[] result = rpc.callDoubleArray("op", new Object[]{null});		
+		assertArrayEquals(new double[]{10.1,34.4,23.5}, result, 0.000001);
+		
+	}
+	
+	@Test
+	public void testCallFloat() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": 34.5677, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		float result = rpc.callFloat("op");		
+		assertTrue( result == 34.5677f );
+	}
+	
+	@Test
+	public void testCallFloatParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[true],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": 65.3482374, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		float result = rpc.callFloat("op",true);		
+		assertTrue( result == 65.3482374f );
+	}
+	
+	@Test
+	public void testCallFloatArray() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10.1,34.4,23.5], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		float[] result = rpc.callFloatArray("op");		
+		assertArrayEquals(new float[]{10.1f,34.4f,23.5f}, result, 0.0000001f);		
+		
+	}
+	
+	@Test
+	public void testCallFloatArrayParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[null],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10.1,34.4,23.5], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		float[] result = rpc.callFloatArray("op", new Object[]{null});		
+		assertArrayEquals(new float[]{10.1f,34.4f,23.5f}, result, 0.000001f);
+		
+	}
+	
+	@Test
+	public void testCallString() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": \"foobar\", \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		String result = rpc.callString("op");		
+		assertEquals("foobar", result);
+	}
+	
+	@Test
+	public void testCallStringParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[true],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": \"foobar\", \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		String result = rpc.callString("op",true);		
+		assertEquals("foobar",result);
+	}
+	
+	@Test
+	public void testCallStringArray() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": [\"foo\",\"bar\",\"dummy\"], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		String[] result = rpc.callStringArray("op");		
+		assertArrayEquals(new String[]{"foo","bar","dummy"}, result);		
+		
+	}
+	
+	@Test
+	public void testCallStringArrayParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();						
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[{\"a\":1,\"b\":\"baz\"}],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": [\"foo\",\"bar\",\"dummy\"], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);
+		Map<String,Object> params = new LinkedHashMap<String, Object>();
+		params.put("a",1);
+		params.put("b","baz");
+		String[] result = rpc.callStringArray("op", params);		
+		assertArrayEquals(new String[]{"foo","bar","dummy"}, result);
+		
+	}
+	
+	@Test
+	public void testCallBoolean() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": true, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		boolean result = rpc.callBoolean("op");		
+		assertTrue( result == true );
+	}
+	
+	@Test
+	public void testCallBooleanParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[1,2,3,\"foo\"],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": false, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		boolean result = rpc.callBoolean("op",1,2,3, "foo" );		
+		assertTrue( result == false );
+	}
+	
+	@Test
+	public void testCallBooleanArray() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": [true,true,false], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		boolean[] result = rpc.callBooleanArray("op");		
+		assertTrue( Arrays.equals(new boolean[]{true,true,false}, result ) );
+					
+		
+	}
+	
+	@Test
+	public void testCallBooleanArrayParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[5],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": [true,true,false], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		boolean[] result = rpc.callBooleanArray("op", 5);		
+		assertTrue( Arrays.equals(new boolean[]{true,true,false}, result ) );
+		
+	}
+	
+	@Test
+	public void testCallShort() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": 10, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		short result = rpc.callShort("op");		
+		assertTrue( result == 10 );
+	}
+	
+	@Test
+	public void testCallShortParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[false,\"test\"],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": 10, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		short result = rpc.callShort("op",false,"test");		
+		assertTrue( result == 10 );
+	}
+	
+	@Test
+	public void testCallShortArray() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10,34,23], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		short[] result = rpc.callShortArray("op");		
+		assertArrayEquals(new short[]{10,34,23}, result);
+	}
+	
+	@Test
+	public void testCallShortArrayParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"mult10\",\"params\":[true,false],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10,20,30], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		short[] result = rpc.callShortArray("mult10",true,false);		
+		assertArrayEquals(new short[]{10,20,30}, result);
+	}
+	
+	@Test
+	public void testCallLong() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": 10, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		long result = rpc.callLong("op");		
+		assertTrue( result == 10 );
+	}
+	
+	@Test
+	public void testCallLongParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":[false,\"test\"],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": 10, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		long result = rpc.callLong("op",false,"test");		
+		assertTrue( result == 10 );
+	}
+	
+	@Test
+	public void testCallLongArray() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10,34,23], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		long[] result = rpc.callLongArray("op");		
+		assertArrayEquals(new long[]{10,34,23}, result);
+	}
+	
+	@Test
+	public void testCallLongArrayParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"mult10\",\"params\":[true,false],\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": [10,20,30], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		long[] result = rpc.callLongArray("mult10",true,false);		
+		assertArrayEquals(new long[]{10,20,30}, result);
+	}
+	
+	@Test
+	public void testCallChar() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"result\": \"a\", \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		char result = rpc.callChar("op");		
+		//System.out.println(String.format("%04x", (int) result));
+		assertTrue( result == 0x61 );
+		assertTrue( result == 'a' );
 	}
 	
 

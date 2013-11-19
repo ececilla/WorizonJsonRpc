@@ -247,9 +247,10 @@ public class Rpc{
 	 */
 	public void callVoid( String method, Object... args) throws IOException, InterruptedException{
 		
-		if(args != null)		
+		if(args != null){		
+			
 			call(method, Arrays.asList(args), Void.class);
-		else
+		}else
 			call(method, Void.class);
 	}
 		

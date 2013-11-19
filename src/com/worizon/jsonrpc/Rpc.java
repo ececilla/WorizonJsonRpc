@@ -238,15 +238,7 @@ public class Rpc{
 		
 		return call(method, (Object)null, clazz);
 	}
-	
-	/**
-	 * Calls the remote procedure with void as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 */
-	public void callVoid( String method ) throws IOException,InterruptedException {
 		
-		call(method, Void.class);
-	}
 	
 	/**
 	 * Calls the remote procedure with void as result.
@@ -254,19 +246,13 @@ public class Rpc{
 	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
 	 */
 	public void callVoid( String method, Object... args) throws IOException, InterruptedException{
-				
-		call(method, Arrays.asList(args), Void.class);
-	}
-	
-	/**
-	 * Calls the remote procedure with int as result an with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as integer.
-	 */
-	public int callInteger( String method ) throws IOException, InterruptedException{
 		
-		return call(method, Integer.class);
+		if(args != null)		
+			call(method, Arrays.asList(args), Void.class);
+		else
+			call(method, Void.class);
 	}
+		
 	
 	/**
 	 * Calls the remote procedure with int as the result.
@@ -276,23 +262,12 @@ public class Rpc{
 	 */
 	public int callInteger( String method, Object... args) throws IOException, InterruptedException{
 		
-		return call(method, Arrays.asList(args), Integer.class);
+		if(args != null)
+			return call(method, Arrays.asList(args), Integer.class);
+		else
+			return call(method, Integer.class);
 	}
-	
-	/**
-	 * Calls the remote procedure with an array of ints as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The precedure return value as an array of integers.
-	 */
-	public int[] callIntegerArray( String method ) throws IOException, InterruptedException{
 		
-		Integer result[] =  call(method, Integer[].class);
-		int resultPrimitive[] = new int[result.length];
-		for(int i = 0; i < result.length; i++)
-			resultPrimitive[i] = result[i].intValue();
-		
-		return resultPrimitive;
-	}
 	
 	/**
 	 * Calls the remote procedure with an array of ints as result.
@@ -302,24 +277,19 @@ public class Rpc{
 	 */
 	public int[] callIntegerArray( String method, Object...args ) throws IOException, InterruptedException{
 		
-		Integer result[] =  call(method,Arrays.asList(args), Integer[].class);
+		Integer result[];
+		if( args != null )
+			result = call(method,Arrays.asList(args), Integer[].class);
+		else
+			result = call(method, Integer[].class);
+		
 		int resultPrimitive[] = new int[result.length];
 		for(int i = 0; i < result.length; i++)
 			resultPrimitive[i] = result[i].intValue();
 		
 		return resultPrimitive;
 	}
-	
-	
-	/**
-	 * Calls the remote procedure with double as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as double.
-	 */
-	public double callDouble( String method ) throws IOException, InterruptedException{
-		
-		return call(method, Double.class);
-	}
+			
 	
 	/**
 	 * Calls the remote procedure with double as result.
@@ -329,24 +299,12 @@ public class Rpc{
 	 */
 	public double callDouble( String method, Object... args ) throws IOException, InterruptedException{
 		
-		return call(method,Arrays.asList(args), Double.class);
+		if( args != null )
+			return call(method,Arrays.asList(args), Double.class);
+		else
+			return call(method, Double.class);
 	}
 	
-	/**
-	 * Calls the remote procedure with an array of doubles as a result.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as an array of doubles.
-	 */
-	public double[] callDoubleArray(String method) throws IOException, InterruptedException{
-		
-		Double result[] = call(method, Double[].class);
-		double resultPrimitive[] = new double[result.length];
-		for(int i=0; i < result.length; i++)
-			resultPrimitive[i] = result[i].doubleValue();
-		
-		return resultPrimitive;
-	}
-
 	/**
 	 * Calls the remote procedure with an array of doubles as a result.
 	 * @param method The remote procedure name to be invoked.
@@ -355,23 +313,18 @@ public class Rpc{
 	 */
 	public double[] callDoubleArray(String method, Object...args) throws IOException, InterruptedException{
 		
-		Double result[] = call(method, Arrays.asList(args), Double[].class);
+		Double result[];
+		if( args != null )
+			result = call(method, Arrays.asList(args), Double[].class);
+		else
+			result = call(method, Double[].class);
+		
 		double resultPrimitive[] = new double[result.length];
 		for(int i=0; i < result.length; i++)
 			resultPrimitive[i] = result[i].doubleValue();
 		
 		return resultPrimitive;
-	}
-
-	/**
-	 * Calls the remote procedure with float as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as float.
-	 */
-	public float callFloat( String method ) throws IOException, InterruptedException{
-		
-		return call(method, Float.class);
-	}
+	}	
 	
 	/**
 	 * Calls the remote procedure with float as result.
@@ -381,23 +334,11 @@ public class Rpc{
 	 */
 	public float callFloat( String method, Object... args ) throws IOException, InterruptedException{
 		
-		return call(method, Arrays.asList(args), Float.class);
-	}
-	
-	/**
-	 * Calls the remote procedure with an array of floats as result.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as an array of floats.
-	 */
-	public float[] callFloatArray(String method) throws IOException, InterruptedException{
-		
-		Float result[] = call(method, Float[].class);
-		float resultPrimitive[] = new float[result.length];
-		for(int i=0; i < result.length; i++)
-			resultPrimitive[i] = result[i].floatValue();
-		
-		return resultPrimitive;
-	}
+		if( args != null )
+			return call(method, Arrays.asList(args), Float.class);
+		else
+			return call(method, Float.class);
+	}		
 	
 	/**
 	 * Calls the remote procedure with an array of floats as result.
@@ -407,24 +348,19 @@ public class Rpc{
 	 */
 	public float[] callFloatArray(String method, Object...args) throws IOException, InterruptedException{
 		
-		Float result[] = call(method, Arrays.asList(args), Float[].class);
+		Float result[];
+		if( args != null)
+			result = call(method, Arrays.asList(args), Float[].class);
+		else
+			result = call(method, Float[].class);
+		
 		float resultPrimitive[] = new float[result.length];
 		for(int i=0; i < result.length; i++)
 			resultPrimitive[i] = result[i].floatValue();
 		
 		return resultPrimitive;
 	}
-	
-	/**
-	 * Calls the remote procedure with String as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as String.
-	 */
-	public String callString( String method ) throws IOException, InterruptedException{
-		
-		return call(method, String.class);
-	}
-	
+			
 	/**
 	 * Calls the remote procedure with String as result.
 	 * @param method The remote procedure name to be invoked.
@@ -433,18 +369,12 @@ public class Rpc{
 	 */
 	public String callString( String method, Object... args ) throws IOException, InterruptedException{
 		
-		return call(method,Arrays.asList(args), String.class);
+		if(args != null)
+			return call(method,Arrays.asList(args), String.class);
+		else
+			return call(method, String.class);
 	}
-	
-	/**
-	 * Calls the remote procedure with an array of Strings as result.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as an array of Strings.
-	 */
-	public String[] callStringArray(String method) throws IOException, InterruptedException{
 		
-		return call(method, String[].class);		
-	}
 	
 	/**
 	 * Calls the remote procedure with an array of Strings as result.
@@ -454,19 +384,12 @@ public class Rpc{
 	 */
 	public String[] callStringArray(String method, Object... args) throws IOException, InterruptedException{
 		
-		return call(method, Arrays.asList(args), String[].class);		
+		if( args != null )
+			return call(method, Arrays.asList(args), String[].class);
+		else
+			return call(method, String[].class);
 	}
-	
-	/**
-	 * Calls the remote procedure with boolean as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as boolean.
-	 */
-	public boolean callBoolean( String method ) throws IOException, InterruptedException{
-		
-		return call(method, Boolean.class);
-	}
-	
+			
 	/**
 	 * Calls the remote procedure with boolean as result and with no params.
 	 * @param method The remote procedure name to be invoked.
@@ -475,22 +398,10 @@ public class Rpc{
 	 */
 	public boolean callBoolean( String method, Object... args ) throws IOException, InterruptedException{
 		
-		return call(method,Arrays.asList(args), Boolean.class);
-	}
-	
-	/**
-	 * Calls the remote procedure with boolean as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as an array of booleans.
-	 */
-	public boolean[] callBooleanArray( String method ) throws IOException, InterruptedException{
-		
-		Boolean[] result =  call(method, Boolean[].class);
-		boolean resultPrimitive[] = new boolean[result.length];
-		for(int i=0; i < result.length; i++)
-			resultPrimitive[i] = result[i].booleanValue();
-		
-		return resultPrimitive;
+		if( args != null)
+			return call(method,Arrays.asList(args), Boolean.class);
+		else
+			return call(method, Boolean.class);	
 	}
 	
 	/**
@@ -501,24 +412,19 @@ public class Rpc{
 	 */
 	public boolean[] callBooleanArray( String method, Object... args ) throws IOException, InterruptedException{
 		
-		Boolean[] result =  call(method, Arrays.asList(args), Boolean[].class);
+		Boolean[] result;
+		if( args != null)
+			result = call(method, Arrays.asList(args), Boolean[].class);
+		else
+			result = call(method, Boolean[].class);
+		
 		boolean resultPrimitive[] = new boolean[result.length];
 		for(int i=0; i < result.length; i++)
 			resultPrimitive[i] = result[i].booleanValue();
 		
 		return resultPrimitive;
 	}
-	
-	/**
-	 * Calls the remote procedure with short as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as short.
-	 */
-	public short callShort( String method ) throws IOException, InterruptedException{
-		
-		return call(method, Short.class);
-	}
-	
+			
 	/**
 	 * Calls the remote procedure with short as result.
 	 * @param method The remote procedure name to be invoked.
@@ -527,24 +433,12 @@ public class Rpc{
 	 */
 	public short callShort( String method, Object... args ) throws IOException, InterruptedException{
 		
-		return call(method,Arrays.asList(args), Short.class);
+		if( args != null )
+			return call(method,Arrays.asList(args), Short.class);
+		else
+			return call(method, Short.class);
 	}
-	
-	/**
-	 * Calls the remote procedure with short as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as an array of shorts.
-	 */
-	public short[] callShortArray( String method ) throws IOException, InterruptedException{
-		
-		Short[] result =  call(method, Short[].class);
-		short resultPrimitive[] = new short[result.length];
-		for(int i=0; i < result.length; i++)
-			resultPrimitive[i] = result[i].shortValue();
-		
-		return resultPrimitive;
-	}
-	
+			
 	/**
 	 * Calls the remote procedure with boolean as result.
 	 * @param method The remote procedure name to be invoked.
@@ -553,24 +447,19 @@ public class Rpc{
 	 */
 	public short[] callShortArray( String method, Object... args ) throws IOException, InterruptedException{
 		
-		Short[] result =  call(method, Arrays.asList(args), Short[].class);
+		Short[] result;
+		if( args != null )
+			result = call(method, Arrays.asList(args), Short[].class);
+		else
+			result = call(method, Short[].class);
+		
 		short resultPrimitive[] = new short[result.length];
 		for(int i=0; i < result.length; i++)
 			resultPrimitive[i] = result[i].shortValue();
 		
 		return resultPrimitive;
 	}
-	
-	/**
-	 * Calls the remote procedure with long as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as long.
-	 */
-	public long callLong( String method ) throws IOException, InterruptedException{
-		
-		return call(method, Long.class);
-	}
-	
+			
 	/**
 	 * Calls the remote procedure with long as result.
 	 * @param method The remote procedure name to be invoked.
@@ -579,24 +468,12 @@ public class Rpc{
 	 */
 	public long callLong( String method, Object... args ) throws IOException, InterruptedException{
 		
-		return call(method,Arrays.asList(args), Long.class);
+		if( args != null )
+			return call(method,Arrays.asList(args), Long.class);
+		else
+			return call(method, Long.class);
 	}
-	
-	/**
-	 * Calls the remote procedure with long as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as an array of longs.
-	 */
-	public long[] callLongArray( String method ) throws IOException, InterruptedException{
 		
-		Long[] result =  call(method, Long[].class);
-		long resultPrimitive[] = new long[result.length];
-		for(int i=0; i < result.length; i++)
-			resultPrimitive[i] = result[i].longValue();
-		
-		return resultPrimitive;
-	}
-	
 	/**
 	 * Calls the remote procedure with long as result.
 	 * @param method The remote procedure name to be invoked.
@@ -605,7 +482,12 @@ public class Rpc{
 	 */
 	public long[] callLongArray( String method, Object... args ) throws IOException, InterruptedException{
 		
-		Long[] result =  call(method, Arrays.asList(args), Long[].class);
+		Long[] result;
+		if( args != null )
+			result = call(method, Arrays.asList(args), Long[].class);
+		else
+			result = call(method, Long[].class);
+		
 		long resultPrimitive[] = new long[result.length];
 		for(int i=0; i < result.length; i++)
 			resultPrimitive[i] = result[i].longValue();
@@ -613,15 +495,6 @@ public class Rpc{
 		return resultPrimitive;
 	}
 	
-	/**
-	 * Calls the remote procedure with char as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as long.
-	 */
-	public char callChar( String method ) throws IOException, InterruptedException{
-		
-		return call(method, Character.class);
-	}
 	
 	/**
 	 * Calls the remote procedure with char as result.
@@ -629,25 +502,14 @@ public class Rpc{
 	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
 	 * @return The procedure return value as char.
 	 */
-	public long callChar( String method, Object... args ) throws IOException, InterruptedException{
+	public char callChar( String method, Object... args ) throws IOException, InterruptedException{
 		
-		return call(method,Arrays.asList(args), Character.class);
+		if( args != null )
+			return call(method,Arrays.asList(args), Character.class);
+		else
+			return call(method, Character.class);
 	}
 	
-	/**
-	 * Calls the remote procedure with char as result and with no params.
-	 * @param method The remote procedure name to be invoked.
-	 * @return The procedure return value as an array of chars.
-	 */
-	public char[] callCharArray( String method ) throws IOException, InterruptedException{
-		
-		Character[] result =  call(method, Character[].class);
-		char resultPrimitive[] = new char[result.length];
-		for(int i=0; i < result.length; i++)
-			resultPrimitive[i] = result[i].charValue();
-		
-		return resultPrimitive;
-	}
 	
 	/**
 	 * Calls the remote procedure with char as result.
@@ -657,7 +519,12 @@ public class Rpc{
 	 */
 	public char[] callCharArray( String method, Object... args ) throws IOException, InterruptedException{
 		
-		Character[] result =  call(method, Arrays.asList(args), Character[].class);
+		Character[] result;
+		if( args != null )
+			result = call(method, Arrays.asList(args), Character[].class);
+		else
+			result = call(method, Character[].class);
+		
 		char resultPrimitive[] = new char[result.length];
 		for(int i=0; i < result.length; i++)
 			resultPrimitive[i] = result[i].charValue();

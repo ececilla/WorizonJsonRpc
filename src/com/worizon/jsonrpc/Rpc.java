@@ -494,7 +494,7 @@ public class Rpc{
 	}
 	
 	/**
-	 * Calls the remote procedure with boolean as result and with no params.
+	 * Calls the remote procedure with boolean as result.
 	 * @param method The remote procedure name to be invoked.
 	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
 	 * @return The procedure return value as an array of booleans.
@@ -505,6 +505,162 @@ public class Rpc{
 		boolean resultPrimitive[] = new boolean[result.length];
 		for(int i=0; i < result.length; i++)
 			resultPrimitive[i] = result[i].booleanValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with short as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as short.
+	 */
+	public short callShort( String method ) throws IOException, InterruptedException{
+		
+		return call(method, Short.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with short as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as short.
+	 */
+	public short callShort( String method, Object... args ) throws IOException, InterruptedException{
+		
+		return call(method,Arrays.asList(args), Short.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with short as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as an array of shorts.
+	 */
+	public short[] callShortArray( String method ) throws IOException, InterruptedException{
+		
+		Short[] result =  call(method, Short[].class);
+		short resultPrimitive[] = new short[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].shortValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with boolean as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as an array of shorts.
+	 */
+	public short[] callShortArray( String method, Object... args ) throws IOException, InterruptedException{
+		
+		Short[] result =  call(method, Arrays.asList(args), Short[].class);
+		short resultPrimitive[] = new short[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].shortValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with long as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as long.
+	 */
+	public long callLong( String method ) throws IOException, InterruptedException{
+		
+		return call(method, Long.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with long as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as long.
+	 */
+	public long callLong( String method, Object... args ) throws IOException, InterruptedException{
+		
+		return call(method,Arrays.asList(args), Long.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with long as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as an array of longs.
+	 */
+	public long[] callLongArray( String method ) throws IOException, InterruptedException{
+		
+		Long[] result =  call(method, Long[].class);
+		long resultPrimitive[] = new long[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].longValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with long as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as an array of longs.
+	 */
+	public long[] callLongArray( String method, Object... args ) throws IOException, InterruptedException{
+		
+		Long[] result =  call(method, Arrays.asList(args), Long[].class);
+		long resultPrimitive[] = new long[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].longValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with char as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as long.
+	 */
+	public char callChar( String method ) throws IOException, InterruptedException{
+		
+		return call(method, Character.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with char as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as char.
+	 */
+	public long callChar( String method, Object... args ) throws IOException, InterruptedException{
+		
+		return call(method,Arrays.asList(args), Character.class);
+	}
+	
+	/**
+	 * Calls the remote procedure with char as result and with no params.
+	 * @param method The remote procedure name to be invoked.
+	 * @return The procedure return value as an array of chars.
+	 */
+	public char[] callCharArray( String method ) throws IOException, InterruptedException{
+		
+		Character[] result =  call(method, Character[].class);
+		char resultPrimitive[] = new char[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].charValue();
+		
+		return resultPrimitive;
+	}
+	
+	/**
+	 * Calls the remote procedure with char as result.
+	 * @param method The remote procedure name to be invoked.
+	 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+	 * @return The procedure return value as an array of chars.
+	 */
+	public char[] callCharArray( String method, Object... args ) throws IOException, InterruptedException{
+		
+		Character[] result =  call(method, Arrays.asList(args), Character[].class);
+		char resultPrimitive[] = new char[result.length];
+		for(int i=0; i < result.length; i++)
+			resultPrimitive[i] = result[i].charValue();
 		
 		return resultPrimitive;
 	}

@@ -27,9 +27,9 @@ import com.worizon.net.HttpRequester;
 public class RpcTest {
 	
 	@Test
-	public void testPair(){
+	public void testRemoteParam(){
 			
-		Map.Entry<String, Object> pair = Rpc.ParamEntry("paramName", "paramValue");
+		Map.Entry<String, Object> pair = Rpc.RemoteParam("paramName", "paramValue");
 		assertEquals( "paramName", pair.getKey() );
 		assertEquals( "paramValue", pair.getValue() );
 		
@@ -719,7 +719,7 @@ public class RpcTest {
 		});						
 		EasyMock.replay(requester);				
 		Rpc rpc = new Rpc(requester);										
-		rpc.callVoid("op",Rpc.ParamEntry("v1", 1.5),Rpc.ParamEntry("v2", "test"));		
+		rpc.callVoid("op",Rpc.RemoteParam("v1", 1.5),Rpc.RemoteParam("v2", "test"));		
 		
 	}
 	
@@ -742,7 +742,7 @@ public class RpcTest {
 		});						
 		EasyMock.replay(requester);				
 		Rpc rpc = new Rpc(requester);										
-		rpc.callVoid("op",Rpc.ParamEntry("v1", 1.5),"test");		
+		rpc.callVoid("op",Rpc.RemoteParam("v1", 1.5),"test");		
 		
 	}
 	

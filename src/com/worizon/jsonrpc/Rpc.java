@@ -246,7 +246,7 @@ public class Rpc{
 	private Object transformParametersArrayIntoCollection( Object...args ){
 		
 		if( TypesUtil.all(args,Map.Entry.class ) ){
-			Map<String,Object> margs = new LinkedHashMap<String, Object>();
+			Map<String,Object> margs = new LinkedHashMap<String, Object>();//preserve same order of named parameters as in the args array.
 			for( Object arg: args){
 				
 				Map.Entry<String, Object> entry = (Map.Entry<String, Object>)arg;
@@ -255,7 +255,7 @@ public class Rpc{
 			return margs;
 		}else if( TypesUtil.any(args, Map.Entry.class) ){
 			
-			throw new JsonRpcException("Must pass ALL parameters as named parameters or NONE.");
+			throw new IllegalArgumentException("Must pass ALL parameters as named parameters or NONE.");
 		}else	
 			return Arrays.asList(args);
 	}

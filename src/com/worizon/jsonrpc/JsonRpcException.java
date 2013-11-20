@@ -45,7 +45,7 @@ public class JsonRpcException extends RuntimeException {
 			if(error != null)
 				return error.getMessage();
 			else
-				return super.getMessage();
+				throw new IllegalStateException("No JSON-RPC error object setted.");
 		}		
 		
 }

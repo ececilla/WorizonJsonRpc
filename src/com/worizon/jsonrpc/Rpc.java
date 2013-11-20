@@ -570,7 +570,7 @@ public class Rpc{
 	 * @param paramValue Value of this parameter.
 	 * @return The pair of (paramName, paramValue) as an object of type AbstractMap.SimpleEntry
 	 */
-	public static Map.Entry<String, Object> ParamEntry(String paramName, Object  paramValue){
+	public static Map.Entry<String, Object> RemoteParam(String paramName, Object  paramValue){
 		
 		return new AbstractMap.SimpleEntry<String, Object>(paramName,paramValue);
 	}

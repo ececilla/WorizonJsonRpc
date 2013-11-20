@@ -19,7 +19,6 @@ import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
 
-import static com.worizon.jsonrpc.Consts.*;
 
 /**
  * 
@@ -238,6 +237,28 @@ public class Rpc{
 		
 		return call(method, (Object)null, clazz);
 	}
+	
+	/**
+	 * Return the parameters bundled in a apropiate container, List or HashMap depending on how these
+	 * were passed in.
+	 * @return Parameters container.
+	 */
+	private Object transformParametersArrayIntoCollection( Object...args ){
+		
+		if( TypesUtil.all(args,Map.Entry.class ) ){
+			Map<String,Object> margs = new LinkedHashMap<String, Object>();
+			for( Object arg: args){
+				
+				Map.Entry<String, Object> entry = (Map.Entry<String, Object>)arg;
+				margs.put(entry.getKey(), entry.getValue());				
+			}
+			return margs;
+		}else if( TypesUtil.any(args, Map.Entry.class) ){
+			
+			throw new JsonRpcException("Must pass ALL parameters as named parameters or NONE.");
+		}else	
+			return Arrays.asList(args);
+	}
 		
 	
 	/**
@@ -247,10 +268,9 @@ public class Rpc{
 	 */
 	public void callVoid( String method, Object... args) throws IOException, InterruptedException{
 		
-		if(args != null){		
-			
-			call(method, Arrays.asList(args), Void.class);
-		}else
+		if(args != null)								
+			call(method, transformParametersArrayIntoCollection(args), Void.class);
+		else
 			call(method, Void.class);
 	}
 		
@@ -264,7 +284,7 @@ public class Rpc{
 	public int callInteger( String method, Object... args) throws IOException, InterruptedException{
 		
 		if(args != null)
-			return call(method, Arrays.asList(args), Integer.class);
+			return call(method, transformParametersArrayIntoCollection(args), Integer.class);
 		else
 			return call(method, Integer.class);
 	}
@@ -280,7 +300,7 @@ public class Rpc{
 		
 		Integer result[];
 		if( args != null )
-			result = call(method,Arrays.asList(args), Integer[].class);
+			result = call(method,transformParametersArrayIntoCollection(args), Integer[].class);
 		else
 			result = call(method, Integer[].class);
 		
@@ -301,7 +321,7 @@ public class Rpc{
 	public double callDouble( String method, Object... args ) throws IOException, InterruptedException{
 		
 		if( args != null )
-			return call(method,Arrays.asList(args), Double.class);
+			return call(method,transformParametersArrayIntoCollection(args), Double.class);
 		else
 			return call(method, Double.class);
 	}
@@ -316,7 +336,7 @@ public class Rpc{
 		
 		Double result[];
 		if( args != null )
-			result = call(method, Arrays.asList(args), Double[].class);
+			result = call(method, transformParametersArrayIntoCollection(args), Double[].class);
 		else
 			result = call(method, Double[].class);
 		
@@ -336,7 +356,7 @@ public class Rpc{
 	public float callFloat( String method, Object... args ) throws IOException, InterruptedException{
 		
 		if( args != null )
-			return call(method, Arrays.asList(args), Float.class);
+			return call(method, transformParametersArrayIntoCollection(args), Float.class);
 		else
 			return call(method, Float.class);
 	}		
@@ -351,7 +371,7 @@ public class Rpc{
 		
 		Float result[];
 		if( args != null)
-			result = call(method, Arrays.asList(args), Float[].class);
+			result = call(method, transformParametersArrayIntoCollection(args), Float[].class);
 		else
 			result = call(method, Float[].class);
 		
@@ -371,7 +391,7 @@ public class Rpc{
 	public String callString( String method, Object... args ) throws IOException, InterruptedException{
 		
 		if(args != null)
-			return call(method,Arrays.asList(args), String.class);
+			return call(method,transformParametersArrayIntoCollection(args), String.class);
 		else
 			return call(method, String.class);
 	}
@@ -386,7 +406,7 @@ public class Rpc{
 	public String[] callStringArray(String method, Object... args) throws IOException, InterruptedException{
 		
 		if( args != null )
-			return call(method, Arrays.asList(args), String[].class);
+			return call(method, transformParametersArrayIntoCollection(args), String[].class);
 		else
 			return call(method, String[].class);
 	}
@@ -400,7 +420,7 @@ public class Rpc{
 	public boolean callBoolean( String method, Object... args ) throws IOException, InterruptedException{
 		
 		if( args != null)
-			return call(method,Arrays.asList(args), Boolean.class);
+			return call(method, transformParametersArrayIntoCollection(args), Boolean.class);
 		else
 			return call(method, Boolean.class);	
 	}
@@ -415,7 +435,7 @@ public class Rpc{
 		
 		Boolean[] result;
 		if( args != null)
-			result = call(method, Arrays.asList(args), Boolean[].class);
+			result = call(method, transformParametersArrayIntoCollection(args), Boolean[].class);
 		else
 			result = call(method, Boolean[].class);
 		
@@ -435,7 +455,7 @@ public class Rpc{
 	public short callShort( String method, Object... args ) throws IOException, InterruptedException{
 		
 		if( args != null )
-			return call(method,Arrays.asList(args), Short.class);
+			return call(method, transformParametersArrayIntoCollection(args), Short.class);
 		else
 			return call(method, Short.class);
 	}
@@ -450,7 +470,7 @@ public class Rpc{
 		
 		Short[] result;
 		if( args != null )
-			result = call(method, Arrays.asList(args), Short[].class);
+			result = call(method, transformParametersArrayIntoCollection(args), Short[].class);
 		else
 			result = call(method, Short[].class);
 		
@@ -470,7 +490,7 @@ public class Rpc{
 	public long callLong( String method, Object... args ) throws IOException, InterruptedException{
 		
 		if( args != null )
-			return call(method,Arrays.asList(args), Long.class);
+			return call(method, transformParametersArrayIntoCollection(args), Long.class);
 		else
 			return call(method, Long.class);
 	}
@@ -485,7 +505,7 @@ public class Rpc{
 		
 		Long[] result;
 		if( args != null )
-			result = call(method, Arrays.asList(args), Long[].class);
+			result = call(method, transformParametersArrayIntoCollection(args), Long[].class);
 		else
 			result = call(method, Long[].class);
 		
@@ -506,7 +526,7 @@ public class Rpc{
 	public char callChar( String method, Object... args ) throws IOException, InterruptedException{
 		
 		if( args != null )
-			return call(method,Arrays.asList(args), Character.class);
+			return call(method, transformParametersArrayIntoCollection(args), Character.class);
 		else
 			return call(method, Character.class);
 	}
@@ -522,7 +542,7 @@ public class Rpc{
 		
 		Character[] result;
 		if( args != null )
-			result = call(method, Arrays.asList(args), Character[].class);
+			result = call(method, transformParametersArrayIntoCollection(args), Character[].class);
 		else
 			result = call(method, Character[].class);
 		
@@ -550,7 +570,7 @@ public class Rpc{
 	 * @param paramValue Value of this parameter.
 	 * @return The pair of (paramName, paramValue) as an object of type AbstractMap.SimpleEntry
 	 */
-	public static Map.Entry<String, Object> Pair(String paramName, Object  paramValue){
+	public static Map.Entry<String, Object> ParamEntry(String paramName, Object  paramValue){
 		
 		return new AbstractMap.SimpleEntry<String, Object>(paramName,paramValue);
 	}

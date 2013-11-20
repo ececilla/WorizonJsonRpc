@@ -723,7 +723,7 @@ public class RpcTest {
 		
 	}
 	
-	@Test(expected=JsonRpcException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void testCallVoidNamedParamsWithException() throws Exception{
 		
 		

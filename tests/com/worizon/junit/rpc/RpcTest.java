@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +22,18 @@ import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
-import com.worizon.test.TestServer;
 
 
 public class RpcTest {
+	
+	@Test
+	public void testPair(){
+			
+		Map.Entry<String, Object> pair = Rpc.ParamEntry("paramName", "paramValue");
+		assertEquals( "paramName", pair.getKey() );
+		assertEquals( "paramValue", pair.getValue() );
+		
+	}
 	
 	interface NonRemoteInterface{};
 	
@@ -668,9 +675,10 @@ public class RpcTest {
 		rpc.callVoid("op");		
 		
 	}
+		
 	
 	@Test
-	public void testCallVoidParams() throws Exception{
+	public void testCallVoidOrderedParams() throws Exception{
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
@@ -689,6 +697,52 @@ public class RpcTest {
 		EasyMock.replay(requester);				
 		Rpc rpc = new Rpc(requester);										
 		rpc.callVoid("op",1.5,"test");		
+		
+	}
+	
+	@Test
+	public void testCallVoidNamedParams() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":{\"v1\":1.5,\"v2\":\"test\"},\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		rpc.callVoid("op",Rpc.ParamEntry("v1", 1.5),Rpc.ParamEntry("v2", "test"));		
+		
+	}
+	
+	@Test(expected=JsonRpcException.class)
+	public void testCallVoidNamedParamsWithException() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();					
+				assertTrue(request.startsWith("{\"method\":\"op\",\"params\":{\"v1\":1.5,\"v2\":\"test\"},\"jsonrpc\":\"2.0\","));
+				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc rpc = new Rpc(requester);										
+		rpc.callVoid("op",Rpc.ParamEntry("v1", 1.5),"test");		
 		
 	}
 	

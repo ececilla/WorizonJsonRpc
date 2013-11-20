@@ -33,13 +33,19 @@ public class JsonRpcException extends RuntimeException {
 		
 		public int getCode(){
 			
-			return error.getCode();
+			if( error != null)
+				return error.getCode();
+			else
+				throw new IllegalStateException("No JSON-RPC error object setted.");
 		}
 		
 		@Override
 		public String getMessage(){
 			
-			return error.getMessage();
+			if(error != null)
+				return error.getMessage();
+			else
+				return super.getMessage();
 		}		
 		
 }

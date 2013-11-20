@@ -1,5 +1,10 @@
 package com.worizon.jsonrpc;
 
+/**
+ * 
+ * @author Enric Cecilla
+ * @since 1.0.0
+ */
 public class TypesUtil {
 	
 	/**

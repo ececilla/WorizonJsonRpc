@@ -245,7 +245,8 @@ public class Rpc{
 	 */
 	private Object transformParametersArrayIntoCollection( Object...args ){
 		
-		if( TypesUtil.all(args,Map.Entry.class ) ){
+		if( TypesUtil.all(args).haveType(Map.Entry.class) ){
+			
 			Map<String,Object> margs = new LinkedHashMap<String, Object>();//preserve same order of named parameters as in the args array.
 			for( Object arg: args){
 				
@@ -253,7 +254,7 @@ public class Rpc{
 				margs.put(entry.getKey(), entry.getValue());				
 			}
 			return margs;
-		}else if( TypesUtil.any(args, Map.Entry.class) ){
+		}else if( TypesUtil.any(args).haveType(Map.Entry.class) ){
 			
 			throw new IllegalArgumentException("Must pass ALL parameters as named parameters or NONE.");
 		}else	

@@ -10,7 +10,7 @@ public class TypesUtilTest {
 	public void testAllTrue(){
 		
 		Object objs[] = new Object[]{new Integer(1), new Integer(2), new Integer(3), new Integer(4)};
-		assertTrue( TypesUtil.all(objs, Integer.class) );
+		assertTrue( TypesUtil.all(objs).haveType(Integer.class) );
 		
 	}
 	
@@ -18,7 +18,7 @@ public class TypesUtilTest {
 	public void testAllFalse(){
 		
 		Object objs[] = new Object[]{new Integer(1), new Double(2), new Integer(3), new Integer(4)};
-		assertFalse( TypesUtil.all(objs, Integer.class) );
+		assertFalse( TypesUtil.all(objs).haveType(Integer.class) );
 		
 	}
 	
@@ -26,7 +26,7 @@ public class TypesUtilTest {
 	public void testAnyTrue(){
 		
 		Object objs[] = new Object[]{new Double(1), new Long(2), new Integer(3), new Float(4)};
-		assertTrue( TypesUtil.any(objs, Integer.class) );
+		assertTrue( TypesUtil.any(objs).haveType(Integer.class) );
 		
 	}
 	
@@ -34,7 +34,7 @@ public class TypesUtilTest {
 	public void testAnyFalse(){
 		
 		Object objs[] = new Object[]{new Double(1), new Long(2), new String(""), new Float(4)};
-		assertFalse( TypesUtil.any(objs, Integer.class) );
+		assertFalse( TypesUtil.any(objs).haveType(Integer.class) );
 		
 	}
 	
@@ -42,7 +42,7 @@ public class TypesUtilTest {
 	public void testNoneTrue(){
 		
 		Object objs[] = new Object[]{new Double(1), new Long(2), new Short((short)0), new Float(4)};
-		assertTrue( TypesUtil.none(objs, Integer.class) );
+		assertTrue( TypesUtil.none(objs).haveType(Integer.class) );
 		
 	}
 	
@@ -50,7 +50,7 @@ public class TypesUtilTest {
 	public void testNoneFalse(){
 		
 		Object objs[] = new Object[]{new Double(1), new Integer(2), new Short((short)0), new Float(4)};
-		assertFalse( TypesUtil.none(objs, Integer.class) );
+		assertFalse( TypesUtil.none(objs).haveType(Integer.class) );
 		
 	}
 	

@@ -46,8 +46,7 @@ public class JsonRpcResponse<T> extends JsonRpc {
 		if( root.has("result") ){
 			if( !root.get("result").isJsonNull() ){ 
 								
-				result = gson.fromJson(root.get("result"), clazz);
-				
+				result = gson.fromJson(root.get("result"), clazz);				
 			}else
 				result = null;			
 		}else if( root.has("error") ){
@@ -55,9 +54,8 @@ public class JsonRpcResponse<T> extends JsonRpc {
 				
 				JsonElement errorJsonElement = root.get("error");				
 				if( errorJsonElement.getAsJsonObject().has("code") && errorJsonElement.getAsJsonObject().has("message")){
-					
-					String error_str = gson.toJson( errorJsonElement );
-					error = gson.fromJson(error_str, JsonRpcError.class);
+										
+					error = gson.fromJson(errorJsonElement, JsonRpcError.class);
 				}else{
 					throw new JsonRpcException("Error code or message not found");
 				}

@@ -58,8 +58,8 @@ public class JsonRpcErrorResponseTest {
 	}
 	
 		
-	@Test
-	public void testErrorWithCodeMessageNull() throws Exception{
+	@Test(expected=JsonRpcException.class)
+	public void testErrorWithMessageNull() throws Exception{
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-100, \"message\":null}, \"id\": 2}";		
 		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
@@ -70,7 +70,15 @@ public class JsonRpcErrorResponseTest {
 	}
 	
 	@Test(expected=JsonRpcException.class)
-	public void testErrorWithCodeMessageNotFound() throws Exception{
+	public void testErrorWithCodeNull() throws Exception{
+		
+		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":null, \"message\":\"Not found\"}, \"id\": 2}";		
+		new JsonRpcResponse<Integer>(message, Integer.class);
+				
+	}
+	
+	@Test(expected=JsonRpcException.class)
+	public void testErrorWithMessageNotFound() throws Exception{
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-100}, \"id\": 2}";		
 		new JsonRpcResponse<Integer>(message, Integer.class);
@@ -78,11 +86,11 @@ public class JsonRpcErrorResponseTest {
 	}
 	
 	@Test(expected=JsonRpcException.class)
-	public void testErrorCodeNotFound() throws Exception{
+	public void testErrorWithCodeNotFound() throws Exception{
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"message\":null}, \"id\": 2}";		
 		new JsonRpcResponse<Void>(message, Void.class);
 		
-	}
+	}		
 	
 }

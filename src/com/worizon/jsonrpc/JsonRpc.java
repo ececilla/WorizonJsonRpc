@@ -12,7 +12,7 @@ import com.worizon.jsonrpc.gson.NonExposeExclusionEstrategy;
  * objects are defined here as well as static helpers methods to serialize and deserialize.
  * 
  * @author Enric Cecilla
- *
+ * @since 1.0.0
  */
 public abstract class JsonRpc {
 	

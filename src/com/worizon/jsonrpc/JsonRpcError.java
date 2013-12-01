@@ -1,24 +1,24 @@
 package com.worizon.jsonrpc;
 
-import static com.worizon.jsonrpc.Consts.INTERNAL_ERROR_CODE;
-import static com.worizon.jsonrpc.Consts.INVALID_PARAMS_CODE;
-import static com.worizon.jsonrpc.Consts.INVALID_REQUEST_CODE;
-import static com.worizon.jsonrpc.Consts.METHOD_NOT_FOUND_CODE;
-import static com.worizon.jsonrpc.Consts.PARSE_ERROR_CODE;
+import static com.worizon.jsonrpc.Const.Errors.INTERNAL_ERROR_CODE;
+import static com.worizon.jsonrpc.Const.Errors.INVALID_PARAMS_CODE;
+import static com.worizon.jsonrpc.Const.Errors.INVALID_REQUEST_CODE;
+import static com.worizon.jsonrpc.Const.Errors.METHOD_NOT_FOUND_CODE;
+import static com.worizon.jsonrpc.Const.Errors.PARSE_ERROR_CODE;
 
 /**
- * This class encapsulates a JSONRPC error. This library will distinguish two types of error, 
- * JSONRPC level or domain level errors.
+ * This class encapsulates a JSON-RPC error. This library will makes explicit distinction of two types of errors: 
+ * -JSON-RPC level errors.
+ * -Domain level errors.
  * 
- * JSONRPC errors are those that happen when something at the transport level goes wrong. These kind of
+ * JSONRPC errors are those that happen when something at the transport level went wrong. These kind of
  * errors include method not found, parse error or internal server error. So, most of these errors are not generated
  * inside the remote procedure but along the way to its execution.
  * 
- * On the other hand, domain level errors are those that are normally generated inside the remote procedure. 
- * When the remote procedure signals a failure situation, the server implementation should
- * response back with an error code.
+ * On the other hand, domain level errors are those that are usually generated inside the remote procedure. 
+ * When the remote procedure signals a failure situation, the server implementation should response back
+ * with an error code different from those stated in the spec. 
  *  
- * 
  * 
  * @author Enric Cecilla 
  * @since 1.0.0

@@ -1,5 +1,11 @@
 package com.worizon.jsonrpc;
 
+/**
+ * Base class for JSON-RPC exceptions, the error object returned from the server is bundled into this exception object.
+ * 
+ * @author Enric Cecilla
+ * @since 1.0.0
+ */
 @SuppressWarnings("serial")
 public class JsonRpcException extends RuntimeException {
 	

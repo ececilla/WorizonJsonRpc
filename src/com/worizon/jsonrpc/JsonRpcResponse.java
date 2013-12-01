@@ -10,29 +10,56 @@ import com.google.gson.JsonParser;
 
 
 /**
- * Clase que representa una respuesta de JSON-RPC 2.0.
+ * This class represents a JSON-RPC response. The generic parameter T is the type of the
+ * expected output of the remote procedure. For instance, JsonRpcResponse{@literal <}Integer{@literal >} is the response
+ * object of a remote procedure returning an integer. Not only this class can be parameterized with
+ * primitive types but also with custom types: JsonRpcResponse{@literal <}Dummy{@literal >}.
  * 
- * Ejemplos de respuesta JSON-RPC:
+ * <p>
+ * All JsonRpcResponse has one and only one of the fields error or results filled. A server response having 
+ * none of these or both of them generates an IllegalArgumentException.
+ *  
+ * <p> 
+ * If an error happens, on the remote procedure or along the way to the remote procedure, the error object 
+ * will be non-null and the result object will be null, otherwise the result object will be non-null.
  * 
- * Con error:
- * {"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found."}, "id": "1"}
+ * <p>
+ * Example of two JSON-RPC response strings, error and non-error situation:
+ * <pre>
+ *   
+ * {"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found."}, "id": 188329}
  * 
- * Sin error:
- * {"jsonrpc": "2.0", "result": 19, "id": 1}
+ * {"jsonrpc": "2.0", "result": 19, "id": 177784}
+ * </pre>
  * 
- * @author enric
+ * @author Enric Cecilla
+ * @since 1.0.0
  *
- * @param <R>
  */
 public class JsonRpcResponse<T> extends JsonRpc {	
-		
+	
+	/**
+	 * Result object.
+	 */
 	private T result = null;
+	
+	/**
+	 * Error object.
+	 */
 	private JsonRpcError error = null;	
 	
-	public JsonRpcResponse( String json_str, Class<? extends T> clazz ) {
+	/**
+	 * Crates a JsonRpcResponse object. 
+	 * @param jsonStr The JSON-RPC response string from the server.
+	 * @param clazz The type that the result object will be converted to.
+	 * @throws JsonRpcException when the jsonrpc field in the response is different from "2.0".
+	 * @throws JsonRpcException when the id field in the response is empty or null.
+	 * @throws JsonRpcExceptoin when result and error fields are both empty or null.
+	 */
+	public JsonRpcResponse( String jsonStr, Class<? extends T> clazz ) {
 				
 		JsonParser parser = new JsonParser();
-		JsonObject root = parser.parse(json_str).getAsJsonObject();				
+		JsonObject root = parser.parse(jsonStr).getAsJsonObject();				
 		jsonrpc = root.get("jsonrpc").getAsString();
 		if(!jsonrpc.equals("2.0"))
 			throw new JsonRpcException("Version not supported:" + jsonrpc);
@@ -52,27 +79,37 @@ public class JsonRpcResponse<T> extends JsonRpc {
 		}else if( root.has("error") ){
 			if(!root.get("error").isJsonNull()){
 				
-				JsonElement errorJsonElement = root.get("error");				
+				JsonElement errorJsonElement = root.get("error");		
 				if( errorJsonElement.getAsJsonObject().has("code") && errorJsonElement.getAsJsonObject().has("message")){
-										
-					error = gson.fromJson(errorJsonElement, JsonRpcError.class);
-				}else{
-					throw new JsonRpcException("Error code or message not found");
-				}
-			}else{
-				throw new JsonRpcException("Error field is null");
-			}
-		}else{
+					
+					if( !errorJsonElement.getAsJsonObject().get("code").isJsonNull() && 
+						!errorJsonElement.getAsJsonObject().get("message").isJsonNull()){											
+					
+						error = gson.fromJson(errorJsonElement, JsonRpcError.class);
+					}else
+						throw new JsonRpcException("Error code or message should not be null");
+				}else
+					throw new JsonRpcException("Error code or message not found");				
+			}else
+				throw new JsonRpcException("Error field is null");			
+		}else
 			throw new JsonRpcException("Neither result nor error fields present");
-		}
+		
 	}			
 	
-	
+	/**
+	 * Gets the result part of this JsonRpcResponse object.
+	 * @return Result object.
+	 */
 	public T getResult(){
 		
 		return result;
 	}
 	
+	/**
+	 * Gets the error part of this JsonRpcResponse object.
+	 * @return Error object.
+	 */
 	public JsonRpcError getError(){
 		
 		return error;

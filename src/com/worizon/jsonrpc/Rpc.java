@@ -22,10 +22,10 @@ import com.worizon.net.HttpRequester;
 
 /**
  * 
- * Facade class to make remote procedure calls to JSON-RPC servers. This facade class can be consumed via the proxy api and via the 
- * direct api (the set of methods named as callX). To use the proxy method to make rpc calls your interface must be annotated 
- * with the {@literal @}Remote annotation. There exists some other annotations apart from {@literal @}Remote  to tweak and adjust to  
- * your needs the remote procedure behaviour. Following you can find the list of annotations that can be used to modify the behaviour of
+ * Facade class to make remote procedure calls to JSON-RPC 2.0 compliant servers. This facade class can be consumed via the proxy api and 
+ *  via the direct api (the set of methods named as callX). To use the proxy method to make rpc calls your interface must be annotated 
+ * with the {@literal @}Remote annotation. There exists some other annotations apart from {@literal @}Remote  to tweak and adjust
+ * the remote procedure behaviour to your needs. Following you can find the list of annotations that can be used to modify the behaviour of
  * the resulting rpc stub object: 
  * <ul>
  * <li>{@literal @}RemoteProcName</li>
@@ -91,8 +91,10 @@ import com.worizon.net.HttpRequester;
  * int result = service.sum(3,4); //==> parameters ordered by position {method:"my_sum",params:[3,4]}
  * </pre>
  * <p>
- * There exists another way to make remote invocations, the direct api. The direct api is suposed to be used 
- * as a delegated object inside your service implementation:
+ * There exists another way to make remote invocations, the direct api. The direct api uses variable arguments (Object...) 
+ * to supply the parameters to the remote procedure. The direct api is suposed to be used as a delegated object inside your service 
+ * implementation:
+ *  
  * <pre>
  * public class MyService{
  * 	
@@ -110,7 +112,7 @@ import com.worizon.net.HttpRequester;
  * Ex5:
  * <pre>
  * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
- * int result = rpc.callInteger("sum",4,5);
+ * int result = rpc.callInteger("sum",1,2,3,4,5);
  * </pre>
  * 
  * <p>
@@ -131,6 +133,7 @@ import com.worizon.net.HttpRequester;
  * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
  * short[] ids = rpc.callShortArray("get_ids");
  * </pre>
+ * 
  * @author Enric Cecilla
  * @since 1.0.0
  *

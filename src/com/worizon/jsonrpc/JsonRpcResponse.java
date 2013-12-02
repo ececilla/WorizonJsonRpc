@@ -36,7 +36,7 @@ import com.google.gson.JsonParser;
  * @since 1.0.0
  *
  */
-public class JsonRpcResponse<T> extends JsonRpc {	
+public class JsonRpcResponse<T> extends JsonRpcBase {	
 	
 	/**
 	 * Result object.

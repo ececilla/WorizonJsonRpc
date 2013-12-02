@@ -15,7 +15,7 @@ import com.google.gson.Gson;
  * @since 1.0.0
  */
 @SuppressWarnings("serial")
-public class JsonRpcRequest extends JsonRpc implements Serializable {
+public class JsonRpcRequest extends JsonRpcBase implements Serializable {
 			
 	/**
 	 * Remote procedure method name.

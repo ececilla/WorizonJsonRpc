@@ -14,7 +14,7 @@ import com.worizon.jsonrpc.gson.NonExposeExclusionEstrategy;
  * @author Enric Cecilla
  * @since 1.0.0
  */
-public abstract class JsonRpc {
+public abstract class JsonRpcBase {
 	
 	private static BooleanTypeAdapter booleanTypeAdapter = new BooleanTypeAdapter(); 
 	private static ExclusionStrategy nonExposeStrategy = new NonExposeExclusionEstrategy();	
@@ -32,11 +32,11 @@ public abstract class JsonRpc {
 	protected String jsonrpc = null;	
 	protected Long id = null;
 		
-	public JsonRpc(){
+	public JsonRpcBase(){
 				
 	}
 	
-	public JsonRpc( String version, Long id ){
+	public JsonRpcBase( String version, Long id ){
 		
 		jsonrpc = version;
 		this.id = id;

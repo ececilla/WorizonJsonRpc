@@ -57,6 +57,13 @@ public class JsonRpcErrorResponseTest {
 		assertNull(res.getResult());		
 	}
 	
+	@Test(expected=JsonRpcException.class)
+	public void testErrorAndResult() throws Exception{
+		
+		String message = "{\"jsonrpc\": \"2.0\", \"error\": {}, \"result\":{}, \"id\": 2}";		
+		JsonRpcResponse<Void> res = new JsonRpcResponse<Void>(message, Void.class);												
+	}
+	
 		
 	@Test(expected=JsonRpcException.class)
 	public void testErrorWithMessageNull() throws Exception{

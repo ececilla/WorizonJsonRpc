@@ -7,18 +7,27 @@ import static com.worizon.jsonrpc.Const.Errors.METHOD_NOT_FOUND_CODE;
 import static com.worizon.jsonrpc.Const.Errors.PARSE_ERROR_CODE;
 
 /**
- * This class encapsulates a JSON-RPC error. This library will makes explicit distinction of two types of errors: 
- * -JSON-RPC level errors.
- * -Domain level errors.
+ * This class encapsulates a JSON-RPC error. This library will make explicit distinction between two types of errors: 
+ * <ul>
+ * <li>JSON-RPC level errors: For spec's error codes.</li>
+ * <li>Domain level errors: For non spec's error codes. </li>
+ * </ul>
  * 
- * JSONRPC errors are those that happen when something at the transport level went wrong. These kind of
- * errors include method not found, parse error or internal server error. So, most of these errors are not generated
- * inside the remote procedure but along the way to its execution.
+ * <p>
+ * As fas as this library is concerned JSON-RPC errors are those that happen when something at the transport level 
+ * goes wrong. These kind of errors include method not found, parse error or internal server error. So, most of these errors
+ * are not generated inside the remote procedure but along the way to its execution.
  * 
+ * <p>
  * On the other hand, domain level errors are those that are usually generated inside the remote procedure. 
  * When the remote procedure signals a failure situation, the server implementation should response back
- * with an error code different from those stated in the spec. 
- *  
+ * with an error code different from those stated in the spec.
+ * 
+ * <p> 
+ * Typically this object will be instantiated and filled with the contents of the field "error" from the JSON-RPC response message.
+ * 
+ * <p>
+ * If the response error message contains some additional data about the failure situation it will be available through {@link JsonRpcError#getData()}. 
  * 
  * @author Enric Cecilla 
  * @since 1.0.0
@@ -30,7 +39,7 @@ public class JsonRpcError {
 	private Object data;
 	
 	/**
-	 * Gets the code of the error.
+	 * Gets the code of the error. This field is mandatory for error responses.
 	 * @return error code.
 	 */
 	public int getCode() {
@@ -39,8 +48,8 @@ public class JsonRpcError {
 	}
 	
 	/**
-	 * Checks if this error object is a domain level error.
-	 * @return true if the error is a domain level error.
+	 * Checks whether this error object is a custom error or a JSON-RPC error.
+	 * @return true if the error is a customlevel error.
 	 */
 	public boolean isCustomError(){
 		
@@ -58,7 +67,7 @@ public class JsonRpcError {
 		
 	
 	/**
-	 * Gets the message of this error.
+	 * Gets the message of this error. This field is mandatory for error responses.
 	 */
 	public String getMessage() {
 		

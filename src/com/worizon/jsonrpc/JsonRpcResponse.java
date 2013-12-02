@@ -13,11 +13,11 @@ import com.google.gson.JsonParser;
  * This class represents a JSON-RPC response. The generic parameter T is the type of the
  * expected output of the remote procedure. For instance, JsonRpcResponse{@literal <}Integer{@literal >} is the response
  * object of a remote procedure returning an integer. Not only this class can be parameterized with
- * primitive types but also with custom types: JsonRpcResponse{@literal <}Dummy{@literal >}.
+ * primitive types but also with custom types, ex: JsonRpcResponse{@literal <}Dummy{@literal >}.
  * 
  * <p>
- * All JsonRpcResponse has one and only one of the fields error or results filled. A server response having 
- * none of these or both of them generates an IllegalArgumentException.
+ * All JsonRpcResponse MUST come with one and only one of the fields error or results filled. A server response having 
+ * none of these or both of them will throw a JsonRpcException.
  *  
  * <p> 
  * If an error happens, on the remote procedure or along the way to the remote procedure, the error object 
@@ -71,13 +71,18 @@ public class JsonRpcResponse<T> extends JsonRpc {
 		
 		Gson gson = getDeserializeHelper();
 		if( root.has("result") ){
+			
+			if( root.has("error") )
+				throw new JsonRpcException("Both result and error fields present");
+			
 			if( !root.get("result").isJsonNull() ){ 
 								
 				result = gson.fromJson(root.get("result"), clazz);				
 			}else
 				result = null;			
 		}else if( root.has("error") ){
-			if(!root.get("error").isJsonNull()){
+									
+			if(!root.get("error").isJsonNull() ){								
 				
 				JsonElement errorJsonElement = root.get("error");		
 				if( errorJsonElement.getAsJsonObject().has("code") && errorJsonElement.getAsJsonObject().has("message")){

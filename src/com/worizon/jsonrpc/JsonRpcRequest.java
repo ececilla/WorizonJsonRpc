@@ -8,7 +8,8 @@ import com.google.gson.Gson;
 
 
 /**
- * This class is the representation of a JSON-RPC request. 
+ * This class is the representation of a JSON-RPC request. The id field of the JSON-RPC
+ * message is generated with a timestamp value as returned by
  * 
  * @author enric
  * @since 1.0.0

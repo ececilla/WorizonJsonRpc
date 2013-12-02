@@ -22,22 +22,34 @@ import com.worizon.net.HttpRequester;
 
 /**
  * 
- * Proxy utility to make remote procedure calls to JSON-RPC servers. To use the proxy method to make
- * rpc calls your interface must be annotated with @Remote. Some examples using this class.
- * 
+ * Facade class to make remote procedure calls to JSON-RPC servers. This facade class can be consumed via the proxy api and via the 
+ * direct api (the set of methods named as callX). To use the proxy method to make rpc calls your interface must be annotated 
+ * with the {@literal @}Remote annotation. There exists some other annotations apart from {@literal @}Remote  to tweak and adjust to  
+ * your needs the remote procedure behaviour. Following you can find the list of annotations that can be used to modify the behaviour of
+ * the resulting rpc stub object: 
+ * <ul>
+ * <li>{@literal @}RemoteProcName</li>
+ * <li>{@literal @}RemoteParams</li>
+ * <li>{@literal @}LocalExceptions</li>
+ * <li>{@literal @}LocalException</li>
+ * </ul>
+ * <p> 
+ * <strong>Some examples using the proxy api:</strong>
+ * <p>
  * Ex1:
  * 
  * <pre>
- * {@literal @}Remote
+ * <strong>{@literal @}Remote</strong> (Notice the annotation)
  * interface MyRemoteInterface{
  *		
  *	public Void doTask();
  * };
  * 
- * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
- * MyRemoteInterface service = proxy.create(MyRemoteInterface.class);
- * service.doTask(); ==> remote procedure
+ * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
+ * MyRemoteInterface service = rpc.createProxy(MyRemoteInterface.class);
+ * service.doTask(); //==> blocking call to the remote procedure
  * </pre>	
+ * <p>
  * Ex2:
  * <pre>
  * {@literal @}Remote
@@ -46,10 +58,11 @@ import com.worizon.net.HttpRequester;
  * 	public int sum(int x, y);
  * }
  * 
- * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
- * MyRemoteInterface service = proxy.create(MyRemoteInterface.class);
- * int result = service.sum(3,4); ==> parameters ordered by position {params:[3,4]}
+ * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
+ * MyRemoteInterface service = rpc.createProxy(MyRemoteInterface.class);
+ * int result = service.sum(3,4); //==> parameters ordered by position {params:[3,4]}
  * </pre>
+ * <p>
  * Ex3:
  * <pre>
  * {@literal @}Remote
@@ -59,25 +72,65 @@ import com.worizon.net.HttpRequester;
  * 	public int  sum(int x, int y);
  * }
  * 
- * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
- * MyRemoteInterface service = proxy.create(MyRemoteInterface.class);
- * int result = service.sum(3,4); ==> parameters ordered by name {params:{x:3,y:4}}
+ * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
+ * MyRemoteInterface service = rpc.createProxy(MyRemoteInterface.class);
+ * int result = service.sum(3,4); //==> parameters ordered by name {...,params:{x:3,y:4}}
  * </pre>
+ * <p>
  * Ex4:
  * <pre>
  * {@literal @}Remote
  * interface MyRemoteInterface{
  * 		
- * 	{@literal @}RemoteProcName("my_sum")
+ *  {@literal @}RemoteProcName("my_sum")
  *  public int sum(int x, int y);
  * }
  * 
- * RpcProxy proxy = new RpcProxy("http://myserver.mydomain.com:4444/rpc");
- * MyRemoteInterface service = proxy.create(MyRemoteInterface.class);
- * int result = service.sum(3,4); ==> parameters ordered by position {method:"my_sum",params:[3,4]}
+ * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
+ * MyRemoteInterface service = rpc.createProxy(MyRemoteInterface.class);
+ * int result = service.sum(3,4); //==> parameters ordered by position {method:"my_sum",params:[3,4]}
+ * </pre>
+ * <p>
+ * There exists another way to make remote invocations, the direct api. The direct api is suposed to be used 
+ * as a delegated object inside your service implementation:
+ * <pre>
+ * public class MyService{
+ * 	
+ *  private Rpc rpcDelegate = new Rpc("http://myserver.mydomain.com:4444/rpc");	
+ * 
+ *  public int sum(int x, int y){
+ *  	
+ *   return rpcDelegate.callInteger("my_sum",x,y);
+ *  }
+ * 
+ * </pre>
+ * <p>
+ * <strong>Some examples using the "direct call" api:</strong>
+ * <p>
+ * Ex5:
+ * <pre>
+ * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
+ * int result = rpc.callInteger("sum",4,5);
  * </pre>
  * 
- * 
+ * <p>
+ * Ex6:
+ * <pre>
+ * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
+ * rpc.callVoid("doTask");
+ * </pre>
+ * <p>
+ * Ex7:
+ * <pre>
+ * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
+ * int result = rpc.callInteger("sum",Rpc.RemoteParam("op1", 4),Rpc.RemoteParam("op2", 5)); //==> parameters ordered by name {...,params:{op1:4,op2:5}}
+ * </pre>
+ * <p>
+ * Ex8:
+ * <pre>
+ * Rpc rpc = new Rpc("http://myserver.mydomain.com:4444/rpc");
+ * short[] ids = rpc.callShortArray("get_ids");
+ * </pre>
  * @author Enric Cecilla
  * @since 1.0.0
  *

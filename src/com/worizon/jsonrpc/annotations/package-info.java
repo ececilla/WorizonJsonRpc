@@ -1,6 +1,7 @@
 /**
- * This package contains annotations for jsonrpc proxy. An interface in order to be
- * exported and used as a remote procedure must be anotated with @Remote annotation.
+ * This package contains annotations for the facade {@link com.worizon.jsonrpc.Rpc} proxy api. An interface 
+ * in order to be exported and used as a remote procedure must be anotated with {@literal @}Remote annotation.
+ * 
  * 
  * By default the remote procedure name that will be called is the one of the method's.
  * This behaviour can be overriden with the {@literal @}ProcName annotation. This annotation lets you define a 

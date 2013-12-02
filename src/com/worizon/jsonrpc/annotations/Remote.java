@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to mark an interface Remote. All interfaces required to be called
- * as a remote service must be annotated as @Remote.
+ * Annotation to expose an interface as Remote. All interfaces required to be called
+ * as a remote service via the proxy api must be annotated as @Remote.
  * 
  * @author Enric Cecilla
  * @since 1.0.0

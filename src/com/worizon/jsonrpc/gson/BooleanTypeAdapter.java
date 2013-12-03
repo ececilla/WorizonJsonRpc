@@ -10,6 +10,13 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+/**
+ * This TypeAdapter extends gson's default boolean type adapter. With this hook 
+ * the library accepts both representations as valid boolean values: 1|0 and true|false.
+ * 
+ * @author Enric Cecilla
+ * @since 1.0.0
+ */
 public class BooleanTypeAdapter implements JsonDeserializer<Boolean> {
 	
 	

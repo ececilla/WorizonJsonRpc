@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation gives remote parameters a parameter name. It's mandatory
- * to annotate remote methods with this annotation when we are calling the remote procedure
+ * to annotate remote parameters with this annotation when our intention is to call the remote procedure
  * with named parameters instead of numbered parameters.
  * 
  * @author Enric Cecilla

@@ -16,8 +16,7 @@ public final class TypesUtil {
 	
 	/**
 	 * Checks whether all objects in this array are of the specified type or not.
-	 * @param objs The array of objects to check.
-	 * @param clazz The type to check against.
+	 * @param objs The array of objects to check.	
 	 * @return True if all objects are from this Class, false otherwise. 
 	 */
 	public static TypeChecker all( final Object [] objs ){
@@ -37,8 +36,7 @@ public final class TypesUtil {
 	
 	/**
 	 * Checks whether at least one object in this array is of the specified type or not.
-	 * @param objs The array of objects to check.
-	 * @param clazz The type to check against.
+	 * @param objs The array of objects to check.	 
 	 * @return True if al least one object is an instance of this class, false otherwise.
 	 */
 	public static TypeChecker any( final Object [] objs ){
@@ -58,8 +56,7 @@ public final class TypesUtil {
 	
 	/**
 	 * Checks whether none object in this array is of the specified type or not.
-	 * @param objs The array of objects to check.
-	 * @param clazz The type to check against.
+	 * @param objs The array of objects to check.	 
 	 * @return True if none elements are an instance of this class, false otherwise.
 	 */
 	public static TypeChecker none( final Object [] objs ){

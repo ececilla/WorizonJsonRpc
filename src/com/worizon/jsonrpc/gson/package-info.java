@@ -1,6 +1,6 @@
 /**
- *  This class contains all classes that depend on GSON library and configure
- *  it's particular behaviour in WorizonJsonRpc.
+ *  This package contains adapters and annotations that depend on or are related to 
+ *  gson framework and configure a particular behaviour of serialization and deserialization.
  *  
  *  @author Enric Cecilla
  *  @since 1.0.0

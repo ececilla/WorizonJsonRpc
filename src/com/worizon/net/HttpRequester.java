@@ -46,26 +46,47 @@ public class HttpRequester {
 		
 	}
 	
+	/**
+	 * Sets the number of failed requests before dropping the reconnection loop.
+	 * @param nretries Number of retries.
+	 */
 	public void setRequestRetries( int nretries ){
 		
 		this.nretries = nretries;
 	}
 	
+	/**
+	 * Gets the number of retries.
+	 * @return The number of retries.
+	 */
 	public int getRequestRetries(){
 		
 		return this.nretries;
 	}
 	
+	/**
+	 * Sets the number of milliseconds to wait for reading data before dropping the connection 
+	 * and throw a readtimeout exception.
+	 * @param readTimeout Number of millis for read timeout.
+	 */
 	public void setReadTimeout( int readTimeout ){
 		
 		this.readTimeout = readTimeout;
 	}
 	
+	/**
+	 * Gets the number of milliseconds to wait for data to be read.
+	 * @return Read timeout milliseconds.
+	 */
 	public int getReadTimeout(){
 		
 		return this.readTimeout;
 	}
 	
+	/**
+	 * Sets the number of milliseconds the connection attemp will be hold.
+	 * @param connectTimeout Number of 
+	 */
 	public void setConnectTimeout( int connectTimeout ){
 		
 		this.connectTimeout = connectTimeout;

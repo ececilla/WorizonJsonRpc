@@ -128,7 +128,9 @@ final public class HttpRequesterBuilder {
 		});		
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public HttpRequesterBuilder continueIfTrue( final boolean condition ){
 		
 		return addTransformer(new ITransformer() {

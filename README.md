@@ -5,7 +5,8 @@ Easy to use Java implementation to perform synchronous JSON-RPC 2.0 requests ove
 library to convert java objects to and from json objects.   
 
 ### JSON-RPC 2.0 specification
-Most of the specification that this library implements can be found at [jsonrpc.org](http://www.jsonrpc.org/specification).
+Most of the specification that this library implements can be found at [jsonrpc.org](http://www.jsonrpc.org/specification). The user group forum that discusses this topic can be found at 
+[json-rpc google group](http://groups.google.com/group/json-rpc).
 
 
 

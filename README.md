@@ -4,12 +4,12 @@ WorizonJsonRpc [![Build Status](https://travis-ci.org/ececilla/WorizonJsonRpc.pn
 Easy to use Java implementation to perform JSON-RPC 2.0 requests over HTTP. This project uses [Gson](http://code.google.com/p/google-gson/)
 library to convert java objects to and from json objects.   
 
-## JSON-RPC 2.0 specification
+### JSON-RPC 2.0 specification
 Most of the specification that this library implements can be found at [jsonrpc.org](http://www.jsonrpc.org/specification).
 
 
 
-## Usage:
+### Usage:
 The library is intented to be used through the facade class *Rpc*. This class exposes two ways to perform an rpc request: 
 
 * Proxy api.
@@ -88,5 +88,41 @@ MyCalculator calculator = rpc.createProxy(Myservice.class);
 int result = calculator.divide(4,0);//Remote blocking call
 ```
 
+The **regular api** is intented to be used as a delated object to which delegate the responsability to make remote calls. The regular api conforms a set of methods that differ each other on the expected return type:
+
++ callInteger: Call remote procedure with Integer as expected return type.
++ callIntegerArray: Call remote procedure with array of ints as expected return value.
++ callDouble: Call remote procedure with double as expected return type.
++ callDoubleArray: Call remote procedure with arrays of doubles as expected return value.
++ ...
+
+The arguments to these methods are passed as varargs arguments. Following you can find a code snippet demonstrating this api usage:
+
+```java
+public class MyService{
+    
+    private Rpc delegate = new Rpc("http://myhost.mydomain.com:4444/rpc");    
+
+    public MyService();
+
+    public int task1(int x, int y){
+        
+        return delegate.callInteger("task1",x,y);
+    }
+    
+    public void task2(){
+        
+        delegate.callVoid("task2");
+    }
+}
+MyService service = new MyService();
+service.task1(4,5)
+service.task2();
+```
+
+The requests sent to the server would be as follows:
+
+>*{...,method:"task1", params:[4,5], id:62369}*.
+>*{...,method:"task2", id:62370}*.
 
 

@@ -130,7 +130,7 @@ The requests sent to the server would be as follows:
 
 >*{...,method:"task2", id:62370}*.
 
-As you can notice in the example above the parameters are encoded as an ordered list. To switch to a named-style, varargs arguments must be wrapped with an *Rpc.RemoteParam* object in a all-or-none policy: cannot pass some parameters numbered and the remaining named.
+As you can notice in the example above the parameters are encoded as an ordered list. To switch to a named-style, varargs arguments must be wrapped with a call to *Rpc.RemoteParam* in a all-or-none policy, otherwise and IllegalArgumentException is thrown.
 
 ```java
 public class MyService{

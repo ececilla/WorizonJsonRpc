@@ -17,7 +17,7 @@ The library is intented to be used through the facade class *Rpc*. This class ex
 
 The **proxy api** creates a stub object that exposes a local interface ,when indeed it's remote, so calls are pretended to be local. To use the proxy api, the Java interface that mimics the remote service MUST be annotated as *@Remote*. The proxy api uses a set of annotations to tweak the representation of the json request to fit your marshalling needs.
 
-Following you can find an example of the proxy api and it's related annotations:
+Following you can find several examples of the proxy api and it's related annotations:
 
 
 ```java
@@ -54,7 +54,7 @@ The remote call generated from the last example is as follows:
 
 >*{...,method:"substract", params:{x:4,y:5}, id:62365}*. 
 
-You can have a different remote procedure name than local one, for this purpose you should use the *@RemoteProcName* annotation as in the example below:
+You can invoke a different remote procedure name than local one, for this purpose you should use the *@RemoteProcName* annotation as in the example below:
 
 ```java
 @Remote
@@ -69,10 +69,24 @@ Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
 MyCalculator calculator = rpc.createProxy(Myservice.class);
 int result = calculator.multiply(4,5);//Remote blocking call
 ```
-The son object generated from this last example is as follows:
+The json object generated from this last example is as follows:
 
 >*{...,method:"my_multiplication", params:{x:4,y:5}, id:62365}*. 
 
+Finally, the proxy api let's you map error codes to local exception classes, this mapping is provided by the annotations *@LocalExceptions* and *@LocalException*: 
+
+```java
+@Remote
+@LocalExceptions({@LocalException(code=-10,exception=DivideByZeroException.class)})
+public interface MyCalculator{
+    
+    public divide divide(int x, int y);
+}
+
+Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
+MyCalculator calculator = rpc.createProxy(Myservice.class);
+int result = calculator.divide(4,0);//Remote blocking call
+```
 
 
 

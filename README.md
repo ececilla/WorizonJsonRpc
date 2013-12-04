@@ -31,7 +31,7 @@ Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
 MyCalculator calculator = rpc.createProxy(Myservice.class);
 int result = calculator.sum(4,5);//Remote blocking call
 ```
-This code snippet generates a remote call which passes arguments as an ordered list :
+The previous code snippet generates a remote call which passes arguments as an ordered list :
 
 >*{...,method:"sum", params:[4,5], id:62364}*. 
 
@@ -53,6 +53,25 @@ int result = calculator.substract(4,5);//Remote blocking call
 The remote call generated from the last example is as follows:
 
 >*{...,method:"substract", params:{x:4,y:5}, id:62365}*. 
+
+You can have a different the remote procedure name than local one, for this purpose you should use the *@RemoteProcName* annotation as in the examlpe below:
+
+```java
+@Remote
+public interface MyCalculator{
+    
+    @RemoteProcName("my_multiplication")
+    @RemoteParams({"x","y"})
+    public int multiply(int x, int y);
+}
+
+Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
+MyCalculator calculator = rpc.createProxy(Myservice.class);
+int result = calculator.multiply(4,5);//Remote blocking call
+```
+The remote call generated from the last example is as follows:
+
+>*{...,method:"my_multiplication", params:{x:4,y:5}, id:62365}*. 
 
 
 

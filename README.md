@@ -89,6 +89,7 @@ Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
 MyCalculator calculator = rpc.createProxy(Myservice.class);
 int result = calculator.divide(4,0);//Remote blocking call
 ```
+
 ---
 
 The **regular api** is intented to be used as a delated object to which delegate the responsability to make remote calls. The regular api conforms a set of methods that differ each other on the expected return type:
@@ -126,6 +127,7 @@ service.task2();
 The requests sent to the server would be as follows:
 
 >*{...,method:"task1", params:[4,5], id:62369}*.
+
 >*{...,method:"task2", id:62370}*.
 
 

@@ -1,7 +1,7 @@
 WorizonJsonRpc [![Build Status](https://travis-ci.org/ececilla/WorizonJsonRpc.png?branch=master)](https://travis-ci.org/ececilla/WorizonJsonRpc)
 ==============
 
-Easy to use Java implementation to perform JSON-RPC 2.0 requests over HTTP. This project uses [Gson](http://code.google.com/p/google-gson/)
+Easy to use Java implementation to perform synchronous JSON-RPC 2.0 requests over HTTP. This project uses [Gson](http://code.google.com/p/google-gson/)
 library to convert java objects to and from json objects.   
 
 ### JSON-RPC 2.0 specification

@@ -15,6 +15,8 @@ The library is intented to be used through the facade class *Rpc*. This class ex
 * Proxy api.
 + Regular api.
 
+---
+
 The **proxy api** creates a stub object that exposes a local interface ,when indeed it's remote, so calls are pretended to be local. To use the proxy api, the Java interface that mimics the remote service MUST be annotated as *@Remote*. The proxy api uses a set of annotations to tweak the representation of the json request to fit your marshalling needs.
 
 Following you can find several examples of the proxy api and it's related annotations:
@@ -87,6 +89,7 @@ Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
 MyCalculator calculator = rpc.createProxy(Myservice.class);
 int result = calculator.divide(4,0);//Remote blocking call
 ```
+---
 
 The **regular api** is intented to be used as a delated object to which delegate the responsability to make remote calls. The regular api conforms a set of methods that differ each other on the expected return type:
 

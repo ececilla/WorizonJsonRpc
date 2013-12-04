@@ -145,7 +145,7 @@ public class MyService{
     }    
 }
 MyService service = new MyService();
-service.task3(true,56.92);
+int result[] = service.task3(true,56.92);
 ```
 >*{...,method:"task3", params:{x:true,y:56.92}, id:62369}*.
 

@@ -9,7 +9,7 @@ Most of the specification that this library implements can be found at [jsonrpc.
 
 
 
-### Usage:
+### Usage
 The library is intented to be used through the facade class *Rpc*. This class exposes two ways to perform an rpc request: 
 
 * Proxy api.
@@ -97,7 +97,7 @@ The **regular api** is intented to be used as a delated object to which delegate
 + callInteger: Call remote procedure with Integer as expected return type.
 + callIntegerArray: Call remote procedure with array of ints as expected return value.
 + callDouble: Call remote procedure with double as expected return type.
-+ callDoubleArray: Call remote procedure with arrays of doubles as expected return value.
++ callDoubleArray: Call remote procedure with array of doubles as expected return value.
 + ...
 
 The arguments to these methods are passed as varargs arguments. Following you can find a code snippet demonstrating this api usage:
@@ -129,5 +129,24 @@ The requests sent to the server would be as follows:
 >*{...,method:"task1", params:[4,5], id:62369}*.
 
 >*{...,method:"task2", id:62370}*.
+
+As you can notice in the example above the parameters are encoded as an ordered list. To switch to a named-style, varargs arguments must be wrapped with an *Rpc.RemoteParam* object in a all-or-none policy: cannot pass some parameters numbered and the remaining named.
+
+```java
+public class MyService{
+    
+    private Rpc delegate = new Rpc("http://myhost.mydomain.com:4444/rpc");    
+
+    public MyService();
+
+    public int[] task3(boolean x, double y){
+        
+        return delegate.callIntegerArray("task3",Rpc.RemoteParam("x",x),Rpc.RemoteParam("y",y));
+    }    
+}
+MyService service = new MyService();
+service.task3(true,56.92);
+```
+>*{...,method:"task3", params:{x:true,y:56.92}, id:62369}*.
 
 

@@ -150,3 +150,26 @@ int result[] = service.task3(true,56.92);
 >*{...,method:"task3", params:{x:true,y:56.92}, id:62369}*.
 
 
+
+To use this library add the **WorizonJsonRpc** maven repository location and dependency to your pom.xml.
+
+```xml
+<dependencies>
+	<dependency>
+		<groupId>com.worizon</groupId>
+		<artifactId>WorizonJsonRpc</artifactId>
+		<version>1.0.0-SNAPSHOT</version>		
+	</dependency>  
+  </dependencies>
+<repositories>
+    <repository>
+        <id>worizonjsonrpc-maven-s3-repo</id>
+        <url>s3://ececilla-maven-com-worizon-jsonrpc-snapshot/snapshot</url>
+    </repository>
+</repositories>
+```
+
+
+
+
+

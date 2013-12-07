@@ -150,7 +150,7 @@ int result[] = service.task3(true,56.92);
 >*{...,method:"task3", params:{x:true,y:56.92}, id:62369}*.
 
 
-To use this library add the **WorizonJsonRpc** maven repository location and dependency to your pom.xml.
+To use this library add the maven repository location and dependency to your pom.xml.
 
 ```xml
 <dependencies>

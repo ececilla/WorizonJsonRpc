@@ -5,7 +5,7 @@ Easy to use Java implementation to perform synchronous JSON-RPC 2.0 requests ove
 library to convert java objects to and from json objects.   
 
 ### JSON-RPC 2.0 specification
-Most of the specification that this library implements can be found at [jsonrpc.org](http://www.jsonrpc.org/specification).
+Most of the specification that this library implements can be found at [jsonrpc.org](http://www.jsonrpc.org/specification). There is a group that discusses the specification and related issues [here](https://groups.google.com/forum/#!forum/json-rpc).
 
 
 
@@ -82,12 +82,12 @@ Finally, the proxy api let's you map error codes to local exception classes, thi
 @LocalExceptions({@LocalException(code=-10,exception=DivideByZeroException.class)})
 public interface MyCalculator{
     
-    public divide divide(int x, int y);
+    public double divide(double x, double y);
 }
 
 Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
 MyCalculator calculator = rpc.createProxy(Myservice.class);
-int result = calculator.divide(4,0);//Remote blocking call
+double result = calculator.divide(4,0);//Remote blocking call
 ```
 
 ---
@@ -148,7 +148,6 @@ MyService service = new MyService();
 int result[] = service.task3(true,56.92);
 ```
 >*{...,method:"task3", params:{x:true,y:56.92}, id:62369}*.
-
 
 
 To use this library add the **WorizonJsonRpc** maven repository location and dependency to your pom.xml.

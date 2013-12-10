@@ -312,6 +312,7 @@ public class Rpc{
 			Map<String,Object> margs = new LinkedHashMap<String, Object>();//preserve same order of named parameters as in the args array.
 			for( Object arg: args){
 				
+				@SuppressWarnings("unchecked")
 				Map.Entry<String, Object> entry = (Map.Entry<String, Object>)arg;
 				margs.put(entry.getKey(), entry.getValue());				
 			}

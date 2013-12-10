@@ -3,6 +3,7 @@ package com.worizon.junit.rpc;
 import static org.junit.Assert.*;
 
 import java.net.ConnectException;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,7 +30,7 @@ public class HttpRequesterTest {
 			
 			private HttpRequester myRequester = new HttpRequester();
 			@Override
-			public void setEndpoint(String endpoint) {
+			public void setEndpoint(String endpoint) throws MalformedURLException{
 				
 				myRequester.setEndpoint(endpoint);//my particular method to set the endpoint
 			}
@@ -48,6 +49,18 @@ public class HttpRequesterTest {
 	public void tearDown() throws Exception{
 		
 		server.finish();
+	}
+	
+	@Test(expected=MalformedURLException.class)
+	public void testWrongEndpointProtocol() throws MalformedURLException{
+		
+		HttpRequester myRequester = new HttpRequester("httx://foobar");
+	}
+	
+	@Test(expected=MalformedURLException.class)
+	public void testWrongEndpointURLSyntax() throws MalformedURLException{
+		
+		HttpRequester myRequester = new HttpRequester("http://foobar.");
 	}
 	
 	@Test

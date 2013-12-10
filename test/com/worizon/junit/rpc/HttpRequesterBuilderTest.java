@@ -42,7 +42,7 @@ public class HttpRequesterBuilderTest {
 	public void testEndpoint() throws Exception{
 						
 		http = builder.endpoint("http://localhost:4444/rpc").build();				
-		assertEquals("http://localhost:4444/rpc", http.getEndpoint());				
+		assertEquals("http://localhost:4444/rpc", http.getEndpoint().toString());				
 	}
 		
 	

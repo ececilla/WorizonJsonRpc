@@ -2,6 +2,7 @@ package com.worizon.junit.rpc;
 
 import static org.junit.Assert.*;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -39,7 +40,7 @@ public class RpcTest {
 	interface NonRemoteInterface{};
 	
 	@Test(expected = IllegalArgumentException.class)	
-	public void testNonRemoteInterface(){
+	public void testNonRemoteInterface() throws MalformedURLException{
 		
 		HttpRequester http = new HttpRequester("http://localhost:8080/rpc");
 		Rpc proxy = new Rpc(http);

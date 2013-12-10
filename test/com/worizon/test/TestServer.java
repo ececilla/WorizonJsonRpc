@@ -5,13 +5,14 @@
 	import java.io.InputStream;
 	import java.io.InputStreamReader;
 	import java.net.ConnectException;
+import java.net.MalformedURLException;
 	import java.util.LinkedHashMap;
 	import java.util.Map;
 	import java.util.Map.Entry;
 	
 	import org.aopalliance.intercept.MethodInterceptor;
 	import org.aopalliance.intercept.MethodInvocation;
-	import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.framework.ProxyFactory;
 	
 	/**
 	 *  Single-threaded server to test Http requester classes when doing unit testing. Unlike a mocked-based approach this class lets you test 
@@ -166,7 +167,7 @@
 		/**
 		 * Builds the wrapped version of the adapter to make the request.
 		 */
-		public IRequester createTestRequester(String endpoint){
+		public IRequester createTestRequester(String endpoint) throws MalformedURLException{
 			
 			return this.new NonResponseReadRequester(endpoint);
 		}
@@ -269,7 +270,7 @@
 		 */
 		public interface IRequester{
 			
-			public void setEndpoint(String endpoint);
+			public void setEndpoint(String endpoint) throws MalformedURLException;
 			public void doRequest(String body) throws Exception;
 		}
 		
@@ -283,7 +284,7 @@
 			
 			public NonResponseReadRequester(){}
 			
-			public NonResponseReadRequester(String endpoint){
+			public NonResponseReadRequester(String endpoint) throws MalformedURLException{
 				
 				if(adapter == null)
 					throw new IllegalStateException("Request adapter not set");
@@ -291,7 +292,7 @@
 				adapter.setEndpoint(endpoint);
 			}	
 					
-			public void setEndpoint( String endpoint){
+			public void setEndpoint( String endpoint) throws MalformedURLException{
 				
 				adapter.setEndpoint(endpoint);
 			}

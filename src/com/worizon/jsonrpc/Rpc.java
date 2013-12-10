@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.MalformedURLException;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -150,7 +151,12 @@ public class Rpc{
 	 */
 	private Map<Integer, Class<? extends RuntimeException>> exceptions = new HashMap<Integer, Class<? extends RuntimeException>>();
 	
-	public Rpc( String endpoint ){
+	/**
+	 * Instantiates a new facade Rpc object.
+	 * @param endpoint Remote procedure endpoint String.
+	 * @throws MalformedURLException When the remote url is not valid: bad protocol, bad url syntax.
+	 */
+	public Rpc( String endpoint ) throws MalformedURLException{
 		
 		this.http = new HttpRequester(endpoint);
 	}

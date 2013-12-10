@@ -8,12 +8,16 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.validator.routines.UrlValidator;
 
 import com.worizon.jsonrpc.TransformerException;
 
@@ -28,8 +32,8 @@ public class HttpRequester {
 	private static final int DEFAULT_READ_TIMEOUT = 15000;
 	private static final int DEFAULT_CONNECT_TIMEOUT = 10000;
 	private static final int DEFAULT_CONNECT_RETRIES = 2;
-	
-	private String endpoint;
+		
+	private URL endpoint;
 	private int nretries = DEFAULT_CONNECT_RETRIES;	
 	private int readTimeout = DEFAULT_READ_TIMEOUT;	
 	private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
@@ -41,10 +45,13 @@ public class HttpRequester {
 				
 	}
 	
-	public HttpRequester( String endpoint ){
+	/**
+	 * Instantiates an HttpRequester with the specified endpoint
+	 * @param endpoint The endpoint of the remote procedure.
+	 */
+	public HttpRequester( String endpoint ) throws MalformedURLException{
 		
-		this.endpoint = endpoint;
-		
+		setEndpoint(endpoint);		
 	}
 	
 	/**
@@ -103,10 +110,10 @@ public class HttpRequester {
 	}
 	
 	/**
-	 * Gets the rpc endpoint this object will try to make requests.
+	 * Gets the rpc endpoint this object will make requests.
 	 * @return rpc endpoint
 	 */
-	public String getEndpoint(){
+	public URL getEndpoint(){
 		
 		return endpoint;
 	}
@@ -114,10 +121,16 @@ public class HttpRequester {
 	/**
 	 * Sets the rpc endpoint to which this object will try to make requests.
 	 * @param endpoint The rpc endpoint.
+	 * @throws MalformedURLException When the URL string is not valid.
 	 */
-	public void setEndpoint( String endpoint ){
+	public void setEndpoint( String endpoint ) throws MalformedURLException{
+				
+		UrlValidator validator = new UrlValidator(new String[]{"http"},UrlValidator.ALLOW_LOCAL_URLS);
+		if( validator.isValid(endpoint ))
+			this.endpoint = new URL(endpoint);
+		else
+			throw new MalformedURLException();
 		
-		this.endpoint = endpoint;
 	}
 	
 	/**
@@ -197,9 +210,8 @@ public class HttpRequester {
 		if(ctx.getBody() == null )
 			throw new IllegalStateException("body not set");
 		
-		//Prepare connection
-		URL url = new URL( endpoint );
-		conn = (HttpURLConnection)url.openConnection();				
+		//Prepare connection		
+		conn = (HttpURLConnection)endpoint.openConnection();				
 		conn.setDoOutput( true );		
 		conn.setUseCaches(false);
 		conn.setAllowUserInteraction(false);

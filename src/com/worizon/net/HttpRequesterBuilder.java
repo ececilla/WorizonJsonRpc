@@ -1,6 +1,7 @@
 package com.worizon.net;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
@@ -161,7 +162,7 @@ final public class HttpRequesterBuilder {
 		return this;
 	}	
 	
-	public HttpRequester build(){
+	public HttpRequester build() throws MalformedURLException{
 		
 		if( requester == null ){
 			if( endpoint == null )

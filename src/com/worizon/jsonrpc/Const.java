@@ -5,6 +5,8 @@ package com.worizon.jsonrpc;
  * JSON-RPC 2.0 spec has several code numbers reserved to signal different transport errors and 
  * server implementations which honors JSONRPC 2.0 spec must use these error codes.
  * 
+ * <p>
+ * This class also exposes Http constants.
  * 
  * @see <a href="http://www.jsonrpc.org/specification#error_object">JSONRPC 2.0 error codes</a>
  * @author Enric Cecilla
@@ -13,6 +15,7 @@ package com.worizon.jsonrpc;
 public final class Const {
 	
 	private Const(){}
+	
 	public static class Errors{
 		private Errors(){};
 		public static final int INVALID_REQUEST_CODE = -32600;
@@ -20,6 +23,14 @@ public final class Const {
 		public static final int INVALID_PARAMS_CODE = -32602;
 		public static final int INTERNAL_ERROR_CODE = -32603;
 		public static final int PARSE_ERROR_CODE = -32700;
+	}
+	
+	public static class Http{
+		
+		private Http(){}
+		public static final int DEFAULT_READ_TIMEOUT = 15000;
+		public static final int DEFAULT_CONNECT_TIMEOUT = 10000;
+		public static final int DEFAULT_CONNECT_RETRIES = 2;
 	}
 
 }

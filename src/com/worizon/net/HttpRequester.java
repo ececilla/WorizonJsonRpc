@@ -8,8 +8,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,6 +17,9 @@ import java.util.Map.Entry;
 
 import org.apache.commons.validator.routines.UrlValidator;
 
+import static com.worizon.jsonrpc.Const.Http.DEFAULT_CONNECT_RETRIES;
+import static com.worizon.jsonrpc.Const.Http.DEFAULT_READ_TIMEOUT;
+import static com.worizon.jsonrpc.Const.Http.DEFAULT_CONNECT_TIMEOUT;
 import com.worizon.jsonrpc.TransformerException;
 
 /**
@@ -28,11 +29,7 @@ import com.worizon.jsonrpc.TransformerException;
  * @since 1.0.0
  */
 public class HttpRequester {
-			
-	private static final int DEFAULT_READ_TIMEOUT = 15000;
-	private static final int DEFAULT_CONNECT_TIMEOUT = 10000;
-	private static final int DEFAULT_CONNECT_RETRIES = 2;
-		
+							
 	private URL endpoint;
 	private int nretries = DEFAULT_CONNECT_RETRIES;	
 	private int readTimeout = DEFAULT_READ_TIMEOUT;	

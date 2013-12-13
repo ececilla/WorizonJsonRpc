@@ -16,7 +16,17 @@ import com.worizon.jsonrpc.JsonRpcRequest;
 import com.worizon.jsonrpc.gson.NonExpose;
 
 public class JsonRpcRequestTest {
-		
+	
+	
+	@Test
+	public void testId(){
+				
+		for( int i=1; i < 10000; i++){
+			
+			JsonRpcRequest req = new JsonRpcRequest("test");
+			assertTrue( req.getId().longValue() == i );
+		}		
+	}
 
 	@Test
 	public void testConstructor1() {
@@ -40,13 +50,22 @@ public class JsonRpcRequestTest {
 		assertTrue(request.toString().startsWith("{\"method\":\"test\",\"jsonrpc\":\"2.0\","));		
 	}
 	
+	@Test
+	public void testConstructor3() {
+		
+		
+		JsonRpcRequest request1 = new JsonRpcRequest("test");
+		JsonRpcRequest request2 = new JsonRpcRequest( request1 );
+		assertTrue( request1.equals(request2) );		
+	}
+	
 		
 	@Test
 	public void testEquals(){
 		
 		JsonRpcRequest req1 = new JsonRpcRequest("test");		
-		JsonRpcRequest req2 = new JsonRpcRequest("test");
-		assertEquals( req1, req2 );
+		JsonRpcRequest req2 = new JsonRpcRequest("test");		
+		assertFalse( req1.equals(req2) );
 		
 	}
 		

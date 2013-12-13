@@ -29,10 +29,20 @@ public class JsonRpcRequest extends JsonRpcBase implements Serializable {
 	private Object params;
 	
 	JsonRpcRequest( String method, Object params){
-		
-		super("2.0",System.currentTimeMillis());
+				
+		super("2.0",IDGenerator.getInstance().createID());
 		this.method = method;
 		this.params = params;
+	}
+	
+	/**
+	 * Copy constructor.
+	 */
+	public JsonRpcRequest( JsonRpcRequest req ){
+		
+		super("2.0", req.getId());
+		this.method = req.getMethod();
+		this.params = req.getParams();
 	}
 	
 	public JsonRpcRequest( String method ){
@@ -77,11 +87,11 @@ public class JsonRpcRequest extends JsonRpcBase implements Serializable {
 		else if(obj == this)
 			return true;
 		else if( !(obj instanceof JsonRpcRequest) )
-			return false;
-		
-		
-			
+			return false;		
+				
 		JsonRpcRequest req = (JsonRpcRequest)obj;
+		return id.equals(req.getId()); 
+		/*		
 		boolean retval = req.method.equals(this.method);
 		if(!retval)
 			return false;
@@ -100,7 +110,7 @@ public class JsonRpcRequest extends JsonRpcBase implements Serializable {
 		}
 		
 		return retval;
-												 
+		*/										 
 	}
 	
 	/**

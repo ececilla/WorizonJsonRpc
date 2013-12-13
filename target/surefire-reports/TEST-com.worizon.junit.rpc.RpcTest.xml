@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="0.509" errors="0" skipped="0" tests="66" name="com.worizon.junit.rpc.RpcTest">
+  <properties>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64"/>
+    <property name="java.vm.version" value="20.0-b12"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="ES"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/enric/workspace/WorizonJsonRpc"/>
+    <property name="java.runtime.version" value="1.6.0_27-b27"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="os.name" value="Linux"/>
+    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64:/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="3.2.0-27-generic"/>
+    <property name="user.home" value="/home/enric"/>
+    <property name="user.timezone" value="Europe/Madrid"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="user.name" value="enric"/>
+    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/usr/lib/jvm/java-6-openjdk-amd64/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher package javadoc:jar"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.language" value="es"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.6.0_27"/>
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="securerandom.source" value="file:/dev/./urandom"/>
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/netx.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/plugin.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/rhino.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/modules/jdk.boot.jar:/usr/lib/jvm/java-6-openjdk-amd64/jre/classes"/>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="maven.home" value="/usr/share/maven"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="gnome"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteParam"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testNonRemoteInterface"/>
+  <testcase time="0.235" classname="com.worizon.junit.rpc.RpcTest" name="testNonAnotattedParams"/>
+  <testcase time="0.006" classname="com.worizon.junit.rpc.RpcTest" name="testAnnottedParamsNumberMismath"/>
+  <testcase time="0.006" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteInterfaceWithHashMapParamAnnotatedWithParamsName"/>
+  <testcase time="0.006" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteInterfaceWithListParamAnnotatedWithParamsName"/>
+  <testcase time="0.005" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteInterfaceWithNamedParameters"/>
+  <testcase time="0.005" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteInterfaceWithNumberedParameters"/>
+  <testcase time="0.006" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteInterfaceWithNamedObjectParameters"/>
+  <testcase time="0.006" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteInterfaceWithNnumberedObjectParameters"/>
+  <testcase time="0.011" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteInterfaceProcName"/>
+  <testcase time="0.006" classname="com.worizon.junit.rpc.RpcTest" name="testJsonRpcExceptionParseError"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testJsonRpcExceptionInvalidRequest"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testJsonRpcExceptionMethodNotFound"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testJsonRpcExceptionInvalidParams"/>
+  <testcase time="0.004" classname="com.worizon.junit.rpc.RpcTest" name="testJsonRpcExceptionInternalError"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteException"/>
+  <testcase time="0.011" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteExceptionMapedLocalException"/>
+  <testcase time="0.005" classname="com.worizon.junit.rpc.RpcTest" name="testRemoteExceptionMapedLocalExceptionFailure"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCall1"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCall2"/>
+  <testcase time="0.004" classname="com.worizon.junit.rpc.RpcTest" name="testCall3"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallVoid"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallVoidOrderedParams"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallVoidNamedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallVoidNamedParamsWithException"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallInteger"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallIntegerOrderedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallIntegerNamedParams"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallIntegerArray"/>
+  <testcase time="0.004" classname="com.worizon.junit.rpc.RpcTest" name="testCallIntegerArrayParams"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallDouble"/>
+  <testcase time="0.004" classname="com.worizon.junit.rpc.RpcTest" name="testCallDoubleOrderedParams"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallDoubleNamedParams"/>
+  <testcase time="0.004" classname="com.worizon.junit.rpc.RpcTest" name="testCallDoubleArray"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallDoubleArrayParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallFloat"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallFloatOrderedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallFloatNamedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallFloatArray"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallFloatArrayParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallString"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallStringOrderedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallStringNamedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallStringArray"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallStringArrayParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallBoolean"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallBooleanOrderedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallBooleanNamedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallBooleanArray"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallBooleanArrayParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallShort"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallShortOrderedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallShortNamedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallShortArray"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallShortArrayParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallLong"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallLongOrderedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallLongNamedParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallLongArray"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallLongArrayParams"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallChar"/>
+  <testcase time="0.002" classname="com.worizon.junit.rpc.RpcTest" name="testCallCharOrderedParams"/>
+  <testcase time="0.003" classname="com.worizon.junit.rpc.RpcTest" name="testCallCharNamedParams"/>
+  <testcase time="0.004" classname="com.worizon.junit.rpc.RpcTest" name="testCallCharArray"/>
+  <testcase time="0.006" classname="com.worizon.junit.rpc.RpcTest" name="testCallCharArrayParams"/>
+</testsuite>

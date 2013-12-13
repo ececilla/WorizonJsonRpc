@@ -1,0 +1,13 @@
+com/worizon/net/HttpRequester.class
+com/worizon/jsonrpc/annotations/LocalExceptions.class
+com/worizon/net/HttpRequesterBuilder$1.class
+com/worizon/net/HttpRequester$ITransformer.class
+com/worizon/net/HttpRequesterBuilder$5.class
+com/worizon/net/HttpRequesterBuilder$2.class
+com/worizon/jsonrpc/annotations/LocalException.class
+com/worizon/net/HttpRequesterBuilder$3.class
+com/worizon/net/HttpRequesterBuilder$4.class
+com/worizon/net/HttpRequesterBuilder$6.class
+com/worizon/jsonrpc/gson/NonExpose.class
+com/worizon/net/HttpRequesterBuilder.class
+com/worizon/net/HttpRequester$TransformerContext.class

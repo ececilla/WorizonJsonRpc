@@ -12,18 +12,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
+import com.worizon.jsonrpc.IDGenerator;
 import com.worizon.jsonrpc.JsonRpcRequest;
 import com.worizon.jsonrpc.gson.NonExpose;
 
 public class JsonRpcRequestTest {
-	
+		
 	
 	@Test
 	public void testId(){
-				
-		for( int i=1; i < 10000; i++){
+		
+		IDGenerator.getInstance().reset();
+		for( long i=1; i < 10000; i++){
 			
-			JsonRpcRequest req = new JsonRpcRequest("test");
+			JsonRpcRequest req = new JsonRpcRequest("test");				
 			assertTrue( req.getId().longValue() == i );
 		}		
 	}

@@ -27,4 +27,12 @@ public class IDGenerator {
 		
 		return id++;
 	}
+	
+	/**
+	 * Resets the requests counter.
+	 */
+	public void reset(){
+		
+		id = 1;
+	}
 }

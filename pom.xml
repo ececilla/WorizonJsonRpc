@@ -3,7 +3,7 @@
   <groupId>com.worizon</groupId>
   <artifactId>WorizonJsonRpc</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>WorizonJsonRpc</name>
   <url>http://github.com/ececilla/WorizonJsonRpc</url>
   <description>JSON-RPC 2.0 java client library.</description>

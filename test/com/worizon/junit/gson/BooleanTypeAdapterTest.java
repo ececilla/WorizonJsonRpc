@@ -8,6 +8,7 @@ import com.worizon.jsonrpc.JsonRpcResponse;
 import com.worizon.jsonrpc.gson.BooleanTypeAdapter;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 public class BooleanTypeAdapterTest {
 	
@@ -26,9 +27,8 @@ public class BooleanTypeAdapterTest {
 		Gson gson = builder.create();
 		Foo b = (Foo)gson.fromJson(message, Foo.class);
 		
-		
-		assertEquals(true, b.resultPri);
-		assertEquals(true, b.resultObj);
+		assertThat(b.resultPri, is(true));
+		assertThat(b.resultObj, is(true));		
 	}
 	
 	@Test
@@ -40,10 +40,9 @@ public class BooleanTypeAdapterTest {
 		String message = "{\"resultPri\":false,\"resultObj\":false}";
 		Gson gson = builder.create();
 		Foo b = (Foo)gson.fromJson(message, Foo.class);
-		
-		
-		assertEquals(false, b.resultPri);
-		assertEquals(false, b.resultObj);
+						
+		assertThat(b.resultPri, is(false));
+		assertThat(b.resultObj, is(false));
 	}
 	
 	@Test
@@ -55,10 +54,9 @@ public class BooleanTypeAdapterTest {
 		String message = "{\"resultPri\":1,\"resultObj\":1}";
 		Gson gson = builder.create();
 		Foo b = (Foo)gson.fromJson(message, Foo.class);
-		
-		
-		assertEquals(true, b.resultPri);
-		assertEquals(true, b.resultObj);
+						
+		assertThat(b.resultPri, is(true));
+		assertThat(b.resultObj, is(true));
 	}
 	
 	@Test
@@ -70,10 +68,9 @@ public class BooleanTypeAdapterTest {
 		String message = "{\"resultPri\":0,\"resultObj\":0}";
 		Gson gson = builder.create();
 		Foo b = (Foo)gson.fromJson(message, Foo.class);
-		
-		
-		assertEquals(false, b.resultPri);
-		assertEquals(false, b.resultObj);
+						
+		assertThat(b.resultPri, is(false));
+		assertThat(b.resultObj, is(false));
 	}
 	
 	@Test
@@ -85,10 +82,9 @@ public class BooleanTypeAdapterTest {
 		String message = "{\"resultPri\":0,\"resultObj\":           0}";
 		Gson gson = builder.create();
 		Foo b = (Foo)gson.fromJson(message, Foo.class);
-		
-		
-		assertEquals(false, b.resultPri);
-		assertEquals(false, b.resultObj);
+					
+		assertThat(b.resultPri, is(false));
+		assertThat(b.resultObj, is(false));
 	}
 	
 	@Test
@@ -100,10 +96,9 @@ public class BooleanTypeAdapterTest {
 		String message = "{		\"resultPri\"	:	0,      \"resultObj\"    :						0}";
 		Gson gson = builder.create();
 		Foo b = (Foo)gson.fromJson(message, Foo.class);
-		
-		
-		assertEquals(false, b.resultPri);
-		assertEquals(false, b.resultObj);
+						
+		assertThat(b.resultPri, is(false));
+		assertThat(b.resultObj, is(false));
 	}
 
 }

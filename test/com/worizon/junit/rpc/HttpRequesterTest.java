@@ -1,13 +1,11 @@
 package com.worizon.junit.rpc;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -67,15 +65,14 @@ public class HttpRequesterTest {
 	public void testRequest() throws Exception{
 		
 						
-		http.doRequest("test");				
-		assertEquals( "test", server.getBody() );
-		assertEquals("application/json", server.getHeaders().get("Content-Type"));
-		assertEquals("application/json", server.getHeaders().get("Accept"));		
-		assertEquals("no-cache", server.getHeaders().get("Cache-Control"));
-		assertEquals("no-cache", server.getHeaders().get("Pragma"));
-		assertEquals("localhost:4444", server.getHeaders().get("Host"));
-		assertEquals("close", server.getHeaders().get("Connection"));
-		assertEquals("5", server.getHeaders().get("Content-Length"));		
+		http.doRequest("test");	
+		assertThat("test", is(equalTo(server.getBody())));		
+		assertThat("application/json", is(equalTo(server.getHeaders().get("Content-Type"))) );		
+		assertThat("no-cache", is(equalTo(server.getHeaders().get("Cache-Control"))) );		
+		assertThat("no-cache", is(equalTo(server.getHeaders().get("Pragma"))) );
+		assertThat("localhost:4444", is(equalTo(server.getHeaders().get("Host"))) );
+		assertThat("close", is(equalTo(server.getHeaders().get("Connection"))));
+		assertThat("5", is(equalTo(server.getHeaders().get("Content-Length"))));		
 		
 	}
 	
@@ -101,7 +98,7 @@ public class HttpRequesterTest {
 	public void testParseOK() throws Exception{
 		
 		JsonRpcRequest req = JsonRpcRequest.parse("{\"method\":\"test\",\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"jsonrpc\":\"2.0\",\"id\":1000}");
-		assertNotNull(req);
+		assertThat(req, is(notNullValue()));		
 	}
 	
 	@Test
@@ -117,11 +114,11 @@ public class HttpRequesterTest {
 		});
 		http.doRequest("{\"method\":\"test\",\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"jsonrpc\":\"2.0\",\"id\":1000}");						
 		JsonRpcRequest req = (JsonRpcRequest)server.getBodyAsObject();
-		assertNotNull(req);
-		assertEquals("test", req.getMethod());
-		assertEquals("2.0",req.getVersion());
-		assertEquals(1000d, req.getId().longValue(),0.001);		
 		
+		assertThat(req, is(notNullValue()));
+		assertThat("test", is(equalTo(req.getMethod())) );
+		assertThat("2.0", is(equalTo(req.getVersion())) );
+		assertThat(1000L, is(equalTo(req.getId().longValue())));				
 	}
 	
 	@Test

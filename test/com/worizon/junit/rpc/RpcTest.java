@@ -1,6 +1,7 @@
 package com.worizon.junit.rpc;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import org.easymock.IAnswer;
 import org.junit.Test;
 
 import com.worizon.jsonrpc.JsonRpcException;
-import com.worizon.jsonrpc.JsonRpcRequest;
 import com.worizon.jsonrpc.RemoteException;
 import com.worizon.jsonrpc.Rpc;
 import com.worizon.jsonrpc.annotations.LocalException;
@@ -32,8 +32,8 @@ public class RpcTest {
 	public void testRemoteParam(){
 			
 		Map.Entry<String, Object> pair = Rpc.RemoteParam("paramName", "paramValue");
-		assertEquals( "paramName", pair.getKey() );
-		assertEquals( "paramValue", pair.getValue() );
+		assertThat( "paramName", is(equalTo(pair.getKey())) );
+		assertThat( "paramValue", is(equalTo(pair.getValue())) );
 		
 	}
 	

@@ -1,16 +1,13 @@
 package com.worizon.junit.rpc;
 
-import java.io.IOException;
-
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.After;
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.worizon.jsonrpc.Rpc;
+
 import com.worizon.jsonrpc.TransformerException;
 import com.worizon.net.HttpRequester;
 import com.worizon.net.HttpRequesterBuilder;
@@ -42,24 +39,24 @@ public class HttpRequesterBuilderTest {
 	public void testEndpoint() throws Exception{
 						
 		http = builder.endpoint("http://localhost:4444/rpc").build();				
-		assertEquals("http://localhost:4444/rpc", http.getEndpoint().toString());				
+		assertThat("http://localhost:4444/rpc", is(equalTo(http.getEndpoint().toString())));				
 	}
 		
 	
 	@Test
 	public void testRequest() throws Exception{
 				
-		http = builder.endpoint("http://localhost:4444/rpc").build();
-			
+		http = builder.endpoint("http://localhost:4444/rpc").build();		
 		http.request("test");
-		assertEquals("test", server.getBody());
-		assertEquals("application/json", server.getHeaders().get("Content-Type"));
-		assertEquals("application/json", server.getHeaders().get("Accept"));		
-		assertEquals("no-cache", server.getHeaders().get("Cache-Control"));
-		assertEquals("no-cache", server.getHeaders().get("Pragma"));
-		assertEquals("localhost:4444", server.getHeaders().get("Host"));
-		assertEquals("close", server.getHeaders().get("Connection"));
-		assertEquals("5", server.getHeaders().get("Content-Length"));
+		
+		assertThat("test", is(equalTo(server.getBody())));
+		assertThat("application/json", is(equalTo(server.getHeaders().get("Content-Type"))));
+		assertThat("application/json", is(equalTo(server.getHeaders().get("Accept"))));		
+		assertThat("no-cache", is(equalTo(server.getHeaders().get("Cache-Control"))));
+		assertThat("no-cache", is(equalTo(server.getHeaders().get("Pragma"))));
+		assertThat("localhost:4444", is(equalTo(server.getHeaders().get("Host"))));
+		assertThat("close", is(equalTo(server.getHeaders().get("Connection"))));
+		assertThat("5", is(equalTo(server.getHeaders().get("Content-Length"))));
 		
 	}
 	
@@ -76,7 +73,8 @@ public class HttpRequesterBuilderTest {
 					}
 				}).build();		
 		http.request("bar");
-		assertEquals("foo", server.getBody());
+		
+		assertThat("foo", is(equalTo(server.getBody())));
 		
 	}
 	
@@ -95,8 +93,8 @@ public class HttpRequesterBuilderTest {
 		try{
 			http.request("bar");
 		}catch(TransformerException re){
-			
-			assertTrue( re.getCause() instanceof IllegalStateException );
+						
+			assertThat( re.getCause() instanceof IllegalStateException, is(true) );
 		}
 		
 	}
@@ -119,14 +117,15 @@ public class HttpRequesterBuilderTest {
 					@Override
 					public void transform(TransformerContext ctx) {
 							
-						assertEquals("foo\n",ctx.getBody());
+						assertThat("foo\n",is(equalTo(ctx.getBody())) );
 						ctx.putHeader("Content-type", "text/xml");
 					}
 				})
 				.build();		
 		http.request("bar");
-		assertEquals("foo", server.getBody());
-		assertEquals("text/xml", server.getHeaders().get("Content-Type"));
+		
+		assertThat("foo", is(equalTo(server.getBody())));
+		assertThat("text/xml", is(equalTo(server.getHeaders().get("Content-Type"))) );
 		
 	}
 	
@@ -145,8 +144,9 @@ public class HttpRequesterBuilderTest {
 					}
 				}).build();		
 		http.request("bar");
-		assertEquals("bar", server.getBody());
-		assertEquals("application/json", server.getHeaders().get("Content-Type"));
+		
+		assertThat("bar", is(equalTo(server.getBody())));
+		assertThat("application/json", is(equalTo(server.getHeaders().get("Content-Type"))));
 		
 	}
 	
@@ -165,7 +165,8 @@ public class HttpRequesterBuilderTest {
 					}
 				}).build();		
 		http.request("bar");
-		assertEquals("bar", server.getBody());		
+		
+		assertThat("bar", is(equalTo(server.getBody())));		
 		
 	}	
 	
@@ -185,7 +186,8 @@ public class HttpRequesterBuilderTest {
 				.bodyConcat("test2\n")
 				.build();		
 		http.request("bar");
-		assertEquals("bartest2", server.getBody());		
+		
+		assertThat("bartest2", is(equalTo(server.getBody())));		
 	}
 		
 	@Test
@@ -196,7 +198,8 @@ public class HttpRequesterBuilderTest {
 				.bodyPrepend("test2")
 				.build();		
 		http.request("bar");
-		assertEquals("test2bar", server.getBody());		
+		
+		assertThat("test2bar", is(equalTo(server.getBody())) );		
 	}
 	
 	@Test
@@ -208,8 +211,11 @@ public class HttpRequesterBuilderTest {
 				.bodyURLEncode()
 				.bodyConcat("\n")
 				.build();		
-		http.request("{test:1}");			
-		assertArrayEquals(new char[]{'%','7','B','t','e','s','t','%','3','A','1','%','7','D'}, server.getBody().toCharArray());		
+		http.request("{test:1}");	
+		
+		assertThat(new char[]{'%','7','B','t','e','s','t','%','3','A','1','%','7','D'}, 
+					is(equalTo(server.getBody().toCharArray()))
+					);		
 	}
 			
 }

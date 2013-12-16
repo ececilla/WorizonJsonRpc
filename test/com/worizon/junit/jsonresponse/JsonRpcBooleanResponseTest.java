@@ -1,6 +1,7 @@
 package com.worizon.junit.jsonresponse;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
@@ -16,13 +17,13 @@ public class JsonRpcBooleanResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": true, \"id\": 2}";		
 		JsonRpcResponse<Boolean> res = new JsonRpcResponse<Boolean>(message, Boolean.class);
 						
-		assertEquals( true, res.getResult() );	
-		assertEquals( 2, res.getId().longValue() );				
-		assertEquals("2.0",res.getVersion());
-		assertNull(res.getError());
+		assertThat(res.getResult(), is(true));
+		assertThat(res.getId(), is(equalTo(2L)));
+		assertThat(res.getVersion(), is(equalTo("2.0")));
+		assertThat(res.getError(),is(nullValue()));		
 		
 		JsonRpcResponse<Boolean> res2 = new JsonRpcResponse<Boolean>(message, boolean.class);
-		assertEquals( true, res2.getResult() );
+		assertThat( res2.getResult(), is(true) );
 		
 	}
 	
@@ -32,13 +33,13 @@ public class JsonRpcBooleanResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": 1, \"id\": 2}";		
 		JsonRpcResponse<Boolean> res = new JsonRpcResponse<Boolean>(message, Boolean.class);
 						
-		assertEquals( true, res.getResult() );	
-		assertEquals( 2, res.getId().longValue() );				
-		assertEquals("2.0",res.getVersion());
-		assertNull(res.getError());
+		assertThat( res.getResult(), is(true) );
+		assertThat(res.getId(), is(equalTo(2L)));
+		assertThat(res.getVersion(), is(equalTo("2.0")));
+		assertThat(res.getError(), is(nullValue()));		
 		
 		JsonRpcResponse<Boolean> res2 = new JsonRpcResponse<Boolean>(message, boolean.class);
-		assertEquals( true, res2.getResult() );
+		assertThat( res2.getResult(), is(true) );
 		
 	}
 	
@@ -48,13 +49,13 @@ public class JsonRpcBooleanResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": false, \"id\": 2}";		
 		JsonRpcResponse<Boolean> res = new JsonRpcResponse<Boolean>(message, Boolean.class);
 						
-		assertEquals( false, res.getResult() );	
-		assertEquals( 2, res.getId().longValue() );				
-		assertEquals("2.0",res.getVersion());
-		assertNull(res.getError());
+		assertThat( res.getResult(), is(false) );	
+		assertThat( res.getId(), is(equalTo(2L)) );				
+		assertThat(res.getVersion(), is(equalTo("2.0")));
+		assertThat(res.getError(), is(nullValue()));
 		
 		JsonRpcResponse<Boolean> res2 = new JsonRpcResponse<Boolean>(message, boolean.class);
-		assertEquals( false, res2.getResult() );
+		assertThat(res2.getResult(), is(false) );
 		
 	}
 	
@@ -64,13 +65,13 @@ public class JsonRpcBooleanResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": 0, \"id\": 2}";		
 		JsonRpcResponse<Boolean> res = new JsonRpcResponse<Boolean>(message, Boolean.class);
 						
-		assertEquals( false, res.getResult() );	
-		assertEquals( 2, res.getId().longValue() );				
-		assertEquals("2.0",res.getVersion());
-		assertNull(res.getError());
+		assertThat( res.getResult(), is(false) );	
+		assertThat( res.getId(), is(equalTo(2L)) );				
+		assertThat( res.getVersion(), is(equalTo("2.0")));
+		assertThat(res.getError(), is(nullValue()));
 		
 		JsonRpcResponse<Boolean> res2 = new JsonRpcResponse<Boolean>(message, boolean.class);
-		assertEquals( false, res2.getResult() );
+		assertThat( res2.getResult(), is(false) );
 		
 	}
 	
@@ -80,7 +81,7 @@ public class JsonRpcBooleanResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": null, \"id\": 2}";		
 		JsonRpcResponse<String> res = new JsonRpcResponse<String>(message, String.class);
 		
-		assertNull(res.getResult());
+		assertThat(res.getResult(), is(nullValue()));
 		
 	}
 	
@@ -91,7 +92,8 @@ public class JsonRpcBooleanResponseTest {
 		try{
 			JsonRpcResponse<Boolean> res = new JsonRpcResponse<Boolean>(message, Boolean.class);
 		}catch(JsonParseException jpe){
-			assertEquals("Boolean value \"test\" not valid",jpe.getMessage());
+			
+			assertThat(jpe.getMessage(), is(equalTo("Boolean value \"test\" not valid")));
 		}
 	}
 	
@@ -102,7 +104,8 @@ public class JsonRpcBooleanResponseTest {
 		try{
 			JsonRpcResponse<Boolean> res = new JsonRpcResponse<Boolean>(message, Boolean.class);
 		}catch(JsonParseException jpe){
-			assertEquals("Boolean value [1,2,3] not valid",jpe.getMessage());
+			
+			assertThat(jpe.getMessage(), is(equalTo("Boolean value [1,2,3] not valid")));
 		}
 	}
 	
@@ -113,7 +116,8 @@ public class JsonRpcBooleanResponseTest {
 		try{
 			JsonRpcResponse<Boolean> res = new JsonRpcResponse<Boolean>(message, Boolean.class);
 		}catch(JsonParseException jpe){
-			assertEquals("Boolean value {} not valid",jpe.getMessage());
+			
+			assertThat(jpe.getMessage(), is(equalTo("Boolean value {} not valid")));
 		}
 	}
 	
@@ -125,7 +129,7 @@ public class JsonRpcBooleanResponseTest {
 			JsonRpcResponse<Boolean> res = new JsonRpcResponse<Boolean>(message, Boolean.class);
 		}catch(JsonParseException jpe){
 			
-			assertEquals("Boolean value 4.5 not valid",jpe.getMessage());
+			assertThat(jpe.getMessage(), is(equalTo("Boolean value 4.5 not valid")));
 		}
 	}
 	

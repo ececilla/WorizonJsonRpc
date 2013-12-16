@@ -5,7 +5,6 @@ import static org.hamcrest.CoreMatchers.*;
 
 import java.util.Arrays;
 
-import org.hamcrest.core.IsNull;
 import org.junit.Test;
 
 import com.worizon.jsonrpc.JsonRpcResponse;
@@ -20,8 +19,8 @@ public class JsonRpcBooleanArrayResponseTest {
 		JsonRpcResponse<boolean[]> res = new JsonRpcResponse<boolean[]>(message, boolean[].class);
 				
 		assertThat(Arrays.equals(new boolean[]{true,true,false,true,false}, res.getResult()), is(true));
-		assertThat(2L, is(equalTo(res.getId())) );
-		assertThat("2.0", is(equalTo(res.getVersion())));
+		assertThat(res.getId(), is(equalTo(2L)) );
+		assertThat(res.getVersion(), is(equalTo("2.0")));
 		assertThat(res.getError(), is(nullValue()));		
 		
 		String message2 = "{\"jsonrpc\": \"2.0\", \"result\": [1,1,false,true,0,null], \"id\": 2}";		

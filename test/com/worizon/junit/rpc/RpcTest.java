@@ -13,8 +13,10 @@ import java.util.Map;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.worizon.jsonrpc.IDGenerator;
 import com.worizon.jsonrpc.JsonRpcException;
 import com.worizon.jsonrpc.RemoteException;
 import com.worizon.jsonrpc.Rpc;
@@ -27,6 +29,12 @@ import com.worizon.net.HttpRequester;
 
 
 public class RpcTest {
+	
+	@Before
+	public void setUp(){
+		
+		IDGenerator.getInstance().reset();
+	}
 	
 	@Test
 	public void testRemoteParam(){
@@ -65,7 +73,7 @@ public class RpcTest {
 			public String answer() throws Throwable{
 				
 				String request = requestCapture.getValue();				
-				assertTrue( request.startsWith("{\"method\":\"test\",\"jsonrpc\":\"2.0\"") );
+				assertThat( request.toString(), is("{\"method\":\"test\",\"jsonrpc\":\"2.0\",\"id\":1}") );
 				return "{\"jsonrpc\": \"2.0\", \"result\":{} , \"id\": 2}";
 				
 			}
@@ -111,7 +119,7 @@ public class RpcTest {
 			public String answer() throws Throwable{
 				
 				String request = requestCapture.getValue();					
-				assertTrue( request.startsWith("{\"method\":\"test\",\"params\":{\"x\":1,\"y\":\"test string\"},\"jsonrpc\":\"2.0\"") );
+				assertThat(request.toString(), is("{\"method\":\"test\",\"params\":{\"x\":1,\"y\":\"test string\"},\"jsonrpc\":\"2.0\",\"id\":1}") );
 				return "{\"jsonrpc\": \"2.0\", \"result\":{} , \"id\": 2}";
 				
 			}
@@ -145,7 +153,7 @@ public class RpcTest {
 			public String answer() throws Throwable{
 				
 				String request = requestCapture.getValue();					
-				assertTrue( request.startsWith("{\"method\":\"test\",\"params\":[1,\"test string\"],\"jsonrpc\":\"2.0\"") );
+				assertThat( request.toString(), is("{\"method\":\"test\",\"params\":[1,\"test string\"],\"jsonrpc\":\"2.0\",\"id\":1}") );
 				return "{\"jsonrpc\": \"2.0\", \"result\":{} , \"id\": 2}";
 				
 			}
@@ -180,7 +188,7 @@ public class RpcTest {
 			public String answer() throws Throwable{
 				
 				String request = requestCapture.getValue();					
-				assertTrue( request.startsWith("{\"method\":\"sum\",\"params\":{\"x\":5,\"y\":4},\"jsonrpc\":\"2.0\"") );
+				assertThat(request.toString(), is("{\"method\":\"sum\",\"params\":{\"x\":5,\"y\":4},\"jsonrpc\":\"2.0\",\"id\":1}") );
 				return "{\"jsonrpc\": \"2.0\", \"result\":9 , \"id\": 2}";
 				
 			}
@@ -210,7 +218,7 @@ public class RpcTest {
 			public String answer() throws Throwable{
 				
 				String request = requestCapture.getValue();					
-				assertTrue( request.startsWith("{\"method\":\"sum\",\"params\":[5,4],\"jsonrpc\":\"2.0\"") );
+				assertThat(request.toString(), is("{\"method\":\"sum\",\"params\":[5,4],\"jsonrpc\":\"2.0\",\"id\":1}") );
 				return "{\"jsonrpc\": \"2.0\", \"result\":9 , \"id\": 2}";
 				
 			}
@@ -260,7 +268,7 @@ public class RpcTest {
 			public String answer() throws Throwable{
 				
 				String request = requestCapture.getValue();					
-				assertTrue( request.startsWith("{\"method\":\"op\",\"params\":{\"a\":{\"x\":2,\"y\":3}},\"jsonrpc\":\"2.0\"") );
+				assertThat(request.toString(),is("{\"method\":\"op\",\"params\":{\"a\":{\"x\":2,\"y\":3}},\"jsonrpc\":\"2.0\",\"id\":1}") );
 				return "{\"jsonrpc\": \"2.0\", \"result\": {\"z\":\"test\",\"f\":23.45}, \"id\": 2}";
 				
 			}
@@ -293,7 +301,7 @@ public class RpcTest {
 			public String answer() throws Throwable{
 				
 				String request = requestCapture.getValue();					
-				assertTrue( request.startsWith("{\"method\":\"op\",\"params\":[{\"x\":2,\"y\":3}],\"jsonrpc\":\"2.0\"") );
+				assertThat(request.toString(), is("{\"method\":\"op\",\"params\":[{\"x\":2,\"y\":3}],\"jsonrpc\":\"2.0\",\"id\":1}") );
 				return "{\"jsonrpc\": \"2.0\", \"result\": {\"z\":\"test\",\"f\":23.45}, \"id\": 2}";
 				
 			}
@@ -327,7 +335,7 @@ public class RpcTest {
 			public String answer() throws Throwable{
 				
 				String request = requestCapture.getValue();				
-				assertTrue( request.startsWith("{\"method\":\"dummy\",\"jsonrpc\":\"2.0\"") );
+				assertThat(request.toString(), is("{\"method\":\"dummy\",\"jsonrpc\":\"2.0\",\"id\":1}") );
 				return "{\"jsonrpc\": \"2.0\", \"result\": null, \"id\": 2}";
 				
 			}
@@ -364,11 +372,11 @@ public class RpcTest {
 		Rpc proxy = new Rpc(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
-			assertTrue(false);
+			fail();
 		}catch(JsonRpcException ex){
 			
-			assertEquals(-32700,ex.getCode());
-			assertEquals("Parse error",ex.getMessage());
+			assertThat(ex.getCode(), is(-32700));
+			assertThat(ex.getMessage(), is("Parse error"));
 		}
 	}	
 	
@@ -393,8 +401,8 @@ public class RpcTest {
 			assertTrue(false);
 		}catch(JsonRpcException ex){
 			
-			assertEquals(-32600,ex.getCode());
-			assertEquals("Invalid request",ex.getMessage());
+			assertThat(ex.getCode(), is(-32600));
+			assertThat(ex.getMessage(), is("Invalid request"));
 		}
 	}
 	
@@ -416,11 +424,11 @@ public class RpcTest {
 		Rpc proxy = new Rpc(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
-			assertTrue(false);
+			fail();
 		}catch(JsonRpcException ex){
 			
-			assertEquals(-32601,ex.getCode());
-			assertEquals("Method not found",ex.getMessage());
+			assertThat(ex.getCode(), is(-32601));
+			assertThat(ex.getMessage(), is("Method not found"));
 		}
 	}
 	
@@ -442,11 +450,11 @@ public class RpcTest {
 		Rpc proxy = new Rpc(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
-			assertTrue(false);
+			fail();
 		}catch(JsonRpcException ex){
 			
-			assertEquals(-32602,ex.getCode());
-			assertEquals("Invalid params",ex.getMessage());
+			assertThat(ex.getCode(), is(-32602));
+			assertThat(ex.getMessage(), is("Invalid params"));
 		}
 	}
 	
@@ -468,11 +476,11 @@ public class RpcTest {
 		Rpc proxy = new Rpc(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
-			assertTrue(false);
+			fail();
 		}catch(JsonRpcException ex){
 			
-			assertEquals(-32603,ex.getCode());
-			assertEquals("Internal error",ex.getMessage());
+			assertThat(ex.getCode(), is(-32603));
+			assertThat(ex.getMessage(), is("Internal error"));
 		}
 	}
 	
@@ -494,11 +502,11 @@ public class RpcTest {
 		Rpc proxy = new Rpc(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
-			assertTrue(false);
+			fail();
 		}catch(RemoteException ex){
 			
-			assertEquals(-5,ex.getCode());
-			assertEquals("Domain error",ex.getMessage());
+			assertThat(ex.getCode(), is(-5));
+			assertThat(ex.getMessage(), is("Domain error"));
 		}
 	}
 	
@@ -538,10 +546,10 @@ public class RpcTest {
 		Rpc proxy = new Rpc(requester);						
 		try{
 			proxy.createProxy(My11RemoteInterface.class).op();
-			assertTrue(false);
+			fail();
 		}catch(MyDummyException ex){
 						
-			assertEquals("Domain error",ex.getMessage());
+			assertThat(ex.getMessage(), is("Domain error"));
 		}
 	}
 	
@@ -570,11 +578,11 @@ public class RpcTest {
 		Rpc proxy = new Rpc(requester);						
 		try{
 			proxy.createProxy(My12RemoteInterface.class).op();
-			assertTrue(false);
+			fail();
 		}catch(RemoteException ex){
 						
-			assertEquals(-6, ex.getCode());
-			assertEquals("Domain error",ex.getMessage());
+			assertThat(ex.getCode(), is(-6));
+			assertThat(ex.getMessage(), is("Domain error"));
 			
 		}
 	}

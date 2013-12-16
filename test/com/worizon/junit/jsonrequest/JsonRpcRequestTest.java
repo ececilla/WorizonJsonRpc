@@ -41,8 +41,8 @@ public class JsonRpcRequestTest {
 		JsonRpcRequest request = new JsonRpcRequest("test", params);
 
 		assertThat(request.getId(), is(notNullValue()));
-		assertThat("2.0", is(equalTo(request.getVersion())));
-		assertThat("test", is(equalTo(request.getMethod())));
+		assertThat(request.getVersion(), is(equalTo("2.0")));
+		assertThat(request.getMethod(), is(equalTo("test")));
 
 	}
 
@@ -52,9 +52,9 @@ public class JsonRpcRequestTest {
 		JsonRpcRequest request = new JsonRpcRequest("test");
 
 		assertThat(request.getId(), is(notNullValue()));
-		assertThat("2.0", is(equalTo(request.getVersion())));
-		assertThat("test", is(equalTo(request.getMethod())));
-		assertThat("{\"method\":\"test\",\"jsonrpc\":\"2.0\",\"id\":1}", is(equalTo(request.toString())));
+		assertThat(request.getVersion(), is(equalTo("2.0")));
+		assertThat(request.getMethod(), is(equalTo("test")));
+		assertThat(request.toString(), is(equalTo("{\"method\":\"test\",\"jsonrpc\":\"2.0\",\"id\":1}")));
 	}
 
 	@Test
@@ -86,8 +86,8 @@ public class JsonRpcRequestTest {
 		request.setId(1000L);
 
 		assertThat(
-				"{\"method\":\"test\",\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"jsonrpc\":\"2.0\",\"id\":1000}",
-				is(equalTo(request.toString()))
+				request.toString(),
+				is(equalTo("{\"method\":\"test\",\"params\":{\"y\":[3,4,5],\"x\":1,\"z\":true},\"jsonrpc\":\"2.0\",\"id\":1000}"))
 				);
 
 	}
@@ -112,8 +112,8 @@ public class JsonRpcRequestTest {
 		request.setId(1000L);
 
 		assertThat(
-				"{\"method\":\"test\",\"params\":{\"a\":{\"x\":5,\"y\":\"test\"}},\"jsonrpc\":\"2.0\",\"id\":1000}",
-				is(equalTo(request.toString()))
+				request.toString(),
+				is(equalTo("{\"method\":\"test\",\"params\":{\"a\":{\"x\":5,\"y\":\"test\"}},\"jsonrpc\":\"2.0\",\"id\":1000}"))
 				);
 	}
 
@@ -143,7 +143,7 @@ public class JsonRpcRequestTest {
 		JsonRpcRequest request = new JsonRpcRequest("test", params);		
 
 		assertThat(
-				"{\"method\":\"test\",\"params\":{\"b\":{\"x\":5}},\"jsonrpc\":\"2.0\",\"id\":1}",
+				request.toString(),
 				is(equalTo(request.toString()))
 				);
 	}
@@ -157,10 +157,10 @@ public class JsonRpcRequestTest {
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("x", 5.0);
 		params.put("y", 10.0);
-
+		
 		assertThat(params, is(equalTo(req.getParams())));
-		assertThat(1000L, is(equalTo(req.getId())));
-		assertThat("test_numbers", is(equalTo(req.getMethod())));
+		assertThat(req.getId(), is(equalTo(1000L)));
+		assertThat(req.getMethod(), is(equalTo("test_numbers")));
 	}
 
 	@Test
@@ -173,9 +173,9 @@ public class JsonRpcRequestTest {
 		params.put("x", "foo");
 		params.put("y", "bar");
 				
-		assertThat( 1000L, is(equalTo(req.getId())) );
+		assertThat( req.getId(), is(equalTo(1000L)) );
 		assertThat( params,is(equalTo(req.getParams())) );
-		assertThat( "test_strings", is(equalTo(req.getMethod())) );
+		assertThat( req.getMethod(), is(equalTo("test_strings")) );
 	}
 
 	@Test
@@ -187,9 +187,10 @@ public class JsonRpcRequestTest {
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		ArrayList<Double> values = new ArrayList<Double>(Arrays.asList(new Double[]{1d,2d,3d}));
 		params.put("x", values);
+		
 		assertThat( params, is(equalTo(req.getParams())) );
-		assertThat( 1000L, is(equalTo(req.getId())) );
-		assertThat( "test_array", is(equalTo(req.getMethod())) );
+		assertThat( req.getId(), is(equalTo(1000L)) );
+		assertThat( req.getMethod(), is(equalTo("test_array")) );
 				
 	}
 

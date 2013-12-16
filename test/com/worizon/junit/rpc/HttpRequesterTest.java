@@ -67,13 +67,13 @@ public class HttpRequesterTest {
 						
 		http.doRequest("test");	
 		
-		assertThat("test", is(equalTo(server.getBody())));		
-		assertThat("application/json", is(equalTo(server.getHeaders().get("Content-Type"))) );		
-		assertThat("no-cache", is(equalTo(server.getHeaders().get("Cache-Control"))) );		
-		assertThat("no-cache", is(equalTo(server.getHeaders().get("Pragma"))) );
-		assertThat("localhost:4444", is(equalTo(server.getHeaders().get("Host"))) );
-		assertThat("close", is(equalTo(server.getHeaders().get("Connection"))));
-		assertThat("5", is(equalTo(server.getHeaders().get("Content-Length"))));		
+		assertThat(server.getBody(), is("test"));		
+		assertThat(server.getHeaders().get("Content-Type"), is("application/json") );		
+		assertThat(server.getHeaders().get("Cache-Control"), is("no-cache") );		
+		assertThat(server.getHeaders().get("Pragma"), is("no-cache") );
+		assertThat(server.getHeaders().get("Host"), is("localhost:4444") );
+		assertThat(server.getHeaders().get("Connection"), is("close"));
+		assertThat(server.getHeaders().get("Content-Length"), is("5"));		
 		
 	}
 	
@@ -117,9 +117,9 @@ public class HttpRequesterTest {
 		JsonRpcRequest req = (JsonRpcRequest)server.getBodyAsObject();
 		
 		assertThat(req, is(notNullValue()));
-		assertThat("test", is(equalTo(req.getMethod())) );
-		assertThat("2.0", is(equalTo(req.getVersion())) );
-		assertThat(1000L, is(equalTo(req.getId().longValue())));				
+		assertThat(req.getMethod(), is("test") );
+		assertThat(req.getVersion(), is("2.0") );
+		assertThat(req.getId(), is(1000L));				
 	}
 	
 	@Test

@@ -39,7 +39,7 @@ public class HttpRequesterBuilderTest {
 	public void testEndpoint() throws Exception{
 						
 		http = builder.endpoint("http://localhost:4444/rpc").build();				
-		assertThat("http://localhost:4444/rpc", is(equalTo(http.getEndpoint().toString())));				
+		assertThat(http.getEndpoint().toString(), is(equalTo("http://localhost:4444/rpc")));				
 	}
 		
 	
@@ -49,14 +49,14 @@ public class HttpRequesterBuilderTest {
 		http = builder.endpoint("http://localhost:4444/rpc").build();		
 		http.request("test");
 		
-		assertThat("test", is(equalTo(server.getBody())));
-		assertThat("application/json", is(equalTo(server.getHeaders().get("Content-Type"))));
-		assertThat("application/json", is(equalTo(server.getHeaders().get("Accept"))));		
-		assertThat("no-cache", is(equalTo(server.getHeaders().get("Cache-Control"))));
-		assertThat("no-cache", is(equalTo(server.getHeaders().get("Pragma"))));
-		assertThat("localhost:4444", is(equalTo(server.getHeaders().get("Host"))));
-		assertThat("close", is(equalTo(server.getHeaders().get("Connection"))));
-		assertThat("5", is(equalTo(server.getHeaders().get("Content-Length"))));
+		assertThat(server.getBody(), is(equalTo("test")));
+		assertThat(server.getHeaders().get("Content-Type"), is(equalTo("application/json")));
+		assertThat(server.getHeaders().get("Accept"), is(equalTo("application/json")));		
+		assertThat(server.getHeaders().get("Cache-Control"), is(equalTo("no-cache")));
+		assertThat(server.getHeaders().get("Pragma"), is(equalTo("no-cache")));
+		assertThat(server.getHeaders().get("Host"), is(equalTo("localhost:4444")));
+		assertThat(server.getHeaders().get("Connection"), is(equalTo("close")));
+		assertThat(server.getHeaders().get("Content-Length"), is(equalTo("5")));
 		
 	}
 	
@@ -74,7 +74,7 @@ public class HttpRequesterBuilderTest {
 				}).build();		
 		http.request("bar");
 		
-		assertThat("foo", is(equalTo(server.getBody())));
+		assertThat(server.getBody(), is(equalTo("foo")));
 		
 	}
 	
@@ -118,14 +118,14 @@ public class HttpRequesterBuilderTest {
 					public void transform(TransformerContext ctx) {
 							
 						assertThat("foo\n",is(equalTo(ctx.getBody())) );
-						ctx.putHeader("Content-type", "text/xml");
+						ctx.putHeader("Content-Type", "text/xml");
 					}
 				})
 				.build();		
 		http.request("bar");
 		
-		assertThat("foo", is(equalTo(server.getBody())));
-		assertThat("text/xml", is(equalTo(server.getHeaders().get("Content-Type"))) );
+		assertThat(server.getBody(), is(equalTo("foo")));
+		assertThat(server.getHeaders().get("Content-Type"), is(equalTo("text/xml")) );
 		
 	}
 	
@@ -145,8 +145,8 @@ public class HttpRequesterBuilderTest {
 				}).build();		
 		http.request("bar");
 		
-		assertThat("bar", is(equalTo(server.getBody())));
-		assertThat("application/json", is(equalTo(server.getHeaders().get("Content-Type"))));
+		assertThat(server.getBody(), is(equalTo("bar")));
+		assertThat(server.getHeaders().get("Content-Type"), is(equalTo("application/json")));
 		
 	}
 	
@@ -166,7 +166,7 @@ public class HttpRequesterBuilderTest {
 				}).build();		
 		http.request("bar");
 		
-		assertThat("bar", is(equalTo(server.getBody())));		
+		assertThat(server.getBody(), is(equalTo("bar")));		
 		
 	}	
 	
@@ -187,7 +187,7 @@ public class HttpRequesterBuilderTest {
 				.build();		
 		http.request("bar");
 		
-		assertThat("bartest2", is(equalTo(server.getBody())));		
+		assertThat(server.getBody(), is(equalTo("bartest2")));		
 	}
 		
 	@Test
@@ -199,7 +199,7 @@ public class HttpRequesterBuilderTest {
 				.build();		
 		http.request("bar");
 		
-		assertThat("test2bar", is(equalTo(server.getBody())) );		
+		assertThat(server.getBody(), is(equalTo("test2bar")) );		
 	}
 	
 	@Test
@@ -213,8 +213,8 @@ public class HttpRequesterBuilderTest {
 				.build();		
 		http.request("{test:1}");	
 		
-		assertThat(new char[]{'%','7','B','t','e','s','t','%','3','A','1','%','7','D'}, 
-					is(equalTo(server.getBody().toCharArray()))
+		assertThat(server.getBody().toCharArray(), 
+					is(equalTo(new char[]{'%','7','B','t','e','s','t','%','3','A','1','%','7','D'}))
 					);		
 	}
 			

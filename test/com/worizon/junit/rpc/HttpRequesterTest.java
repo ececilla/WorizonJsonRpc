@@ -66,6 +66,7 @@ public class HttpRequesterTest {
 		
 						
 		http.doRequest("test");	
+		
 		assertThat("test", is(equalTo(server.getBody())));		
 		assertThat("application/json", is(equalTo(server.getHeaders().get("Content-Type"))) );		
 		assertThat("no-cache", is(equalTo(server.getHeaders().get("Cache-Control"))) );		

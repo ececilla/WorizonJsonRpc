@@ -1,7 +1,5 @@
 package com.worizon.junit.jsonresponse;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import com.worizon.jsonrpc.JsonRpcException;

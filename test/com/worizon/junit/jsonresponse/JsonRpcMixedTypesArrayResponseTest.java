@@ -1,6 +1,7 @@
 package com.worizon.junit.jsonresponse;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ public class JsonRpcMixedTypesArrayResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": [-19,10.5,67], \"id\": 2}";		
 		JsonRpcResponse<int[]> res = new JsonRpcResponse<int[]>(message, int[].class);			
-		assertArrayEquals(new int[]{-19,10,67}, res.getResult());
+		assertThat(res.getResult(), is(new int[]{-19,10,67}));
 	}
 	
 	@Test(expected=JsonSyntaxException.class)

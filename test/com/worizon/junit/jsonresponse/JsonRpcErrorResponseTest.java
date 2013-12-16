@@ -1,6 +1,7 @@
 package com.worizon.junit.jsonresponse;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
@@ -15,11 +16,11 @@ public class JsonRpcErrorResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-100, \"message\":\"test error\",\"data\":\"foo\"}, \"id\": 2}";		
 		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
-		assertEquals( -100, res.getError().getCode() );
-		assertEquals("test error", res.getError().getMessage());	
-		assertEquals("foo", (String)res.getError().getData());
-		assertEquals("{code:-100, message:'test error', data:foo}", res.getError().toString() );
-		assertNull(res.getResult());		
+		assertThat( res.getError().getCode(), is(-100) );
+		assertThat(res.getError().getMessage(), is(equalTo("test error")));	
+		assertThat((String)res.getError().getData(), is(equalTo("foo")));
+		assertThat( res.getError().toString(), is(equalTo("{code:-100, message:'test error', data:foo}")) );
+		assertThat(res.getResult(), is(nullValue()));		
 	}
 	
 	@Test
@@ -27,10 +28,10 @@ public class JsonRpcErrorResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-100, \"message\":\"test error\"}, \"id\": 2}";		
 		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
-		assertEquals( -100, res.getError().getCode() );
-		assertEquals("test error", res.getError().getMessage());
-		assertEquals("{code:-100, message:'test error'}", res.getError().toString() );
-		assertNull(res.getResult());		
+		assertThat( res.getError().getCode(), is(-100) );
+		assertThat(res.getError().getMessage(), is(equalTo("test error")));
+		assertThat(res.getError().toString(), is(equalTo("{code:-100, message:'test error'}")) );
+		assertThat(res.getResult(), is(nullValue()));		
 	}
 	
 	@Test
@@ -38,11 +39,11 @@ public class JsonRpcErrorResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-100, \"message\":\"test error\"}, \"id\": 2}";		
 		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
-		assertEquals( -100, res.getError().getCode() );
-		assertEquals("test error", res.getError().getMessage());
-		assertEquals("{code:-100, message:'test error'}", res.getError().toString() );
-		assertTrue(res.getError().isCustomError());
-		assertNull(res.getResult());		
+		assertThat(res.getError().getCode(), is(-100) );
+		assertThat(res.getError().getMessage(), is(equalTo("test error")));
+		assertThat(res.getError().toString(), is(equalTo("{code:-100, message:'test error'}")) );
+		assertThat(res.getError().isCustomError(), is(true));
+		assertThat(res.getResult(),is(nullValue()));		
 	}
 	
 	@Test
@@ -50,11 +51,11 @@ public class JsonRpcErrorResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-32601, \"message\":\"method not found\"}, \"id\": 2}";		
 		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
-		assertEquals( -32601, res.getError().getCode() );
-		assertEquals("method not found", res.getError().getMessage());
-		assertEquals("{code:-32601, message:'method not found'}", res.getError().toString() );
-		assertFalse(res.getError().isCustomError());
-		assertNull(res.getResult());		
+		assertThat( res.getError().getCode(), is(-32601) );
+		assertThat( res.getError().getMessage(), is(equalTo("method not found")));
+		assertThat(res.getError().toString(), is(equalTo("{code:-32601, message:'method not found'}")) );
+		assertThat(res.getError().isCustomError(), is(false));
+		assertThat(res.getResult(), is(nullValue()));		
 	}
 	
 	@Test(expected=JsonRpcException.class)
@@ -70,10 +71,10 @@ public class JsonRpcErrorResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-100, \"message\":null}, \"id\": 2}";		
 		JsonRpcResponse<Integer> res = new JsonRpcResponse<Integer>(message, Integer.class);
-		assertEquals( -100, res.getError().getCode() );
-		assertNull(res.getError().getMessage());				
-		assertEquals("{code:-100, message:'null'}", res.getError().toString() );
-		assertNull(res.getResult());		
+		assertThat( res.getError().getCode(), is(-100) );
+		assertThat(res.getError().getMessage(), is(nullValue()));				
+		assertThat(res.getError().toString(), is(equalTo("{code:-100, message:'null'}")) );
+		assertThat(res.getResult(), is(nullValue()));		
 	}
 	
 	@Test(expected=JsonRpcException.class)

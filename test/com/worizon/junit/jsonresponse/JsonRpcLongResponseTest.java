@@ -1,6 +1,7 @@
 package com.worizon.junit.jsonresponse;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
@@ -15,13 +16,13 @@ public class JsonRpcLongResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": 3487394782749223234, \"id\": 2}";		
 		JsonRpcResponse<Long> res = new JsonRpcResponse<Long>(message, Long.class);
 				
-		assertEquals( (Long)3487394782749223234L, res.getResult() );
-		assertEquals( 2, res.getId().longValue() );				
-		assertEquals("2.0",res.getVersion());
-		assertNull(res.getError());
+		assertThat( res.getResult(), is(3487394782749223234L)  );
+		assertThat( res.getId(), is(2L) );				
+		assertThat(res.getVersion(), is(equalTo("2.0")));
+		assertThat(res.getError(), is(nullValue()));
 		
 		JsonRpcResponse<Long> res2 = new JsonRpcResponse<Long>(message, long.class);
-		assertEquals( (Long)3487394782749223234L, res2.getResult() );
+		assertThat( res2.getResult(), is(3487394782749223234L)  );
 	}
 	
 	@Test
@@ -30,7 +31,7 @@ public class JsonRpcLongResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": null, \"id\": 2}";		
 		JsonRpcResponse<Long> res = new JsonRpcResponse<Long>(message, Long.class);
 		
-		assertNull(res.getResult());
+		assertThat(res.getResult(), is(nullValue()));
 		
 	}
 	

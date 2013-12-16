@@ -1,9 +1,8 @@
 package com.worizon.junit.jsonresponse;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -20,10 +19,10 @@ public class JsonRpcDoubleListResponseTest {
 		JsonRpcResponse<List> res = new JsonRpcResponse<List>(message, List.class);
 		
 		
-		assertArrayEquals( new Double[]{-19.8d,10.2d,54.9d,67.1d}, res.getResult().toArray());		
-		assertEquals( 2, res.getId().longValue() );				
-		assertEquals("2.0",res.getVersion());
-		assertNull(res.getError());			
+		assertThat( new Double[]{-19.8d,10.2d,54.9d,67.1d}, is(equalTo(res.getResult().toArray())));		
+		assertThat( res.getId(), is(2L) );				
+		assertThat(res.getVersion(), is(equalTo("2.0")));
+		assertThat(res.getError(), is(nullValue()));			
 		
 	}
 	
@@ -33,7 +32,7 @@ public class JsonRpcDoubleListResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": null, \"id\": 2}";		
 		JsonRpcResponse<float[]> res = new JsonRpcResponse<float[]>(message, float[].class);
 		
-		assertNull(res.getResult());
+		assertThat(res.getResult(), is(nullValue()));
 		
 	}
 		

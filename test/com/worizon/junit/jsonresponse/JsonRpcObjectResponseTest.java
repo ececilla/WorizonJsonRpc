@@ -1,6 +1,7 @@
 package com.worizon.junit.jsonresponse;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
@@ -44,12 +45,11 @@ public class JsonRpcObjectResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": {\"dni\":46579878,\"name\":\"Enric\",\"surname\":\"Cecilla\",\"height\":1.72}, \"id\": 77684}";		
 		JsonRpcResponse<Foo> res = new JsonRpcResponse<Foo>(message, Foo.class);		
-		
-		Foo result = res.getResult();						
+						
 		Foo expected = new Foo(46579878,"Enric","Cecilla",1.72f);
 		
-		assertEquals( expected, result);
-		assertNull(res.getError());		
+		assertThat( res.getResult(), is(expected));
+		assertThat( res.getError(), is(nullValue()));		
 		
 	}
 	
@@ -58,12 +58,11 @@ public class JsonRpcObjectResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": {\"dni\":46579878,\"name\":\"Enric\",\"surname\":\"Cecilla\",\"height\":1.72}, \"id\": 77684}";		
 		JsonRpcResponse<Foo> res = new JsonRpcResponse<Foo>(message, Bar.class);		
-		
-		Foo result = res.getResult();						
+									
 		Foo expected = new Foo(46579878,"Enric","Cecilla",1.72f);		
-		assertEquals( expected, result);
-		assertNull(res.getError());	
-		assertTrue( result instanceof Bar );
+		assertThat( res.getResult(), is(expected));
+		assertThat(res.getError(), is(nullValue()));	
+		assertThat( res.getResult() instanceof Bar, is(true) );
 		
 	}
 	
@@ -73,7 +72,7 @@ public class JsonRpcObjectResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": null, \"id\": 77684}";		
 		JsonRpcResponse<Foo> res = new JsonRpcResponse<Foo>(message, Foo.class);
 		
-		assertNull(res.getResult());
+		assertThat(res.getResult(), is(nullValue()));
 	}
 					
 		

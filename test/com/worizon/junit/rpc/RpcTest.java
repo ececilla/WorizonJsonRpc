@@ -32,8 +32,8 @@ public class RpcTest {
 	public void testRemoteParam(){
 			
 		Map.Entry<String, Object> pair = Rpc.RemoteParam("paramName", "paramValue");
-		assertThat( "paramName", is(equalTo(pair.getKey())) );
-		assertThat( "paramValue", is(equalTo(pair.getValue())) );
+		assertThat( pair.getKey(), is("paramName") );
+		assertThat( (String)pair.getValue(), is("paramValue") );
 		
 	}
 	

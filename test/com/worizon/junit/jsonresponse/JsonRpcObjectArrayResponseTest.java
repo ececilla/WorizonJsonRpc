@@ -1,6 +1,7 @@
 package com.worizon.junit.jsonresponse;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
@@ -36,12 +37,12 @@ public class JsonRpcObjectArrayResponseTest {
 		JsonRpcResponse<Foo[]> res = new JsonRpcResponse<Foo[]>(message, Foo[].class);		
 				
 		Foo expected = new Foo(46579878,"Enric","Cecilla",1.72f);			
-		assertArrayEquals( new Foo[]{expected}, res.getResult());
-		assertNull(res.getError());
+		assertThat( res.getResult(), is(new Foo[]{expected}));
+		assertThat( res.getError(), is(nullValue()));
 		
 		String message2 = "{\"jsonrpc\": \"2.0\", \"result\": [{\"dni\":46579878,\"name\":\"Enric\",\"surname\":\"Cecilla\",\"height\":1.72},null], \"id\": 77684}";		
 		JsonRpcResponse<Foo[]> res2 = new JsonRpcResponse<Foo[]>(message2, Foo[].class);
-		assertArrayEquals( new Foo[]{expected,null}, res2.getResult());
+		assertThat( res2.getResult(), is(new Foo[]{expected,null}) );
 	}
 	
 	@Test
@@ -50,7 +51,7 @@ public class JsonRpcObjectArrayResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": null, \"id\": 77684}";		
 		JsonRpcResponse<Foo[]> res = new JsonRpcResponse<Foo[]>(message, Foo[].class);	
 		
-		assertNull(res.getResult());
+		assertThat(res.getResult(), is(nullValue()));
 		
 	}
 					

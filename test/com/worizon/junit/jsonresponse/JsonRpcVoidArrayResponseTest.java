@@ -1,8 +1,7 @@
 package com.worizon.junit.jsonresponse;
 
 import static org.junit.Assert.*;
-
-import java.util.Arrays;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
@@ -17,9 +16,9 @@ public class JsonRpcVoidArrayResponseTest {
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": [{},{},{},{},{}], \"id\": 2}";		
 		JsonRpcResponse<Void[]> res = new JsonRpcResponse<Void[]>(message, Void[].class);
 								
-		assertEquals( 2, res.getId().longValue() );				
-		assertEquals("2.0",res.getVersion());
-		assertNull(res.getError());				
+		assertThat( res.getId(), is(2L) );				
+		assertThat(res.getVersion(), is("2.0"));
+		assertThat(res.getError(), is(nullValue()));				
 		
 	}
 	
@@ -28,7 +27,7 @@ public class JsonRpcVoidArrayResponseTest {
 		
 		String message = "{\"jsonrpc\": \"2.0\", \"result\": null, \"id\": 2}";		
 		JsonRpcResponse<Void[]> res = new JsonRpcResponse<Void[]>(message, Void[].class);
-		assertNull(res.getResult());
+		assertThat(res.getResult(), is(nullValue()));
 		
 	}
 		

@@ -63,7 +63,7 @@ public class HttpRequesterBuilderTest {
 	@Test
 	public void testAddTransformer() throws Exception{
 		http = builder
-				.endpoint("http://localhost:4444/rpc")				
+				.endpoint("http://localhost:4444/rpc2")				
 				.addTransformer(new HttpRequester.ITransformer() {
 					
 					@Override
@@ -72,10 +72,11 @@ public class HttpRequesterBuilderTest {
 						ctx.setBody("foo\n");
 					}
 				}).build();		
+		assertThat(http.getEndpoint().toString(),is("http://localhost:4444/rpc2"));
+		
 		http.request("bar");
 		
-		assertThat(server.getBody(), is(equalTo("foo")));
-		
+		assertThat(server.getBody(), is(equalTo("foo")));		
 	}
 	
 	@Test
@@ -95,6 +96,7 @@ public class HttpRequesterBuilderTest {
 		}catch(TransformerException re){
 						
 			assertThat( re.getCause() instanceof IllegalStateException, is(true) );
+			assertThat(re.getCause().getMessage(), is("Illegal state to apply this transformer"));
 		}
 		
 	}
@@ -117,15 +119,15 @@ public class HttpRequesterBuilderTest {
 					@Override
 					public void transform(TransformerContext ctx) {
 							
-						assertThat("foo\n",is(equalTo(ctx.getBody())) );
+						assertThat(ctx.getBody(),is(equalTo("foo\n")) );
 						ctx.putHeader("Content-Type", "text/xml");
 					}
 				})
 				.build();		
 		http.request("bar");
 		
-		assertThat(server.getBody(), is(equalTo("foo")));
-		assertThat(server.getHeaders().get("Content-Type"), is(equalTo("text/xml")) );
+		assertThat(server.getBody(), is("foo"));
+		assertThat(server.getHeaders().get("Content-Type"), is("text/xml") );
 		
 	}
 	
@@ -145,8 +147,8 @@ public class HttpRequesterBuilderTest {
 				}).build();		
 		http.request("bar");
 		
-		assertThat(server.getBody(), is(equalTo("bar")));
-		assertThat(server.getHeaders().get("Content-Type"), is(equalTo("application/json")));
+		assertThat(server.getBody(), is("bar"));
+		assertThat(server.getHeaders().get("Content-Type"), is("application/json"));
 		
 	}
 	
@@ -161,7 +163,7 @@ public class HttpRequesterBuilderTest {
 					@Override
 					public void transform(TransformerContext ctx){
 							
-						assertTrue(false);						
+						fail();						
 					}
 				}).build();		
 		http.request("bar");
@@ -187,7 +189,7 @@ public class HttpRequesterBuilderTest {
 				.build();		
 		http.request("bar");
 		
-		assertThat(server.getBody(), is(equalTo("bartest2")));		
+		assertThat(server.getBody(), is("bartest2"));		
 	}
 		
 	@Test
@@ -195,11 +197,11 @@ public class HttpRequesterBuilderTest {
 		
 		http = builder
 				.endpoint("http://localhost:4444/rpc")					
-				.bodyPrepend("test2")
+				.bodyPrepend("foo")
 				.build();		
 		http.request("bar");
 		
-		assertThat(server.getBody(), is(equalTo("test2bar")) );		
+		assertThat(server.getBody(), is("foobar") );		
 	}
 	
 	@Test
@@ -214,7 +216,7 @@ public class HttpRequesterBuilderTest {
 		http.request("{test:1}");	
 		
 		assertThat(server.getBody().toCharArray(), 
-					is(equalTo(new char[]{'%','7','B','t','e','s','t','%','3','A','1','%','7','D'}))
+					is(new char[]{'%','7','B','t','e','s','t','%','3','A','1','%','7','D'})
 					);		
 	}
 			

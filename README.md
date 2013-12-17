@@ -150,29 +150,59 @@ int result[] = service.task3(true,56.92);
 >*{...,method:"task3", params:{x:true,y:56.92}, id:62369}*.
 
 
-To use this library add the maven repository location and dependency to your pom.xml. Following you can find an example of pom file that depends on this library.
+To use this library add the maven repository location and dependency to your pom.xml. Following you can find an example of pom file that includes worizonjsonrpc as a dependency.
 
 ```xml
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>test</groupId>
-  <artifactId>test</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>test</name>
-  <description>test</description>
-  <dependencies>
-	<dependency>
-		<groupId>com.worizon</groupId>
-		<artifactId>WorizonJsonRpc</artifactId>
-		<version>1.0.0-SNAPSHOT</version>		
-	</dependency>  
-  </dependencies>	
-  <repositories>
-    <repository>
-        <id>worizonjsonrpc-maven-s3-repo</id>
-        <url>s3://ececilla-maven-com-worizon-jsonrpc-snapshot/snapshot</url>
-    </repository>
-</repositories>
+    <groupId>test</groupId>
+    <artifactId>test</artifactId>    
+    <version>1.0-SNAPSHOT</version>
+    <name>test</name>    
+    <dependencies>        
+      <dependency>
+        <groupId>com.worizon</groupId>
+        <artifactId>WorizonJsonRpc</artifactId>
+        <version>1.0.0-SNAPSHOT</version>       
+      </dependency>
+    </dependencies>
+    
+    <build>        
+        <extensions>
+            <extension>
+                <groupId>org.springframework.build.aws</groupId>
+                <artifactId>org.springframework.build.aws.maven</artifactId>
+                <version>3.0.0.RELEASE</version>
+            </extension>
+        </extensions>
+    </build>
+   
+    <repositories>
+        <repository>
+            <id>maven-s3-release-repo</id>
+            <name>S3 Release Repository</name>
+            <url>s3://ececilla-maven-com-worizon-jsonrpc-release/release</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>maven-s3-snapshot-repo</id>
+            <name>S3 Snapshot Repository</name>
+            <url>s3://ececilla-maven-com-worizon-jsonrpc-snapshot/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 </project>
 ```
 

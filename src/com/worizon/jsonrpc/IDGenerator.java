@@ -1,11 +1,13 @@
 package com.worizon.jsonrpc;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Class responsible of generating ids for JSON-RPC requests.
  */
 public class IDGenerator {
-
-	private long id = 1;
+	
+	private AtomicLong id = new AtomicLong(0);
 	
 	private static IDGenerator instance;
 	
@@ -23,9 +25,9 @@ public class IDGenerator {
 	 * Creates an id.
 	 * @return The id generated.
 	 */
-	public long createID(){
+	public long incrementAndGet(){
 		
-		return id++;
+		return id.incrementAndGet();
 	}
 	
 	/**
@@ -33,6 +35,6 @@ public class IDGenerator {
 	 */
 	public void reset(){
 		
-		id = 1;
+		id.set(0);
 	}
 }

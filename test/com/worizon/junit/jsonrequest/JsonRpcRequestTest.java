@@ -141,7 +141,7 @@ public class JsonRpcRequestTest {
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("b", new B(5, "test"));
 		JsonRpcRequest request = new JsonRpcRequest("test", params);		
-		System.out.println(request.toString());
+		
 		assertThat(
 				request.toString(),
 				is(equalTo("{\"method\":\"test\",\"params\":{\"b\":{\"x\":5}},\"jsonrpc\":\"2.0\",\"id\":1}"))

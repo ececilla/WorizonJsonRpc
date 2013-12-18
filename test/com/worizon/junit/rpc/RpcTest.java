@@ -358,7 +358,7 @@ public class RpcTest {
 	public void testJsonRpcExceptionParseError() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -384,7 +384,7 @@ public class RpcTest {
 	public void testJsonRpcExceptionInvalidRequest() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -410,7 +410,7 @@ public class RpcTest {
 	public void testJsonRpcExceptionMethodNotFound() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -436,7 +436,7 @@ public class RpcTest {
 	public void testJsonRpcExceptionInvalidParams() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -462,7 +462,7 @@ public class RpcTest {
 	public void testJsonRpcExceptionInternalError() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request((String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -488,7 +488,7 @@ public class RpcTest {
 	public void testRemoteException() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -532,7 +532,7 @@ public class RpcTest {
 	public void testRemoteExceptionMapedLocalException() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -564,7 +564,7 @@ public class RpcTest {
 	public void testRemoteExceptionMapedLocalExceptionFailure() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -597,7 +597,7 @@ public class RpcTest {
 	public void testCall1() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -616,7 +616,7 @@ public class RpcTest {
 	public void testCall2() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -644,7 +644,7 @@ public class RpcTest {
 	public void testCall3() throws Exception{
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -770,7 +770,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -836,7 +836,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -879,7 +879,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -945,7 +945,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -990,7 +990,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1056,7 +1056,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1101,7 +1101,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1167,7 +1167,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1215,7 +1215,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1281,7 +1281,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1327,7 +1327,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request((String)EasyMock.anyObject()))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1393,7 +1393,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1436,7 +1436,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1503,7 +1503,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1546,7 +1546,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
@@ -1614,7 +1614,7 @@ public class RpcTest {
 		
 		
 		HttpRequester requester = EasyMock.createMock(HttpRequester.class);		
-		EasyMock.expect(requester.request( EasyMock.anyString() ))		
+		EasyMock.expect(requester.request( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												

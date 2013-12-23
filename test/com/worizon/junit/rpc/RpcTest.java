@@ -20,6 +20,7 @@ import com.worizon.jsonrpc.IDGenerator;
 import com.worizon.jsonrpc.JsonRpcException;
 import com.worizon.jsonrpc.RemoteException;
 import com.worizon.jsonrpc.Rpc;
+import com.worizon.jsonrpc.RpcImpl;
 import com.worizon.jsonrpc.annotations.LocalException;
 import com.worizon.jsonrpc.annotations.LocalExceptions;
 import com.worizon.jsonrpc.annotations.Remote;
@@ -51,7 +52,7 @@ public class RpcTest {
 	public void testNonRemoteInterface() throws MalformedURLException{
 		
 		HttpRequester http = new HttpRequester("http://localhost:8080/rpc");
-		Rpc proxy = new Rpc(http);
+		Rpc.Proxy proxy = new Rpc.Proxy(http);
 		NonRemoteInterface remote = proxy.createProxy(NonRemoteInterface.class);
 		
 	}
@@ -80,7 +81,7 @@ public class RpcTest {
 		});
 		EasyMock.replay(requester);
 				
-		Rpc proxy = new Rpc(requester);
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My1RemoteInterface remote = proxy.createProxy(My1RemoteInterface.class);
 		remote.test();
 	}
@@ -95,8 +96,8 @@ public class RpcTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testAnnottedParamsNumberMismath() throws Exception{
 		
-		HttpRequester requester = new HttpRequester();										
-		Rpc proxy = new Rpc(requester);
+		HttpRequester requester = new HttpRequester("http://localhost:5555/rpc");										
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My2RemoteInterface remote = proxy.createProxy(My2RemoteInterface.class);
 		remote.test(1,2);
 	}
@@ -126,7 +127,7 @@ public class RpcTest {
 		});
 		
 		EasyMock.replay(requester);
-		Rpc proxy = new Rpc(requester);
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My3RemoteInterface remote = proxy.createProxy( My3RemoteInterface.class);
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("x", 1);
@@ -160,7 +161,7 @@ public class RpcTest {
 		});
 		
 		EasyMock.replay(requester);
-		Rpc proxy = new Rpc(requester);
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My4RemoteInterface remote = proxy.createProxy( My4RemoteInterface.class);
 		List<Object> params = new ArrayList<Object>();
 		params.add(1);
@@ -195,7 +196,7 @@ public class RpcTest {
 		});
 		EasyMock.replay(requester);
 				
-		Rpc proxy = new Rpc(requester);
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My5RemoteInterface remote = proxy.createProxy(My5RemoteInterface.class);
 				
 		assertEquals(9, remote.sum(5, 4));
@@ -225,7 +226,7 @@ public class RpcTest {
 		});
 		EasyMock.replay(requester);
 				
-		Rpc proxy = new Rpc(requester);
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My6RemoteInterface remote = proxy.createProxy(My6RemoteInterface.class);
 				
 		assertEquals(9, remote.sum(5, 4));
@@ -275,7 +276,7 @@ public class RpcTest {
 		});		
 		EasyMock.replay(requester);
 				
-		Rpc proxy = new Rpc(requester);
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My7RemoteInterface remote = proxy.createProxy(My7RemoteInterface.class);
 		
 		A a = new A(2,3);
@@ -308,7 +309,7 @@ public class RpcTest {
 		});		
 		EasyMock.replay(requester);
 				
-		Rpc proxy = new Rpc(requester);
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My8RemoteInterface remote = proxy.createProxy(My8RemoteInterface.class);
 		
 		A a = new A(2,3);
@@ -342,7 +343,7 @@ public class RpcTest {
 		});		
 		EasyMock.replay(requester);
 				
-		Rpc proxy = new Rpc(requester);
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);
 		My9RemoteInterface remote = proxy.createProxy(My9RemoteInterface.class);
 		remote.op();						
 	}	
@@ -369,7 +370,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc proxy = new Rpc(requester);						
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
 			fail();
@@ -395,7 +396,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc proxy = new Rpc(requester);						
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
 			assertTrue(false);
@@ -421,7 +422,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc proxy = new Rpc(requester);						
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
 			fail();
@@ -447,7 +448,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc proxy = new Rpc(requester);						
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
 			fail();
@@ -473,7 +474,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc proxy = new Rpc(requester);						
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
 			fail();
@@ -499,7 +500,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc proxy = new Rpc(requester);						
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
 			fail();
@@ -543,7 +544,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc proxy = new Rpc(requester);						
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);						
 		try{
 			proxy.createProxy(My11RemoteInterface.class).op();
 			fail();
@@ -575,7 +576,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc proxy = new Rpc(requester);						
+		Rpc.Proxy proxy = new Rpc.Proxy(requester);						
 		try{
 			proxy.createProxy(My12RemoteInterface.class).op();
 			fail();
@@ -608,7 +609,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		rpc.callVoid("op");		
 	}
 	
@@ -627,7 +628,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);						
+		Rpc.Sync rpc = new Rpc.Sync(requester);						
 		try{
 			
 			rpc.call("op" ,Void.class);
@@ -655,7 +656,7 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);						
+		Rpc.Sync rpc = new Rpc.Sync(requester);						
 		try{
 			rpc.addRuntimeExceptionMapping(-6, ArithmeticException.class);
 			rpc.call("op" ,Void.class);
@@ -685,7 +686,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		rpc.callVoid("op");		
 		
 	}
@@ -709,7 +710,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		rpc.callVoid("op",1.5,"test");		
 		
 	}
@@ -732,7 +733,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		rpc.callVoid("op",Rpc.RemoteParam("p1", 1.5),Rpc.RemoteParam("p2", "test"));		
 		
 	}
@@ -755,7 +756,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);	
+		Rpc.Sync rpc = new Rpc.Sync(requester);	
 		try{
 			rpc.callVoid("op",Rpc.RemoteParam("v1", 1.5),"test");		
 			fail();
@@ -780,7 +781,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		int result = rpc.callInteger("op");		
 		assertThat( result, is(10) );
 	}
@@ -803,7 +804,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		int result = rpc.callInteger("op",false,"test");		
 		assertThat( result, is(10) );
 	}
@@ -826,7 +827,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		int result = rpc.callInteger("op",Rpc.RemoteParam("p1", false),Rpc.RemoteParam("p2", "test"));		
 		assertThat( result, is(10) );
 	}
@@ -846,7 +847,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		int[] result = rpc.callIntegerArray("op");		
 		assertThat(result, is(new int[]{10,34,23}));
 	}
@@ -869,7 +870,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		int[] result = rpc.callIntegerArray("mult10",true,new int[]{1,2,3});		
 		assertThat(result, is(new int[]{10,20,30}));
 	}
@@ -889,7 +890,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		double result = rpc.callDouble("op");		
 		assertThat( result, is(1000000d) );
 	}
@@ -912,7 +913,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		double result = rpc.callDouble("op",true);		
 		assertThat( result,  is(1000000d) );
 	}
@@ -935,7 +936,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		double result = rpc.callDouble("op",Rpc.RemoteParam("p1", true));		
 		assertThat( result, is(1000000d) );
 	}
@@ -955,7 +956,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		double[] result = rpc.callDoubleArray("op");		
 		assertThat( result, is(new double[]{10.1,34.4,23.5}));
 		
@@ -979,7 +980,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		double[] result = rpc.callDoubleArray("op", new Object[]{null});		
 		assertThat(result, is(new double[]{10.1,34.4,23.5}));
 		
@@ -1000,7 +1001,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		float result = rpc.callFloat("op");		
 		assertThat( result, is(34.5677f) );
 	}
@@ -1023,7 +1024,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		float result = rpc.callFloat("op",true);		
 		assertThat( result, is(65.3482374f) );
 	}
@@ -1046,7 +1047,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		float result = rpc.callFloat("op",Rpc.RemoteParam("p1", true));		
 		assertThat( result, is(65.3482374f) );
 	}
@@ -1066,7 +1067,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		float[] result = rpc.callFloatArray("op");		
 		assertThat(result, is(new float[]{10.1f,34.4f,23.5f}));		
 		
@@ -1090,7 +1091,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		float[] result = rpc.callFloatArray("op", new Object[]{null});		
 		assertThat(result, is(new float[]{10.1f,34.4f,23.5f}));
 		
@@ -1111,7 +1112,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		String result = rpc.callString("op");		
 		assertThat(result, is("foobar"));
 	}
@@ -1134,7 +1135,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		String result = rpc.callString("op",true);		
 		assertThat(result, is("foobar"));
 	}
@@ -1157,7 +1158,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		String result = rpc.callString("op",Rpc.RemoteParam("p1", true));		
 		assertThat(result, is("foobar"));
 	}
@@ -1177,7 +1178,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		String[] result = rpc.callStringArray("op");		
 		assertThat(result, is(new String[]{"foo","bar","dummy"}));		
 		
@@ -1201,7 +1202,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);
+		Rpc.Sync rpc = new Rpc.Sync(requester);
 		Map<String,Object> params = new LinkedHashMap<String, Object>();
 		params.put("a",1);
 		params.put("b","baz");
@@ -1225,7 +1226,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		boolean result = rpc.callBoolean("op");		
 		assertThat( result , is(true) );
 	}
@@ -1248,7 +1249,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		boolean result = rpc.callBoolean("op",1,2,3, "foo" );		
 		assertThat( result, is(false));
 	}
@@ -1271,7 +1272,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		boolean result = rpc.callBoolean("op",Rpc.RemoteParam("p1", 1),Rpc.RemoteParam("p2", 2),Rpc.RemoteParam("p3", 3),Rpc.RemoteParam("p4", "foo"));		
 		assertThat( result, is(false) );
 	}
@@ -1291,7 +1292,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		boolean[] result = rpc.callBooleanArray("op");		
 		assertThat(result,  is(new boolean[]{true,true,false}));
 					
@@ -1316,7 +1317,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		boolean[] result = rpc.callBooleanArray("op", 5);		
 		assertThat(result, is(new boolean[]{true,true,false}));
 		
@@ -1337,7 +1338,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		short result = rpc.callShort("op");		
 		assertThat( result, is((short)10) );
 	}
@@ -1360,7 +1361,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		short result = rpc.callShort("op",false,"test");		
 		assertThat( result, is((short)10) );
 	}
@@ -1383,7 +1384,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		short result = rpc.callShort("op",Rpc.RemoteParam("p1", false),Rpc.RemoteParam("p2", "test"));		
 		assertThat( result, is((short)10) );
 	}
@@ -1403,7 +1404,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		short[] result = rpc.callShortArray("op");		
 		assertThat(result, is(new short[]{10,34,23}));
 	}
@@ -1426,7 +1427,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		short[] result = rpc.callShortArray("mult10",true,false);		
 		assertThat(result, is(new short[]{10,20,30}));
 	}
@@ -1446,7 +1447,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		long result = rpc.callLong("op");		
 		assertThat( result, is(10L) );
 	}
@@ -1469,7 +1470,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		long result = rpc.callLong("op",false,"test");		
 		assertThat( result, is(10L) );
 	}
@@ -1493,7 +1494,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		long result = rpc.callLong("op",Rpc.RemoteParam("p1", false),Rpc.RemoteParam("p2", "test"));		
 		assertThat( result, is(10L) );
 	}
@@ -1513,7 +1514,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		long[] result = rpc.callLongArray("op");		
 		assertThat(result, is(new long[]{10,34,23}));
 	}
@@ -1536,7 +1537,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		long[] result = rpc.callLongArray("mult10",true,false);		
 		assertThat(result, is(new long[]{10,20,30}));
 	}
@@ -1556,7 +1557,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		char result = rpc.callChar("op");		
 		//System.out.println(String.format("%04x", (int) result));
 		assertThat( result, is((char)0x61) );
@@ -1581,7 +1582,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		char result = rpc.callChar("op",false,"test");		
 		assertThat( result, is('a') );
 	}
@@ -1604,7 +1605,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		char result = rpc.callChar("op",Rpc.RemoteParam("p1", false),Rpc.RemoteParam("p2", "test"));		
 		assertThat( result, is('a') );
 	}
@@ -1624,7 +1625,7 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);										
+		Rpc.Sync rpc = new Rpc.Sync(requester);										
 		char[] result = rpc.callCharArray("op");		
 		assertThat( result, is(new char[]{'a','b','c'}));
 	}
@@ -1647,7 +1648,32 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(requester);				
-		Rpc rpc = new Rpc(requester);	
+		Rpc.Sync rpc = new Rpc.Sync(requester);	
+		A a = new A(2,3);
+		a.b = new B("bar",5.6f);
+		char[] result = rpc.callCharArray("op",1,a);		
+		assertThat(result, is(new char[]{'a','b','c'}));
+	}
+	
+	@Test
+	public void testCallMultipleThreads() throws Exception{
+		
+		
+		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();												
+				assertThat(request.toString(), is("{\"method\":\"op\",\"params\":[1,{\"x\":2,\"y\":3,\"b\":{\"z\":\"bar\",\"f\":5.6}}],\"jsonrpc\":\"2.0\",\"id\":1}"));
+				return "{\"jsonrpc\": \"2.0\", \"result\": [\"a\",\"b\",\"c\"], \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(requester);				
+		Rpc.Sync rpc = new Rpc.Sync(requester);	
 		A a = new A(2,3);
 		a.b = new B("bar",5.6f);
 		char[] result = rpc.callCharArray("op",1,a);		

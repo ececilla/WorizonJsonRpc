@@ -30,7 +30,7 @@ public class JsonRpcRequest extends JsonRpcBase implements Serializable {
 	
 	JsonRpcRequest( String method, Object params){
 				
-		super("2.0",IDGenerator.getInstance().incrementAndGet());
+		super("2.0",IDGenerator.getInstance().generate());
 		this.method = method;
 		this.params = params;
 	}

@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +20,13 @@ import com.worizon.jsonrpc.IDGenerator;
 import com.worizon.jsonrpc.JsonRpcException;
 import com.worizon.jsonrpc.RemoteException;
 import com.worizon.jsonrpc.Rpc;
-import com.worizon.jsonrpc.RpcImpl;
 import com.worizon.jsonrpc.annotations.LocalException;
 import com.worizon.jsonrpc.annotations.LocalExceptions;
 import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequester;
+import com.worizon.test.TestServer;
 
 
 public class RpcTest {
@@ -1656,28 +1656,23 @@ public class RpcTest {
 	}
 	
 	@Test
-	public void testCallMultipleThreads() throws Exception{
+	public void testCallTimeout() throws Exception{
 		
 		
-		HttpRequester requester = EasyMock.createMock(HttpRequester.class);	
-		final Capture<String> requestCapture = new Capture<String>();
-		EasyMock.expect(requester.request( EasyMock.capture(requestCapture) ))		
-		.andAnswer(new IAnswer<String>() {
-			
-			public String answer() throws Throwable{												
-				
-				String request = requestCapture.getValue();												
-				assertThat(request.toString(), is("{\"method\":\"op\",\"params\":[1,{\"x\":2,\"y\":3,\"b\":{\"z\":\"bar\",\"f\":5.6}}],\"jsonrpc\":\"2.0\",\"id\":1}"));
-				return "{\"jsonrpc\": \"2.0\", \"result\": [\"a\",\"b\",\"c\"], \"id\": 2}";
-				
-			}
-		});						
-		EasyMock.replay(requester);				
-		Rpc.Sync rpc = new Rpc.Sync(requester);	
-		A a = new A(2,3);
-		a.b = new B("bar",5.6f);
-		char[] result = rpc.callCharArray("op",1,a);		
-		assertThat(result, is(new char[]{'a','b','c'}));
+		TestServer server = new TestServer(4444);
+		server.setIdleTime(5000);
+		HttpRequester requester = (HttpRequester)server.createTestRequester(new HttpRequester(), "request");
+		requester.setReadTimeout(1000);
+		requester.setRequestRetries(0);
+		requester.setEndpoint("http://localhost:4444/rpc");
+		
+		Rpc.Sync rpc = new Rpc.Sync(requester);
+		try{
+			rpc.callVoid("test");
+			fail();
+		}catch(SocketTimeoutException ste){
+			assertThat( ste.getMessage(), is("Read timed out"));
+		}
 	}
 	
 

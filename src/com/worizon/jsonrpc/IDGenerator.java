@@ -7,17 +7,27 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class IDGenerator {
 	
-	private AtomicLong id = new AtomicLong(0);
+	/**
+	 * Internal identifier counter enabled with atomic operations.
+	 */
+	private AtomicLong id = new AtomicLong(0);	
 	
-	private static IDGenerator instance;
+	/**
+	 * singleton instance
+	 */
+	private static IDGenerator instance = new IDGenerator();
 	
+	/**
+	 * No public construction.
+	 */
 	private IDGenerator(){}
 	
+	/**
+	 * Gets instance of this generator.
+	 * @return Singleton IDGenerator instance.  
+	 */
 	public static IDGenerator getInstance(){
-		
-		if( instance == null ){
-			instance = new IDGenerator();
-		}
+				
 		return instance;
 	}
 	
@@ -25,13 +35,13 @@ public class IDGenerator {
 	 * Creates an id.
 	 * @return The id generated.
 	 */
-	public long incrementAndGet(){
+	public long generate(){
 		
 		return id.incrementAndGet();
 	}
 	
 	/**
-	 * Resets the requests counter.
+	 * Resets the counter.
 	 */
 	public void reset(){
 		

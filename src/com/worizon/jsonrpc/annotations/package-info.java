@@ -1,5 +1,5 @@
 /**
- * This package contains annotations for the facade {@link com.worizon.jsonrpc.Rpc}. An interface 
+ * This package contains annotations for the facade {@link com.worizon.jsonrpc.RpcImpl}. An interface 
  * in order to be exported and used as a remote procedure must be annotated with {@literal @}Remote annotation.
  * 
  * <p>

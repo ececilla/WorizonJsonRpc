@@ -173,6 +173,9 @@ final public class HttpRequesterBuilder {
 		else if( requester.getEndpoint() == null )
 			throw new IllegalStateException("endpoint not set");								
 		
+		if(requester.getTransformers().size() > 0)
+			throw new IllegalStateException("This requester has transformers previoulsy set.");
+		
 		requester.addTransformers(transformers);
 		return requester;
 	}

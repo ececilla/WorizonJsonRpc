@@ -245,7 +245,68 @@ public class RpcImpl{
 	public void addRuntimeExceptionMapping( int code, Class<? extends RuntimeException> exception){
 		
 		exceptions.put(code, exception);
-	}	
+	}
+	
+	public class Builder{
+		
+		private String endpoint;
+		private HttpRequester requester;		
+		
+		public Builder(){
+			
+		}
+		
+		public Builder endpoint( String endpoint ){
+			
+			this.endpoint = endpoint;
+			return this;
+		}
+		
+		public Builder httpRequester( HttpRequester requester ){
+			
+			this.requester = requester;
+			return this;
+		}
+		
+		public Rpc.Sync buildSync() throws MalformedURLException{
+			
+			Rpc.Sync rpc;
+			if(requester != null)
+				rpc = new Rpc.Sync(requester);
+			else if(endpoint != null)
+				rpc = new Rpc.Sync(endpoint);
+			else
+				throw new IllegalArgumentException("Missing endpoint or HttpRequester");
+			
+			return rpc;
+		}
+		
+		public <T> T buildProxy( Class<T> clazz ) throws MalformedURLException{
+			
+			Rpc.Proxy rpc;
+			if( requester != null )
+				rpc = new Rpc.Proxy(requester);
+			else if( endpoint != null )
+				rpc = new Rpc.Proxy(endpoint);
+			else
+				throw new IllegalArgumentException("Missing endpoint or HttpRequester");
+			
+			return rpc.createProxy(clazz);
+		}
+		
+		public Rpc.Async buildAsync() throws MalformedURLException{
+			
+			Rpc.Async rpc;
+			if( requester != null )
+				rpc = new Rpc.Async(requester);
+			else if(endpoint != null)
+				rpc = new Rpc.Async(endpoint);
+			else
+				throw new IllegalArgumentException("Missing endpoint or HttpRequester");
+			
+			return rpc;
+		}
+	}
 		
 				
 }

@@ -3,7 +3,6 @@ package com.worizon.jsonrpc;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.util.AbstractMap;
 import java.util.Arrays;
@@ -31,8 +30,7 @@ public class Rpc {
 
 	/**
 	 * Synchronous interface to call remote procedures.
-	 */
-	
+	 */	
 	public static class Sync extends RpcImpl {
 					
 		public Sync( String endpoint ) throws MalformedURLException{
@@ -438,13 +436,29 @@ public class Rpc {
 	/**
 	 * Asynchronous interface to call remote procedures.
 	 */
-	public interface Async{
+	public static class Async extends RpcImpl{
 		
-		public void register( Object registree );
+		public Async( String endpoint ) throws MalformedURLException{
+			
+			super(endpoint);
+		}
 		
-		public void unRegister( Object registree );				
+		public Async( HttpRequester requester ){
+			
+			super(requester);
+		}
 		
-		public void call(String method, Object... params);
+		public void register( Object registree ){
+			
+		}
+		
+		public void unRegister( Object registree ){
+			
+		}
+		
+		public void call(String method, Object... params){
+			
+		}
 	}
 	
 	

@@ -134,9 +134,18 @@ public class HttpRequester {
 	 * Adds a transformer list to the chain of transformers.
 	 * @param transformers
 	 */
-	void addTransformers( List<ITransformer> transformers ){
+	public void addTransformers( List<ITransformer> transformers ){
 		
 		this.transformers.addAll(transformers);
+	}
+	
+	/**
+	 * Gets transformers for this requester object.
+	 * @return transformers list.
+	 */
+	public List<ITransformer> getTransformers(){
+		
+		return this.transformers;
 	}
 	
 	/**

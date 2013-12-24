@@ -1,5 +1,8 @@
 package com.worizon.junit.rpc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -77,6 +80,30 @@ public class HttpRequesterBuilderTest {
 		http.request("bar");
 		
 		assertThat(server.getBody(), is(equalTo("foo")));		
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testAddPreviousTransformer() throws Exception{
+		List<HttpRequester.ITransformer> transformers = new ArrayList<HttpRequester.ITransformer>();
+		transformers.add(new HttpRequester.ITransformer() {
+			
+			@Override
+			public void transform(TransformerContext ctx) throws Throwable {				
+				//do nothing
+			}
+		});
+		http.addTransformers( transformers );
+		http = builder
+				.endpoint("http://localhost:4444/rpc2")				
+				.addTransformer(new HttpRequester.ITransformer() {
+					
+					@Override
+					public void transform(TransformerContext ctx)  {						
+						
+						ctx.setBody("foo\n");
+					}
+				}).build();		
+											
 	}
 	
 	@Test

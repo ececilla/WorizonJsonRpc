@@ -55,7 +55,7 @@ public class HttpRequester {
 	 * Sets the number of failed requests before dropping the reconnection loop.
 	 * @param nretries Number of retries.
 	 */
-	public void setRequestRetries( int nretries ){
+	public synchronized void setRequestRetries( int nretries ){
 		
 		this.nretries = nretries;
 	}
@@ -74,7 +74,7 @@ public class HttpRequester {
 	 * and throw a readtimeout exception.
 	 * @param readTimeout Number of millis for read timeout.
 	 */
-	public void setReadTimeout( int readTimeout ){
+	public synchronized void setReadTimeout( int readTimeout ){
 		
 		this.readTimeout = readTimeout;
 	}
@@ -92,7 +92,7 @@ public class HttpRequester {
 	 * Sets the number of milliseconds the connection attempt will be hold.
 	 * @param connectTimeout Number of 
 	 */
-	public void setConnectTimeout( int connectTimeout ){
+	public synchronized void setConnectTimeout( int connectTimeout ){
 		
 		this.connectTimeout = connectTimeout;
 	}
@@ -120,7 +120,7 @@ public class HttpRequester {
 	 * @param endpoint The rpc endpoint.
 	 * @throws MalformedURLException When the URL string is not valid.
 	 */
-	public void setEndpoint( String endpoint ) throws MalformedURLException{
+	public synchronized void setEndpoint( String endpoint ) throws MalformedURLException{
 				
 		UrlValidator validator = new UrlValidator(new String[]{"http"},UrlValidator.ALLOW_LOCAL_URLS);
 		if( validator.isValid(endpoint ))
@@ -134,7 +134,7 @@ public class HttpRequester {
 	 * Adds a transformer list to the chain of transformers.
 	 * @param transformers
 	 */
-	public void addTransformers( List<ITransformer> transformers ){
+	public synchronized void addTransformers( List<ITransformer> transformers ){
 		
 		this.transformers.addAll(transformers);
 	}
@@ -171,7 +171,7 @@ public class HttpRequester {
 	 * @param body The body that will be sent as POST payload.
 	 * @return The body response from the server.
 	 */
-	public String request( String body  ) throws InterruptedException, IOException{
+	public synchronized String request( String body  ) throws InterruptedException, IOException{
 							    
 	    try{
 	    	return readResponse( connectAndWriteRequest(body) );

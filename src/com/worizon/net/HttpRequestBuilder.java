@@ -6,8 +6,11 @@ import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.worizon.net.HttpRequester.ITransformer;
-import com.worizon.net.HttpRequester.TransformerContext;
+import com.worizon.net.HttpRequest.ITransformer;
+import com.worizon.net.HttpRequest.TransformerContext;
+import static com.worizon.jsonrpc.Const.Http.DEFAULT_READ_TIMEOUT;
+import static com.worizon.jsonrpc.Const.Http.DEFAULT_CONNECT_TIMEOUT;
+import static com.worizon.jsonrpc.Const.Http.DEFAULT_CONNECT_RETRIES;
 
 /**
  * Builder pattern to construct HttpRequester objects.
@@ -15,12 +18,12 @@ import com.worizon.net.HttpRequester.TransformerContext;
  * @author Enric Cecilla
  * @since 1.0.0
  */
-final public class HttpRequesterBuilder {
+final public class HttpRequestBuilder {
 	
 	/**
 	 * Delegate object to make http requests.
 	 */
-	private  HttpRequester requester;
+	private  HttpRequest request;
 	
 	/**
 	 * URL endpoint.
@@ -31,23 +34,71 @@ final public class HttpRequesterBuilder {
 	 * Transformers that will transform the request somehow.
 	 */
 	private  List<ITransformer> transformers = new LinkedList<ITransformer>();
-		
 	
-	public HttpRequesterBuilder( HttpRequester requester ){
+	/**
+	 * Connection timeout setting.
+	 */
+	private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
+	
+	/**
+	 * Read timeout setting.
+	 */
+	private int readTimeout = DEFAULT_READ_TIMEOUT;	
+	
+	/**
+	 * Connection retries. 
+	 */
+	private int nRetries = DEFAULT_CONNECT_RETRIES;
+	
+	public HttpRequestBuilder( HttpRequest request ){
 		
-		this.requester = requester;		
+		this.request = request;		
 	}
 	
-	public HttpRequesterBuilder(){}
+	public HttpRequestBuilder(){}
 	
 	/**
 	 * Sets the endpoint for the HttpRequester object.
 	 * @param endpoint The endpoint which the request will be targeted at.
 	 * @return Builder object to keep building.
 	 */
-	public HttpRequesterBuilder endpoint( String endpoint ){
+	public HttpRequestBuilder endpoint( String endpoint ){
 		
 		this.endpoint = endpoint;
+		return this;
+	}
+		
+	
+	/**
+	 * Sets the connect timeout for the HttpRequester object.
+	 * @param connectTimeout The connection timeout in ms.
+	 * @return Builder object to keep building.
+	 */
+	public HttpRequestBuilder connectTimeout( int connectTimeout ){
+		
+		this.connectTimeout = connectTimeout;
+		return this;
+	}
+	
+	/**
+	 * Sets the read timeout for the HttpRequester object.
+	 * @param connectTimeout The read timeout in ms.
+	 * @return Builder object to keep building.
+	 */
+	public HttpRequestBuilder readTimeout( int readTimeout ){
+		
+		this.readTimeout = readTimeout;
+		return this;
+	}
+	
+	/**
+	 * Sets the connection retries.
+	 * @param nRetries Number of retries.
+	 * @return Builder object to keep building.
+	 */
+	public HttpRequestBuilder requestRetries( int nRetries ){
+		
+		this.nRetries = nRetries;
 		return this;
 	}
 	
@@ -55,7 +106,7 @@ final public class HttpRequesterBuilder {
 	 * Adds a transformer to the transformers chain to encode the body content as URL.
 	 * @return Builder object to keep building.
 	 */
-	public HttpRequesterBuilder bodyURLEncode(){
+	public HttpRequestBuilder bodyURLEncode(){
 		
 		return addTransformer(new ITransformer() {
 			
@@ -78,7 +129,7 @@ final public class HttpRequesterBuilder {
 	 * Adds a transformer to the transformers chain to trim the body content.
 	 * @return Builder object to keep building.
 	 */
-	public HttpRequesterBuilder bodyTrim(){
+	public HttpRequestBuilder bodyTrim(){
 		
 		return addTransformer(new ITransformer() {
 			
@@ -96,7 +147,7 @@ final public class HttpRequesterBuilder {
 	 * @param trailingString the String that will be appended to the end of the body.
 	 * @return Builder object to keep building.
 	 */
-	public HttpRequesterBuilder bodyConcat( final String trailingString ){
+	public HttpRequestBuilder bodyConcat( final String trailingString ){
 		
 		return addTransformer(new ITransformer() {
 			
@@ -115,7 +166,7 @@ final public class HttpRequesterBuilder {
 	 * @param leadingString The string that will be prepended in front of the body content.
 	 * @return Builder object to keep building.
 	 */
-	public HttpRequesterBuilder bodyPrepend( final String leadingString ){
+	public HttpRequestBuilder bodyPrepend( final String leadingString ){
 		
 		return addTransformer(new ITransformer() {
 			
@@ -132,7 +183,7 @@ final public class HttpRequesterBuilder {
 	/**
 	 * 
 	 */
-	public HttpRequesterBuilder continueIfTrue( final boolean condition ){
+	public HttpRequestBuilder continueIfTrue( final boolean condition ){
 		
 		return addTransformer(new ITransformer() {
 			
@@ -144,7 +195,7 @@ final public class HttpRequesterBuilder {
 		});		
 	}
 	
-	public HttpRequesterBuilder skipNextIfTrue( final boolean condition ){
+	public HttpRequestBuilder skipNextIfTrue( final boolean condition ){
 		
 		return addTransformer(new ITransformer() {
 			
@@ -156,28 +207,29 @@ final public class HttpRequesterBuilder {
 		});
 	}
 	
-	public HttpRequesterBuilder addTransformer( ITransformer transformer ){
+	public HttpRequestBuilder addTransformer( ITransformer transformer ){
 		
 		transformers.add(transformer);
 		return this;
 	}	
 	
-	public HttpRequester build() throws MalformedURLException{
+	public HttpRequest build() throws MalformedURLException{
 		
-		if( requester == null ){
+		HttpRequest newRequest = request;
+		if( newRequest == null ){
 			if( endpoint == null )
 				throw new IllegalStateException("endpoint not set");			
-			requester = new HttpRequester(endpoint);
+			newRequest = new HttpRequest(endpoint);
 		}else if( endpoint != null )
-			requester.setEndpoint(endpoint);
-		else if( requester.getEndpoint() == null )
-			throw new IllegalStateException("endpoint not set");								
+			newRequest.setEndpoint(endpoint);
+		else if( newRequest.getEndpoint() == null )
+			throw new IllegalStateException("endpoint not set");												
 		
-		if(requester.getTransformers().size() > 0)
-			throw new IllegalStateException("This requester has transformers previoulsy set.");
-		
-		requester.addTransformers(transformers);
-		return requester;
+		newRequest.addTransformers(transformers);
+		newRequest.setConnectTimeout(connectTimeout);
+		newRequest.setReadTimeout(readTimeout);
+		newRequest.setRequestRetries(nRetries);
+		return newRequest;
 	}
 
 }

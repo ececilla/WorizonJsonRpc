@@ -18,7 +18,8 @@ import com.worizon.jsonrpc.annotations.LocalExceptions;
 import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
-import com.worizon.net.HttpRequester;
+import com.worizon.net.HttpRequest;
+import com.worizon.net.HttpRequestBuilder;
 
 
 /**
@@ -140,11 +141,11 @@ import com.worizon.net.HttpRequester;
  *
  */
 public class RpcImpl{
-	
+			
 	/**
-	 * Requester to make HTTP requests.
+	 * Builder to create http requests.
 	 */
-	protected  HttpRequester http;	
+	protected HttpRequestBuilder builder;
 	
 	/**
 	 * Map that maps from int to Throwable.
@@ -158,15 +159,16 @@ public class RpcImpl{
 	 */
 	public RpcImpl( String endpoint ) throws MalformedURLException{
 		
-		this.http = new HttpRequester(endpoint);
+		this.builder = new HttpRequestBuilder().endpoint(endpoint);		
 	}
 	
 	/**
-	 * Instantiates a new facade Rpc Object.
+	 * Instantiates a new facade Rpc object.
+	 * @param builder Builder object to create http requests at will.
 	 */
-	public RpcImpl( HttpRequester http ){
+	public RpcImpl( HttpRequestBuilder builder ){
 		
-		this.http = http;
+		this.builder = builder;
 	}
 						
 	/**
@@ -174,8 +176,10 @@ public class RpcImpl{
 	 */
 	protected <T> T call(String method, Object params, Class<T> clazz ) throws IOException, InterruptedException {
 		
-		JsonRpcRequest req = new JsonRpcRequest(method, params);		
-		String respStr = http.request( req.toString() );//blocking call
+		JsonRpcRequest req = new JsonRpcRequest(method, params);
+		HttpRequest request = builder.build();
+		String respStr = request.perform( req.toString() );//blocking call
+		//String respStr = http.perform( req.toString() );//blocking call
 		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( respStr, clazz );		
 		if(res.getError() != null){
 			if(res.getError().isCustomError()){
@@ -245,68 +249,6 @@ public class RpcImpl{
 	public void addRuntimeExceptionMapping( int code, Class<? extends RuntimeException> exception){
 		
 		exceptions.put(code, exception);
-	}
-	
-	public class Builder{
-		
-		private String endpoint;
-		private HttpRequester requester;		
-		
-		public Builder(){
-			
-		}
-		
-		public Builder endpoint( String endpoint ){
-			
-			this.endpoint = endpoint;
-			return this;
-		}
-		
-		public Builder httpRequester( HttpRequester requester ){
-			
-			this.requester = requester;
-			return this;
-		}
-		
-		public Rpc.Sync buildSync() throws MalformedURLException{
-			
-			Rpc.Sync rpc;
-			if(requester != null)
-				rpc = new Rpc.Sync(requester);
-			else if(endpoint != null)
-				rpc = new Rpc.Sync(endpoint);
-			else
-				throw new IllegalArgumentException("Missing endpoint or HttpRequester");
-			
-			return rpc;
-		}
-		
-		public <T> T buildProxy( Class<T> clazz ) throws MalformedURLException{
-			
-			Rpc.Proxy rpc;
-			if( requester != null )
-				rpc = new Rpc.Proxy(requester);
-			else if( endpoint != null )
-				rpc = new Rpc.Proxy(endpoint);
-			else
-				throw new IllegalArgumentException("Missing endpoint or HttpRequester");
-			
-			return rpc.createProxy(clazz);
-		}
-		
-		public Rpc.Async buildAsync() throws MalformedURLException{
-			
-			Rpc.Async rpc;
-			if( requester != null )
-				rpc = new Rpc.Async(requester);
-			else if(endpoint != null)
-				rpc = new Rpc.Async(endpoint);
-			else
-				throw new IllegalArgumentException("Missing endpoint or HttpRequester");
-			
-			return rpc;
-		}
-	}
-		
+	}					
 				
 }

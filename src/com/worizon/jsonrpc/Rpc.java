@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -15,7 +16,7 @@ import com.worizon.jsonrpc.annotations.LocalExceptions;
 import com.worizon.jsonrpc.annotations.Remote;
 import com.worizon.jsonrpc.annotations.RemoteParams;
 import com.worizon.jsonrpc.annotations.RemoteProcName;
-import com.worizon.net.HttpRequester;
+import com.worizon.net.HttpRequestBuilder;
 
 /**
  * Rpc apis grouped into a service class. Uou can use the rpc service with 3 different apis:
@@ -33,14 +34,14 @@ public class Rpc {
 	 */	
 	public static class Sync extends RpcImpl {
 					
-		public Sync( String endpoint ) throws MalformedURLException{
+		public Sync( String endpoint ) throws MalformedURLException {
 			
 			super(endpoint);
 		}
 		
-		public Sync( HttpRequester requester ){
+		public Sync( HttpRequestBuilder builder ){
 			
-			super(requester);
+			super(builder);
 		}
 		
 		/**
@@ -367,14 +368,14 @@ public class Rpc {
 	 */
 	public static class Proxy extends RpcImpl{
 		
-		public Proxy( String endpoint )throws MalformedURLException{
+		public Proxy( String endpoint ) throws MalformedURLException{
 			
 			super(endpoint);
 		}
 		
-		public Proxy(HttpRequester requester){
+		public Proxy( HttpRequestBuilder builder ){
 			
-			super(requester);
+			super(builder);
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -429,8 +430,7 @@ public class Rpc {
 						}
 			});
 			
-		}	
-		
+		}			
 	}
 	
 	/**
@@ -443,9 +443,9 @@ public class Rpc {
 			super(endpoint);
 		}
 		
-		public Async( HttpRequester requester ){
+		public Async( HttpRequestBuilder builder ){
 			
-			super(requester);
+			super(builder);
 		}
 		
 		public void register( Object registree ){

@@ -28,17 +28,17 @@ import com.worizon.jsonrpc.TransformerException;
  * @author Enric Cecilla
  * @since 1.0.0
  */
-public class HttpRequester {
-							
+public class HttpRequest {
+	
 	private URL endpoint;
-	private int nretries = DEFAULT_CONNECT_RETRIES;	
+	private int nRetries = DEFAULT_CONNECT_RETRIES;	
 	private int readTimeout = DEFAULT_READ_TIMEOUT;	
 	private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
 	private HttpURLConnection conn = null;
 	private TransformerContext ctx = this.new TransformerContext();
-	private List<ITransformer> transformers = new LinkedList<ITransformer>();
+	private List<ITransformer> transformers = new LinkedList<ITransformer>();	
 	
-	public HttpRequester(){
+	public HttpRequest(){
 				
 	}
 	
@@ -46,7 +46,7 @@ public class HttpRequester {
 	 * Instantiates an HttpRequester with the specified endpoint
 	 * @param endpoint The endpoint of the remote procedure.
 	 */
-	public HttpRequester( String endpoint ) throws MalformedURLException{
+	public HttpRequest( String endpoint ) throws MalformedURLException{
 		
 		setEndpoint(endpoint);		
 	}
@@ -55,9 +55,9 @@ public class HttpRequester {
 	 * Sets the number of failed requests before dropping the reconnection loop.
 	 * @param nretries Number of retries.
 	 */
-	public synchronized void setRequestRetries( int nretries ){
+	public synchronized void setRequestRetries( int nRetries ){
 		
-		this.nretries = nretries;
+		this.nRetries = nRetries;
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public class HttpRequester {
 	 */
 	public int getRequestRetries(){
 		
-		return this.nretries;
+		return this.nRetries;
 	}
 	
 	/**
@@ -128,7 +128,7 @@ public class HttpRequester {
 		else
 			throw new MalformedURLException();
 		
-	}
+	}	
 	
 	/**
 	 * Adds a transformer list to the chain of transformers.
@@ -161,9 +161,9 @@ public class HttpRequester {
 	 * Makes a request with a null body.
 	 * @return response body.
 	 */
-	public String request() throws Exception{
+	public String perform() throws InterruptedException, IOException{
 		
-		return request(null);
+		return perform(null);
 	}
 	
 	/**
@@ -171,7 +171,7 @@ public class HttpRequester {
 	 * @param body The body that will be sent as POST payload.
 	 * @return The body response from the server.
 	 */
-	public synchronized String request( String body  ) throws InterruptedException, IOException{
+	public synchronized String perform( String body  ) throws InterruptedException, IOException{
 							    
 	    try{
 	    	return readResponse( connectAndWriteRequest(body) );
@@ -179,8 +179,8 @@ public class HttpRequester {
 	    	
 	    	disconnect();
 	    	if( !Thread.interrupted() ){
-		    	if(nretries-- > 0)
-		    		return request(body);
+		    	if(nRetries-- > 0)
+		    		return perform(body);
 		    	else
 		    		throw ex;
 	    	}else
@@ -194,6 +194,9 @@ public class HttpRequester {
 	 * @return The read stream that resulted from connecting to the server.  
 	 */
 	private InputStream connectAndWriteRequest( String body ) throws MalformedURLException, IOException {
+		
+		if(endpoint == null)
+			throw new IllegalStateException("Endpoint not set");
 		
 		//Transform payload and headers by delegating on transformers
 		ctx.setBody(body);					
@@ -269,6 +272,7 @@ public class HttpRequester {
 		return buffer.toString();
 		
 	}
+		
 	
 	/**
 	 * This class represents the context of a request body transformation. All transformers receive
@@ -375,6 +379,17 @@ public class HttpRequester {
 	public interface ITransformer{
 		
 		public void transform( TransformerContext ctx ) throws Throwable;
+		
+	}
+	
+	public static class Factory{
+		
+		private URL endpoint;
+		private int nretries = DEFAULT_CONNECT_RETRIES;	
+		private int readTimeout = DEFAULT_READ_TIMEOUT;	
+		private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;			
+		private List<ITransformer> transformers = new LinkedList<ITransformer>();
+		
 		
 	}
 		

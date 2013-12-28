@@ -29,7 +29,8 @@ public interface MyCalculator{
     public int sum(int x, int y);
 }
 
-Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
+HttpRequestBuilder builder = new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc");
+Rpc.Proxy rpc = new Rpc.Proxy(builder);
 MyCalculator calculator = rpc.createProxy(Myservice.class);
 int result = calculator.sum(4,5);//Remote blocking call
 ```
@@ -48,7 +49,8 @@ public interface MyCalculator{
     public int substract(int x, int y);
 }
 
-Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
+HttpRequestBuilder builder = new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc");
+Rpc.Proxy rpc = new Rpc.Proxy(builder);
 MyCalculator calculator = rpc.createProxy(Myservice.class);
 int result = calculator.substract(4,5);//Remote blocking call
 ```
@@ -67,7 +69,8 @@ public interface MyCalculator{
     public int multiply(int x, int y);
 }
 
-Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
+HttpRequestBuilder builder = new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc");
+Rpc.Proxy rpc = new Rpc.Proxy(builder);
 MyCalculator calculator = rpc.createProxy(Myservice.class);
 int result = calculator.multiply(4,5);//Remote blocking call
 ```
@@ -85,7 +88,8 @@ public interface MyCalculator{
     public double divide(double x, double y);
 }
 
-Rpc rpc = new Rpc("http://myhost.mydomain.com:4444/rpc");
+HttpRequestBuilder builder = new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc");
+Rpc.Proxy rpc = new Rpc.Proxy(builder);
 MyCalculator calculator = rpc.createProxy(Myservice.class);
 double result = calculator.divide(4,0);//Remote blocking call
 ```
@@ -105,7 +109,7 @@ The arguments to these methods are passed as varargs arguments. Following you ca
 ```java
 public class MyService{
     
-    private Rpc delegate = new Rpc("http://myhost.mydomain.com:4444/rpc");    
+    private Rpc.Sync delegate = new Rpc.Sync(new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc"));    
 
     public MyService();
 
@@ -135,7 +139,7 @@ As you can notice in the example above the parameters are encoded as an ordered 
 ```java
 public class MyService{
     
-    private Rpc delegate = new Rpc("http://myhost.mydomain.com:4444/rpc");    
+    private Rpc.Sync delegate = new Rpc.Sync(new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc"));    
 
     public MyService();
 

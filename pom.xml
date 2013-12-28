@@ -10,9 +10,21 @@
   <dependencies>
 	<dependency>
 		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
+		<artifactId>junit-dep</artifactId>
 		<version>4.8.2</version>
 		<scope>test</scope>
+		<exclusions><!-- exclude hamcrest version from junit pom or place hamcrest artifact before -->
+          <exclusion>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+          </exclusion>
+      	</exclusions>
+	</dependency>
+	<dependency>
+	  <groupId>org.hamcrest</groupId>
+	  <artifactId>hamcrest-library</artifactId>
+	  <version>1.3</version>
+	  <scope>test</scope>
 	</dependency>
 	<dependency>
 	  <groupId>com.google.android</groupId>

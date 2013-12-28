@@ -212,7 +212,7 @@ public class RpcImpl{
 	 * @param clazz The class to turn itno the result field.
 	 * @return The result field deserialized as a T object.
 	 */
-	public <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws IOException, InterruptedException {
+	protected <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws IOException, InterruptedException {
 		
 		return call(method, (Object)params, clazz);
 	}
@@ -224,7 +224,7 @@ public class RpcImpl{
 	 * @param clazz The class to turn into the result field.
 	 * @return The result field deserialized as a T object.
 	 */
-	public <T> T call(String method, List<Object> params, Class<T> clazz ) throws IOException, InterruptedException{
+	protected <T> T call(String method, List<Object> params, Class<T> clazz ) throws IOException, InterruptedException{
 		
 		return call(method, (Object)params, clazz);
 	}
@@ -235,7 +235,7 @@ public class RpcImpl{
 	 * @param clazz The class to turn into the result field.
 	 * @return The result field deserialized as a T object.
 	 */
-	public <T> T call(String method, Class<T> clazz ) throws IOException, InterruptedException{
+	protected <T> T call(String method, Class<T> clazz ) throws IOException, InterruptedException{
 		
 		return call(method, (Object)null, clazz);
 	}

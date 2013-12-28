@@ -28,27 +28,27 @@ final public class HttpRequestBuilder {
 	/**
 	 * URL endpoint.
 	 */
-	private String endpoint;
+	String endpoint;
 	
 	/**
 	 * Transformers that will transform the request somehow.
 	 */
-	private  List<ITransformer> transformers = new LinkedList<ITransformer>();
+	List<ITransformer> transformers = new LinkedList<ITransformer>();
 	
 	/**
 	 * Connection timeout setting.
 	 */
-	private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
+	int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
 	
 	/**
 	 * Read timeout setting.
 	 */
-	private int readTimeout = DEFAULT_READ_TIMEOUT;	
+	int readTimeout = DEFAULT_READ_TIMEOUT;	
 	
 	/**
 	 * Connection retries. 
 	 */
-	private int nRetries = DEFAULT_CONNECT_RETRIES;
+	int nRetries = DEFAULT_CONNECT_RETRIES;
 	
 	public HttpRequestBuilder( HttpRequest request ){
 		
@@ -181,6 +181,9 @@ final public class HttpRequestBuilder {
 	}
 	
 	/**
+	 * Adds a transformer to the transformers chain to continue the chain execution if condition is true.
+	 * @param condition condition to check to continue execution of transformes chains.
+	 * @return Builder object to keep building.
 	 * 
 	 */
 	public HttpRequestBuilder continueIfTrue( final boolean condition ){
@@ -195,6 +198,11 @@ final public class HttpRequestBuilder {
 		});		
 	}
 	
+	/**
+	 * Adds a transformer to the transformaters chain to skip the next step transformation if condition is true.
+	 * @param condition condition to check to skip next step.
+	 * @return Builder object to keep building.
+	 */
 	public HttpRequestBuilder skipNextIfTrue( final boolean condition ){
 		
 		return addTransformer(new ITransformer() {
@@ -207,29 +215,34 @@ final public class HttpRequestBuilder {
 		});
 	}
 	
+	/**
+	 * Adds a custom transformer to the transformers chain.
+	 * @param transformer A ITransformer object.
+	 * @return Builder object to keep building.
+	 */
 	public HttpRequestBuilder addTransformer( ITransformer transformer ){
 		
 		transformers.add(transformer);
 		return this;
 	}	
 	
+	/**
+	 * Builds an HttpRequest object.
+	 * @return The HttpRequest object.
+	 */
 	public HttpRequest build() throws MalformedURLException{
 		
 		HttpRequest newRequest = request;
-		if( newRequest == null ){
-			if( endpoint == null )
-				throw new IllegalStateException("endpoint not set");			
-			newRequest = new HttpRequest(endpoint);
-		}else if( endpoint != null )
+		if(newRequest == null)
+			newRequest = new HttpRequest(this);
+		else{
+			newRequest.setConnectTimeout(connectTimeout);
+			newRequest.setReadTimeout(readTimeout);
+			newRequest.setRequestRetries(nRetries);
 			newRequest.setEndpoint(endpoint);
-		else if( newRequest.getEndpoint() == null )
-			throw new IllegalStateException("endpoint not set");												
-		
-		newRequest.addTransformers(transformers);
-		newRequest.setConnectTimeout(connectTimeout);
-		newRequest.setReadTimeout(readTimeout);
-		newRequest.setRequestRetries(nRetries);
-		return newRequest;
+			newRequest.addTransformers(transformers);
+		}
+		return newRequest;			
 	}
 
 }

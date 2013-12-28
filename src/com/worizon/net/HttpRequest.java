@@ -38,8 +38,17 @@ public class HttpRequest {
 	private TransformerContext ctx = this.new TransformerContext();
 	private List<ITransformer> transformers = new LinkedList<ITransformer>();	
 	
-	public HttpRequest(){
-				
+	
+	public HttpRequest(){}
+	
+	public HttpRequest( HttpRequestBuilder builder ) throws MalformedURLException{
+		
+		setEndpoint(builder.endpoint);
+		setRequestRetries(builder.nRetries);
+		setReadTimeout(builder.readTimeout);
+		setConnectTimeout(builder.connectTimeout);
+		addTransformers(builder.transformers);
+		
 	}
 	
 	/**
@@ -55,7 +64,7 @@ public class HttpRequest {
 	 * Sets the number of failed requests before dropping the reconnection loop.
 	 * @param nretries Number of retries.
 	 */
-	public synchronized void setRequestRetries( int nRetries ){
+	void setRequestRetries( int nRetries ){
 		
 		this.nRetries = nRetries;
 	}
@@ -74,7 +83,7 @@ public class HttpRequest {
 	 * and throw a readtimeout exception.
 	 * @param readTimeout Number of millis for read timeout.
 	 */
-	public synchronized void setReadTimeout( int readTimeout ){
+	void setReadTimeout( int readTimeout ){
 		
 		this.readTimeout = readTimeout;
 	}
@@ -92,7 +101,7 @@ public class HttpRequest {
 	 * Sets the number of milliseconds the connection attempt will be hold.
 	 * @param connectTimeout Number of 
 	 */
-	public synchronized void setConnectTimeout( int connectTimeout ){
+	void setConnectTimeout( int connectTimeout ){
 		
 		this.connectTimeout = connectTimeout;
 	}
@@ -120,7 +129,7 @@ public class HttpRequest {
 	 * @param endpoint The rpc endpoint.
 	 * @throws MalformedURLException When the URL string is not valid.
 	 */
-	public synchronized void setEndpoint( String endpoint ) throws MalformedURLException{
+	void setEndpoint( String endpoint ) throws MalformedURLException{
 				
 		UrlValidator validator = new UrlValidator(new String[]{"http"},UrlValidator.ALLOW_LOCAL_URLS);
 		if( validator.isValid(endpoint ))
@@ -134,7 +143,7 @@ public class HttpRequest {
 	 * Adds a transformer list to the chain of transformers.
 	 * @param transformers
 	 */
-	public synchronized void addTransformers( List<ITransformer> transformers ){
+	void addTransformers( List<ITransformer> transformers ){
 		
 		this.transformers.addAll(transformers);
 	}
@@ -171,7 +180,7 @@ public class HttpRequest {
 	 * @param body The body that will be sent as POST payload.
 	 * @return The body response from the server.
 	 */
-	public synchronized String perform( String body  ) throws InterruptedException, IOException{
+	public String perform( String body  ) throws InterruptedException, IOException{
 							    
 	    try{
 	    	return readResponse( connectAndWriteRequest(body) );

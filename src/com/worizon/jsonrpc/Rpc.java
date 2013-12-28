@@ -19,7 +19,7 @@ import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequestBuilder;
 
 /**
- * Rpc apis grouped into a service class. Uou can use the rpc service with 3 different apis:
+ * Rpc apis grouped into a service class. You can use the rpc service with 3 different apis:
  * <li>
  * <ul>Sync api</ul>
  * <ul>Async api</ul>
@@ -28,6 +28,7 @@ import com.worizon.net.HttpRequestBuilder;
  */
 public class Rpc {
 	
+	private Rpc(){}
 
 	/**
 	 * Synchronous interface to call remote procedures.
@@ -66,6 +67,36 @@ public class Rpc {
 				throw new IllegalArgumentException("Must pass ALL parameters as named parameters or NONE.");
 			}else	
 				return Arrays.asList(args);
+		}
+		
+		/**
+		 * Makes parent's call method public through the Sync api.
+		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.util.Map, java.lang.Class)
+		 */
+		@Override
+		public <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws IOException, InterruptedException {
+			
+			return super.call(method, params, clazz);
+		}
+		
+		/**
+		 * Makes parent's call method public through the Sync api.
+		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.lang.Class)
+		 */
+		@Override
+		public <T> T call(String method, Class<T> clazz ) throws IOException, InterruptedException{
+			
+			return super.call(method, clazz);
+		}
+		
+		/**
+		 * Makes parent's call method public through the Sync api. 
+		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.util.List, java.lang.Class)
+		 */
+		@Override
+		public <T> T call(String method, List<Object> params, Class<T> clazz ) throws IOException, InterruptedException{
+			
+			return super.call(method,params, clazz);
 		}
 			
 		

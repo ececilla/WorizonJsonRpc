@@ -82,7 +82,7 @@ public class RpcTest {
 		});		
 		EasyMock.replay(request);		
 		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
-		Rpc.Proxy proxy = new Rpc.Proxy(builder);
+		Rpc.Proxy proxy = new Rpc.Proxy(builder);		
 		My1RemoteInterface remote = proxy.createProxy(My1RemoteInterface.class);
 		remote.test();		
 	}
@@ -624,7 +624,7 @@ public class RpcTest {
 				
 		EasyMock.replay(request);
 		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
-		Rpc.Sync rpc = new Rpc.Sync(builder);										
+		Rpc.Sync rpc = new Rpc.Sync(builder);									
 		rpc.callVoid("op");		
 	}
 	
@@ -1735,6 +1735,50 @@ public class RpcTest {
 			assertThat( ste.getMessage(), is("Read timed out"));
 			server.finish();
 		}
+	}
+	
+	@Test
+	public void testCallMultiThread() throws Exception{
+		
+		
+		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();
+				System.out.println(request);
+				assertThat(request.toString(), startsWith("{\"method\":\"op\",\"params\":{},\"jsonrpc\":\"2.0\",\"id\":"));
+				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				
+			}
+		}).times(5);
+		
+		EasyMock.replay(request);
+		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		final Rpc.Sync rpc = new Rpc.Sync(builder);
+		Thread threads[] = new Thread[5];
+		for(int i=0; i<5; i++){
+			
+			threads[i] = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {				
+					try{
+						rpc.callVoid("op");
+					}catch(Exception ex){
+						
+					}
+				}
+			});
+			threads[i].start();
+		}
+		
+		for(Thread t: threads)
+			t.join();
+				
 	}
 	
 

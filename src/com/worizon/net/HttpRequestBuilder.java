@@ -18,7 +18,7 @@ import static com.worizon.jsonrpc.Const.Http.DEFAULT_CONNECT_RETRIES;
  * @author Enric Cecilla
  * @since 1.0.0
  */
-final public class HttpRequestBuilder {
+public class HttpRequestBuilder {
 	
 	/**
 	 * Delegate object to make http requests.
@@ -48,12 +48,7 @@ final public class HttpRequestBuilder {
 	/**
 	 * Connection retries. 
 	 */
-	int nRetries = DEFAULT_CONNECT_RETRIES;
-	
-	public HttpRequestBuilder( HttpRequest request ){
-		
-		this.request = request;		
-	}
+	int nRetries = DEFAULT_CONNECT_RETRIES;	
 	
 	public HttpRequestBuilder(){}
 	
@@ -100,6 +95,16 @@ final public class HttpRequestBuilder {
 		
 		this.nRetries = nRetries;
 		return this;
+	}
+	
+	/**
+	 * Factory method to create a new instance of a {@link HttpRequest}. To provide a mocked version
+	 * of a HttpRequest to be used in your test suites, extend this builder class and override this method.
+	 * @return A new instance of HttpRequest
+	 */
+	protected HttpRequest newInstance() throws MalformedURLException{
+		
+		return new HttpRequest(this);
 	}
 	
 	/**
@@ -232,16 +237,13 @@ final public class HttpRequestBuilder {
 	 */
 	public HttpRequest build() throws MalformedURLException{
 		
-		HttpRequest newRequest = request;
-		if(newRequest == null)
-			newRequest = new HttpRequest(this);
-		else{
-			newRequest.setConnectTimeout(connectTimeout);
-			newRequest.setReadTimeout(readTimeout);
-			newRequest.setRequestRetries(nRetries);
-			newRequest.setEndpoint(endpoint);
-			newRequest.addTransformers(transformers);
-		}
+		HttpRequest newRequest = newInstance();
+		newRequest.setConnectTimeout(connectTimeout);
+		newRequest.setReadTimeout(readTimeout);
+		newRequest.setRequestRetries(nRetries);
+		newRequest.setEndpoint(endpoint);
+		newRequest.addTransformers(transformers);
+		
 		return newRequest;			
 	}
 

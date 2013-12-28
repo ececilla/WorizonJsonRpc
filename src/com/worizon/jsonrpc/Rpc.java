@@ -19,7 +19,7 @@ import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequestBuilder;
 
 /**
- * Rpc apis grouped into a service class. You can use the rpc service with 3 different apis:
+ * Rpc apis grouped into a namespace class. You can use the rpc service with 3 different apis:
  * <li>
  * <ul>Sync api</ul>
  * <ul>Async api</ul>

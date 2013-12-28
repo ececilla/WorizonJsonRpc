@@ -23,7 +23,7 @@ import static com.worizon.jsonrpc.Const.Http.DEFAULT_CONNECT_TIMEOUT;
 import com.worizon.jsonrpc.TransformerException;
 
 /**
- * Class to make HTTP POST requests.
+ * Class to make HTTP POST requests. Each new request must create a new HttpRequest.
  * 
  * @author Enric Cecilla
  * @since 1.0.0
@@ -43,27 +43,19 @@ public class HttpRequest {
 	
 	public HttpRequest( HttpRequestBuilder builder ) throws MalformedURLException{
 		
-		setEndpoint(builder.endpoint);
+		setEndpoint(builder.endpoint);		
 		setRequestRetries(builder.nRetries);
 		setReadTimeout(builder.readTimeout);
 		setConnectTimeout(builder.connectTimeout);
 		addTransformers(builder.transformers);
 		
-	}
-	
-	/**
-	 * Instantiates an HttpRequester with the specified endpoint
-	 * @param endpoint The endpoint of the remote procedure.
-	 */
-	public HttpRequest( String endpoint ) throws MalformedURLException{
-		
-		setEndpoint(endpoint);		
-	}
+	}		
 	
 	/**
 	 * Sets the number of failed requests before dropping the reconnection loop.
 	 * @param nretries Number of retries.
 	 */
+	
 	void setRequestRetries( int nRetries ){
 		
 		this.nRetries = nRetries;

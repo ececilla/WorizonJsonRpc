@@ -10,7 +10,6 @@ import com.worizon.junit.rpc.HttpRequestTest;
 import com.worizon.junit.rpc.RpcTest;
 
 @RunWith(Suite.class)
-//@RunWith(SpringJUnit4ClassRunner.class)
 @SuiteClasses({ JsonRpcResponseSuite.class,
 				JsonRpcRequestTest.class,
 				RpcTest.class,

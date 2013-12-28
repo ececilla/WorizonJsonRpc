@@ -35,7 +35,15 @@ public class HttpRequestTest {
 			@Override
 			public void setEndpoint(String endpoint) throws MalformedURLException{
 				
-				myRequest = new HttpRequestBuilder(myRequest).endpoint(endpoint).build();
+				myRequest = new HttpRequestBuilder(){
+					
+					@Override
+					protected HttpRequest newInstance(){
+						return myRequest;
+					}
+				}
+				.endpoint(endpoint)
+				.build();
 				//myRequest.setEndpoint(endpoint);//my particular method to set the endpoint
 			}
 			
@@ -58,21 +66,21 @@ public class HttpRequestTest {
 	@Test(expected=MalformedURLException.class)
 	public void testWrongEndpointProtocol() throws MalformedURLException{
 		
-		HttpRequest myRequester = new HttpRequest("httx://foobar");
+		new HttpRequestBuilder().endpoint("httx://foobar").build();		
 	}
 	
 	@Test(expected=MalformedURLException.class)
 	public void testWrongEndpointURLSyntax() throws MalformedURLException{
 		
-		HttpRequest myRequester = new HttpRequest("http://foobar.");
+		new HttpRequestBuilder().endpoint("http://foobar.").build();		
 	}
 	
 	@Test
 	public void testMissingEndpoint() throws Exception{
 		
-		HttpRequest requester = new HttpRequest();
+		HttpRequest request = new HttpRequest();
 		try{
-			requester.perform("test body");
+			request.perform("test body");
 		}catch(IllegalStateException ise){
 			
 			assertThat(ise.getMessage(), is("Endpoint not set"));

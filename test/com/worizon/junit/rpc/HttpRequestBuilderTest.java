@@ -1,8 +1,5 @@
 package com.worizon.junit.rpc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.After;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -28,7 +25,13 @@ public class HttpRequestBuilderTest {
 		
 		server = new TestServer(4444);		
 		request = (HttpRequest)server.createTestRequester(new HttpRequest(), "perform");
-		builder = new HttpRequestBuilder(request);
+		builder = new HttpRequestBuilder(){
+			
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		};
 	}
 	
 	//finish server in case any test fails and server is not stopped implicitly

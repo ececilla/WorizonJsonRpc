@@ -31,7 +31,7 @@ import com.worizon.test.TestServer;
 
 
 public class RpcTest {
-	
+		
 	@Before
 	public void setUp(){
 		
@@ -67,7 +67,7 @@ public class RpcTest {
 	@Test	
 	public void testNonAnotattedParams() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);							
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);							
 		final Capture<String> requestCapture = new Capture<String>();		
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
@@ -81,7 +81,12 @@ public class RpcTest {
 			}
 		});		
 		EasyMock.replay(request);		
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);		
 		My1RemoteInterface remote = proxy.createProxy(My1RemoteInterface.class);
 		remote.test();		
@@ -113,7 +118,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteInterfaceWithHashMapParamAnnotatedWithParamsName() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
@@ -128,7 +133,12 @@ public class RpcTest {
 		});
 		
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);
 		My3RemoteInterface remote = proxy.createProxy( My3RemoteInterface.class);
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
@@ -148,7 +158,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteInterfaceWithListParamAnnotatedWithParamsName() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
@@ -163,7 +173,12 @@ public class RpcTest {
 		});
 		
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);
 		My4RemoteInterface remote = proxy.createProxy( My4RemoteInterface.class);
 		List<Object> params = new ArrayList<Object>();
@@ -184,7 +199,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteInterfaceWithNamedParameters() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();		
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
@@ -199,7 +214,12 @@ public class RpcTest {
 		});
 		EasyMock.replay(request);
 		
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);
 		My5RemoteInterface remote = proxy.createProxy(My5RemoteInterface.class);
 				
@@ -215,7 +235,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteInterfaceWithNumberedParameters() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();		
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
@@ -230,7 +250,12 @@ public class RpcTest {
 		});
 		EasyMock.replay(request);
 		
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);
 		My6RemoteInterface remote = proxy.createProxy(My6RemoteInterface.class);
 				
@@ -266,7 +291,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteInterfaceWithNamedObjectParameters() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
@@ -281,7 +306,12 @@ public class RpcTest {
 		});		
 		EasyMock.replay(request);
 		
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);
 		My7RemoteInterface remote = proxy.createProxy(My7RemoteInterface.class);
 		
@@ -300,7 +330,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteInterfaceWithNnumberedObjectParameters() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
@@ -314,7 +344,13 @@ public class RpcTest {
 			}
 		});		
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");		
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");		
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);
 		My8RemoteInterface remote = proxy.createProxy(My8RemoteInterface.class);
 		
@@ -334,7 +370,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteInterfaceProcName() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))
 		.andAnswer(new IAnswer<String>() {
@@ -348,7 +384,13 @@ public class RpcTest {
 			}
 		});		
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");		
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");		
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);
 		My9RemoteInterface remote = proxy.createProxy(My9RemoteInterface.class);
 		remote.op();						
@@ -364,7 +406,7 @@ public class RpcTest {
 	@Test
 	public void testJsonRpcExceptionParseError() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -376,7 +418,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
@@ -391,7 +439,7 @@ public class RpcTest {
 	@Test
 	public void testJsonRpcExceptionInvalidRequest() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -403,7 +451,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
@@ -418,7 +472,7 @@ public class RpcTest {
 	@Test
 	public void testJsonRpcExceptionMethodNotFound() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -430,7 +484,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
@@ -445,7 +505,7 @@ public class RpcTest {
 	@Test
 	public void testJsonRpcExceptionInvalidParams() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -457,7 +517,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
@@ -472,7 +538,7 @@ public class RpcTest {
 	@Test
 	public void testJsonRpcExceptionInternalError() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform((String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -484,7 +550,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
@@ -499,7 +571,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteException() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -511,7 +583,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);						
 		try{
 			proxy.createProxy(My10RemoteInterface.class).op();
@@ -544,7 +622,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteExceptionMapedLocalException() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -556,7 +634,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);						
 		try{
 			proxy.createProxy(My11RemoteInterface.class).op();
@@ -577,7 +661,7 @@ public class RpcTest {
 	@Test
 	public void testRemoteExceptionMapedLocalExceptionFailure() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -589,7 +673,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Proxy proxy = new Rpc.Proxy(builder);						
 		try{
 			proxy.createProxy(My12RemoteInterface.class).op();
@@ -611,7 +701,7 @@ public class RpcTest {
 	@Test
 	public void testCall1() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -623,7 +713,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);									
 		rpc.callVoid("op");		
 	}
@@ -631,7 +727,7 @@ public class RpcTest {
 	@Test
 	public void testCall2() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -643,7 +739,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);						
 		try{
 			
@@ -660,7 +762,7 @@ public class RpcTest {
 	@Test
 	public void testCall3() throws Exception{
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -672,7 +774,13 @@ public class RpcTest {
 		});
 				
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);						
 		try{
 			rpc.addRuntimeExceptionMapping(-6, ArithmeticException.class);
@@ -689,7 +797,7 @@ public class RpcTest {
 	public void testCallVoid() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -703,7 +811,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		rpc.callVoid("op");		
 		
@@ -714,7 +828,7 @@ public class RpcTest {
 	public void testCallVoidOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -728,7 +842,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		rpc.callVoid("op",1.5,"test");		
 		
@@ -738,7 +858,7 @@ public class RpcTest {
 	public void testCallVoidNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -752,7 +872,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		rpc.callVoid("op",Rpc.RemoteParam("p1", 1.5),Rpc.RemoteParam("p2", "test"));		
 		
@@ -762,7 +888,7 @@ public class RpcTest {
 	public void testCallVoidNamedParamsWithException() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -776,7 +902,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);	
 		try{
 			rpc.callVoid("op",Rpc.RemoteParam("v1", 1.5),"test");		
@@ -791,7 +923,7 @@ public class RpcTest {
 	public void testCallInteger() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -802,7 +934,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		int result = rpc.callInteger("op");		
 		assertThat( result, is(10) );
@@ -812,7 +950,7 @@ public class RpcTest {
 	public void testCallIntegerOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -826,7 +964,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		int result = rpc.callInteger("op",false,"test");		
 		assertThat( result, is(10) );
@@ -836,7 +980,7 @@ public class RpcTest {
 	public void testCallIntegerNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -850,7 +994,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		int result = rpc.callInteger("op",Rpc.RemoteParam("p1", false),Rpc.RemoteParam("p2", "test"));		
 		assertThat( result, is(10) );
@@ -860,7 +1010,7 @@ public class RpcTest {
 	public void testCallIntegerArray() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -871,7 +1021,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		int[] result = rpc.callIntegerArray("op");		
 		assertThat(result, is(new int[]{10,34,23}));
@@ -881,7 +1037,7 @@ public class RpcTest {
 	public void testCallIntegerArrayParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -895,7 +1051,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		int[] result = rpc.callIntegerArray("mult10",true,new int[]{1,2,3});		
 		assertThat(result, is(new int[]{10,20,30}));
@@ -905,7 +1067,7 @@ public class RpcTest {
 	public void testCallDouble() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -916,7 +1078,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		double result = rpc.callDouble("op");		
 		assertThat( result, is(1000000d) );
@@ -926,7 +1094,7 @@ public class RpcTest {
 	public void testCallDoubleOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -940,7 +1108,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		double result = rpc.callDouble("op",true);		
 		assertThat( result,  is(1000000d) );
@@ -950,7 +1124,7 @@ public class RpcTest {
 	public void testCallDoubleNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -964,7 +1138,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		double result = rpc.callDouble("op",Rpc.RemoteParam("p1", true));		
 		assertThat( result, is(1000000d) );
@@ -974,7 +1154,7 @@ public class RpcTest {
 	public void testCallDoubleArray() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -985,7 +1165,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		double[] result = rpc.callDoubleArray("op");		
 		assertThat( result, is(new double[]{10.1,34.4,23.5}));
@@ -996,7 +1182,7 @@ public class RpcTest {
 	public void testCallDoubleArrayParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1010,7 +1196,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		double[] result = rpc.callDoubleArray("op", new Object[]{null});		
 		assertThat(result, is(new double[]{10.1,34.4,23.5}));
@@ -1021,7 +1212,7 @@ public class RpcTest {
 	public void testCallFloat() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1032,7 +1223,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		float result = rpc.callFloat("op");		
 		assertThat( result, is(34.5677f) );
@@ -1042,7 +1238,7 @@ public class RpcTest {
 	public void testCallFloatOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1056,7 +1252,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		float result = rpc.callFloat("op",true);		
 		assertThat( result, is(65.3482374f) );
@@ -1066,7 +1267,7 @@ public class RpcTest {
 	public void testCallFloatNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1080,7 +1281,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		float result = rpc.callFloat("op",Rpc.RemoteParam("p1", true));		
 		assertThat( result, is(65.3482374f) );
@@ -1090,7 +1297,7 @@ public class RpcTest {
 	public void testCallFloatArray() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1101,7 +1308,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder =  new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		float[] result = rpc.callFloatArray("op");		
 		assertThat(result, is(new float[]{10.1f,34.4f,23.5f}));		
@@ -1112,7 +1325,7 @@ public class RpcTest {
 	public void testCallFloatArrayParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1126,7 +1339,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		float[] result = rpc.callFloatArray("op", new Object[]{null});		
 		assertThat(result, is(new float[]{10.1f,34.4f,23.5f}));
@@ -1137,7 +1356,7 @@ public class RpcTest {
 	public void testCallString() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1148,7 +1367,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		String result = rpc.callString("op");		
 		assertThat(result, is("foobar"));
@@ -1158,7 +1383,7 @@ public class RpcTest {
 	public void testCallStringOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1172,7 +1397,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		String result = rpc.callString("op",true);		
 		assertThat(result, is("foobar"));
@@ -1182,7 +1413,7 @@ public class RpcTest {
 	public void testCallStringNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1196,7 +1427,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		String result = rpc.callString("op",Rpc.RemoteParam("p1", true));		
 		assertThat(result, is("foobar"));
@@ -1206,7 +1443,7 @@ public class RpcTest {
 	public void testCallStringArray() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1217,7 +1454,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		String[] result = rpc.callStringArray("op");		
 		assertThat(result, is(new String[]{"foo","bar","dummy"}));		
@@ -1228,7 +1471,7 @@ public class RpcTest {
 	public void testCallStringArrayParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1242,7 +1485,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);			
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);
 		Map<String,Object> params = new LinkedHashMap<String, Object>();
 		params.put("a",1);
@@ -1256,7 +1505,7 @@ public class RpcTest {
 	public void testCallBoolean() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1267,7 +1516,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		boolean result = rpc.callBoolean("op");		
 		assertThat( result , is(true) );
@@ -1277,7 +1532,7 @@ public class RpcTest {
 	public void testCallBooleanOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1291,7 +1546,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		boolean result = rpc.callBoolean("op",1,2,3, "foo" );		
 		assertThat( result, is(false));
@@ -1301,7 +1562,7 @@ public class RpcTest {
 	public void testCallBooleanNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1315,7 +1576,13 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		boolean result = rpc.callBoolean("op",Rpc.RemoteParam("p1", 1),Rpc.RemoteParam("p2", 2),Rpc.RemoteParam("p3", 3),Rpc.RemoteParam("p4", "foo"));		
 		assertThat( result, is(false) );
@@ -1325,7 +1592,7 @@ public class RpcTest {
 	public void testCallBooleanArray() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1336,7 +1603,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		boolean[] result = rpc.callBooleanArray("op");		
 		assertThat(result,  is(new boolean[]{true,true,false}));
@@ -1348,7 +1620,7 @@ public class RpcTest {
 	public void testCallBooleanArrayParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1362,7 +1634,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		boolean[] result = rpc.callBooleanArray("op", 5);		
 		assertThat(result, is(new boolean[]{true,true,false}));
@@ -1373,7 +1650,7 @@ public class RpcTest {
 	public void testCallShort() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform((String)EasyMock.anyObject()))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1384,7 +1661,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		short result = rpc.callShort("op");		
 		assertThat( result, is((short)10) );
@@ -1394,7 +1676,7 @@ public class RpcTest {
 	public void testCallShortOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1408,7 +1690,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		short result = rpc.callShort("op",false,"test");		
 		assertThat( result, is((short)10) );
@@ -1418,7 +1705,7 @@ public class RpcTest {
 	public void testCallShortNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1432,7 +1719,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		short result = rpc.callShort("op",Rpc.RemoteParam("p1", false),Rpc.RemoteParam("p2", "test"));		
 		assertThat( result, is((short)10) );
@@ -1442,7 +1734,7 @@ public class RpcTest {
 	public void testCallShortArray() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1453,7 +1745,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		short[] result = rpc.callShortArray("op");		
 		assertThat(result, is(new short[]{10,34,23}));
@@ -1463,7 +1760,7 @@ public class RpcTest {
 	public void testCallShortArrayParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1477,7 +1774,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		short[] result = rpc.callShortArray("mult10",true,false);		
 		assertThat(result, is(new short[]{10,20,30}));
@@ -1487,7 +1789,7 @@ public class RpcTest {
 	public void testCallLong() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1498,7 +1800,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		long result = rpc.callLong("op");		
 		assertThat( result, is(10L) );
@@ -1508,7 +1815,7 @@ public class RpcTest {
 	public void testCallLongOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1522,7 +1829,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		long result = rpc.callLong("op",false,"test");		
 		assertThat( result, is(10L) );
@@ -1532,7 +1844,7 @@ public class RpcTest {
 	public void testCallLongNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1547,7 +1859,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		long result = rpc.callLong("op",Rpc.RemoteParam("p1", false),Rpc.RemoteParam("p2", "test"));		
 		assertThat( result, is(10L) );
@@ -1557,7 +1874,7 @@ public class RpcTest {
 	public void testCallLongArray() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1568,7 +1885,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		long[] result = rpc.callLongArray("op");		
 		assertThat(result, is(new long[]{10,34,23}));
@@ -1578,7 +1900,7 @@ public class RpcTest {
 	public void testCallLongArrayParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1592,7 +1914,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		long[] result = rpc.callLongArray("mult10",true,false);		
 		assertThat(result, is(new long[]{10,20,30}));
@@ -1602,7 +1929,7 @@ public class RpcTest {
 	public void testCallChar() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1613,7 +1940,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		char result = rpc.callChar("op");		
 		//System.out.println(String.format("%04x", (int) result));
@@ -1625,7 +1957,7 @@ public class RpcTest {
 	public void testCallCharOrderedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1639,7 +1971,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		char result = rpc.callChar("op",false,"test");		
 		assertThat( result, is('a') );
@@ -1649,7 +1986,7 @@ public class RpcTest {
 	public void testCallCharNamedParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1663,7 +2000,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		char result = rpc.callChar("op",Rpc.RemoteParam("p1", false),Rpc.RemoteParam("p2", "test"));		
 		assertThat( result, is('a') );
@@ -1673,7 +2015,7 @@ public class RpcTest {
 	public void testCallCharArray() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
 		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
 		.andAnswer(new IAnswer<String>() {
 			
@@ -1684,7 +2026,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);										
 		char[] result = rpc.callCharArray("op");		
 		assertThat( result, is(new char[]{'a','b','c'}));
@@ -1694,7 +2041,7 @@ public class RpcTest {
 	public void testCallCharArrayParams() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);	
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
@@ -1708,7 +2055,12 @@ public class RpcTest {
 			}
 		});						
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		Rpc.Sync rpc = new Rpc.Sync(builder);	
 		A a = new A(2,3);
 		a.b = new B("bar",5.6f);
@@ -1722,11 +2074,15 @@ public class RpcTest {
 		
 		TestServer server = new TestServer(4444);
 		server.setIdleTime(5000);
-		HttpRequest request = (HttpRequest)server.createTestRequester(new HttpRequest(), "perform");					
-		HttpRequestBuilder builder = new HttpRequestBuilder(request)
-											.endpoint("http://localhost:4444/rpc")
-											.readTimeout(1000)
-											.requestRetries(0);
+		final HttpRequest request = (HttpRequest)server.createTestRequester(new HttpRequest(), "perform");					
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost:4444/rpc")
+		 .readTimeout(1000)
+		 .requestRetries(0);
 		Rpc.Sync rpc = new Rpc.Sync(builder);
 		try{
 			rpc.callVoid("test");
@@ -1741,15 +2097,14 @@ public class RpcTest {
 	public void testCallMultiThread() throws Exception{
 		
 		
-		HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
 		final Capture<String> requestCapture = new Capture<String>();
 		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
 		.andAnswer(new IAnswer<String>() {
 			
 			public String answer() throws Throwable{												
 				
-				String request = requestCapture.getValue();
-				System.out.println(request);
+				String request = requestCapture.getValue();				
 				assertThat(request.toString(), startsWith("{\"method\":\"op\",\"params\":{},\"jsonrpc\":\"2.0\",\"id\":"));
 				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
 				
@@ -1757,7 +2112,12 @@ public class RpcTest {
 		}).times(5);
 		
 		EasyMock.replay(request);
-		HttpRequestBuilder builder = new HttpRequestBuilder(request).endpoint("http://localhost");
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
 		final Rpc.Sync rpc = new Rpc.Sync(builder);
 		Thread threads[] = new Thread[5];
 		for(int i=0; i<5; i++){

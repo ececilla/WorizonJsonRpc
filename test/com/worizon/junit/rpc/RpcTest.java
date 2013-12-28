@@ -2093,6 +2093,49 @@ public class RpcTest {
 		}
 	}
 	
+	public static class MyRemoteException extends RuntimeException{
+		
+		public MyRemoteException(){
+			super();
+		}
+		
+		public MyRemoteException(String message){
+			super(message);
+		}
+	}
+	@Test
+	public void testAddRuntimeExceptionMapping() throws Exception{
+		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);		
+		EasyMock.expect(request.perform( (String)EasyMock.anyObject() ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				return "{\"jsonrpc\": \"2.0\", \"error\": {\"code\":-10,\"message\":\"Remote exception\"}, \"id\": 2}";
+				
+			}
+		});
+				
+		EasyMock.replay(request);
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
+		Rpc.Sync rpc = new Rpc.Sync(builder);						
+		try{
+			rpc.addRuntimeExceptionMapping(-10, MyRemoteException.class);
+			rpc.callVoid("test");
+			fail();
+		}catch(MyRemoteException ex){
+						
+			assertThat(ex.getMessage(), is("Remote exception"));
+		}
+	}
+	
 	@Test
 	public void testCallMultiThread() throws Exception{
 		
@@ -2139,6 +2182,37 @@ public class RpcTest {
 		for(Thread t: threads)
 			t.join();
 				
+	}
+	
+	@Test
+	public void testCallVoidAsync() throws Exception{
+		
+		
+		final HttpRequest request = EasyMock.createNiceMock(HttpRequest.class);
+		final Capture<String> requestCapture = new Capture<String>();
+		EasyMock.expect(request.perform( EasyMock.capture(requestCapture) ))		
+		.andAnswer(new IAnswer<String>() {
+			
+			public String answer() throws Throwable{												
+				
+				String request = requestCapture.getValue();	
+				assertThat(request.toString(), is("{\"method\":\"op\",\"params\":{},\"jsonrpc\":\"2.0\",\"id\":1}"));
+				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
+				
+			}
+		});						
+		EasyMock.replay(request);
+		
+		HttpRequestBuilder builder = new HttpRequestBuilder(){
+			@Override
+			protected HttpRequest newInstance(){
+				return request;
+			}
+		}.endpoint("http://localhost");
+		Rpc.Async rpc = new Rpc.Async(builder);										
+		rpc.callVoid("op");
+		
+		
 	}
 	
 

@@ -167,8 +167,8 @@ To use this library add the maven repository location and dependency to your pom
     <dependencies>        
       <dependency>
         <groupId>com.worizon</groupId>
-        <artifactId>WorizonJsonRpc</artifactId>
-        <version>1.0.0-SNAPSHOT</version>       
+        <artifactId>worizonjsonrpc</artifactId>
+        <version>1.0.1-SNAPSHOT</version>       
       </dependency>
     </dependencies>
     

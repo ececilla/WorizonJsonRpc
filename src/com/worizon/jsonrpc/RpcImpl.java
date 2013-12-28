@@ -173,8 +173,12 @@ public class RpcImpl{
 						
 	/**
 	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz. Generic call.
+	 * @param method The remote method name.
+	 * @param clazz The remote method's return type class type.
+	 * @param params remote parameters supplied to the remote procedure.
+	 * @return returned object from the remote procedure.
 	 */
-	protected <T> T call(String method, Object params, Class<T> clazz ) throws IOException, InterruptedException {
+	protected <T> T call(String method, Class<T> clazz, Object params  ) throws IOException, InterruptedException {
 		
 		JsonRpcRequest req = new JsonRpcRequest(method, params);
 		HttpRequest request = builder.build();
@@ -212,9 +216,9 @@ public class RpcImpl{
 	 * @param clazz The class to turn itno the result field.
 	 * @return The result field deserialized as a T object.
 	 */
-	protected <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws IOException, InterruptedException {
+	protected <T> T call(String method,Class<T> clazz,  Map<String, Object> params ) throws IOException, InterruptedException {
 		
-		return call(method, (Object)params, clazz);
+		return call(method, clazz, (Object)params );
 	}
 	
 	/**
@@ -224,9 +228,9 @@ public class RpcImpl{
 	 * @param clazz The class to turn into the result field.
 	 * @return The result field deserialized as a T object.
 	 */
-	protected <T> T call(String method, List<Object> params, Class<T> clazz ) throws IOException, InterruptedException{
+	protected <T> T call(String method, Class<T> clazz, List<Object> params  ) throws IOException, InterruptedException{
 		
-		return call(method, (Object)params, clazz);
+		return call(method, clazz, (Object)params );
 	}
 	
 	/**
@@ -237,7 +241,7 @@ public class RpcImpl{
 	 */
 	protected <T> T call(String method, Class<T> clazz ) throws IOException, InterruptedException{
 		
-		return call(method, (Object)null, clazz);
+		return call(method, clazz, (Object)null );
 	}
 		
 	/**

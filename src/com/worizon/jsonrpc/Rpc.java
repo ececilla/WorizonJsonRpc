@@ -43,40 +43,16 @@ public class Rpc {
 		public Sync( HttpRequestBuilder builder ){
 			
 			super(builder);
-		}
-		
-		/**
-		 * Return the parameters bundled in a apropiate container, List or HashMap depending on how these
-		 * were passed in.
-		 * @return Parameters container.
-		 */
-		private Object transformParametersArrayIntoCollection( Object...args ){
-			
-			if( TypesUtil.all(args).haveType(Map.Entry.class) ){
-				
-				Map<String,Object> margs = new LinkedHashMap<String, Object>();//preserve same order of named parameters as in the args array.
-				for( Object arg: args){
-					
-					@SuppressWarnings("unchecked")
-					Map.Entry<String, Object> entry = (Map.Entry<String, Object>)arg;
-					margs.put(entry.getKey(), entry.getValue());				
-				}
-				return margs;
-			}else if( TypesUtil.any(args).haveType(Map.Entry.class) ){
-				
-				throw new IllegalArgumentException("Must pass ALL parameters as named parameters or NONE.");
-			}else	
-				return Arrays.asList(args);
-		}
+		}				
 		
 		/**
 		 * Makes parent's call method public through the Sync api.
 		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.util.Map, java.lang.Class)
 		 */
 		@Override
-		public <T> T call(String method, Map<String, Object> params, Class<T> clazz ) throws IOException, InterruptedException {
+		public <T> T call(String method, Class<T> clazz, Map<String, Object> params ) throws IOException, InterruptedException {
 			
-			return super.call(method, params, clazz);
+			return super.call(method, clazz, params );
 		}
 		
 		/**
@@ -94,54 +70,56 @@ public class Rpc {
 		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.util.List, java.lang.Class)
 		 */
 		@Override
-		public <T> T call(String method, List<Object> params, Class<T> clazz ) throws IOException, InterruptedException{
+		public <T> T call(String method, Class<T> clazz, List<Object> params  ) throws IOException, InterruptedException{
 			
-			return super.call(method,params, clazz);
+			return super.call(method, clazz, params );
+		}
+		
+		/**
+		 *  Calls the remote procedure with varargs parameters.
+		 *  @param method The remote procedure name.
+		 *  @param clazz The return type class type.
+		 *  @param params The remote parameters supplied to the remote procedure.
+		 *  @return T An object of the remote procedure return type.
+		 */
+		public <T> T call(String method, Class<T> clazz, Object... params )throws IOException, InterruptedException{
+			
+			return super.call(method, clazz, transformParametersArrayIntoCollection(params) );
 		}
 			
 		
 		/**
 		 * Calls the remote procedure with void as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 */
-		public void callVoid( String method, Object... args) throws IOException, InterruptedException{
-			
-			if(args != null)								
-				call(method, transformParametersArrayIntoCollection(args), Void.class);
-			else
-				call(method, Void.class);
+		public void callVoid( String method, Object... params ) throws IOException, InterruptedException{
+						
+			call(method, Void.class, transformParametersArrayIntoCollection(params) );
 		}
 			
 		
 		/**
 		 * Calls the remote procedure with int as the result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as integer.
 		 */
-		public int callInteger( String method, Object... args) throws IOException, InterruptedException{
+		public int callInteger( String method, Object... params ) throws IOException, InterruptedException{
 			
-			if(args != null)
-				return call(method, transformParametersArrayIntoCollection(args), Integer.class);
-			else
-				return call(method, Integer.class);
+			return call(method, Integer.class, transformParametersArrayIntoCollection(params) );			
 		}
 			
 		
 		/**
 		 * Calls the remote procedure with an array of ints as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as an array of integers.
 		 */
-		public int[] callIntegerArray( String method, Object...args ) throws IOException, InterruptedException{
+		public int[] callIntegerArray( String method, Object...params ) throws IOException, InterruptedException{
 			
-			Integer result[];
-			if( args != null )
-				result = call(method,transformParametersArrayIntoCollection(args), Integer[].class);
-			else
-				result = call(method, Integer[].class);
+			Integer result[] = call(method, Integer[].class, transformParametersArrayIntoCollection(params) );			
 			
 			int resultPrimitive[] = new int[result.length];
 			for(int i = 0; i < result.length; i++)
@@ -154,30 +132,23 @@ public class Rpc {
 		/**
 		 * Calls the remote procedure with double as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as double.
 		 */
-		public double callDouble( String method, Object... args ) throws IOException, InterruptedException{
+		public double callDouble( String method, Object... params ) throws IOException, InterruptedException{
 			
-			if( args != null )
-				return call(method,transformParametersArrayIntoCollection(args), Double.class);
-			else
-				return call(method, Double.class);
+			return call(method, Double.class, transformParametersArrayIntoCollection(params) );			
 		}
 		
 		/**
 		 * Calls the remote procedure with an array of doubles as a result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as an array of doubles.
 		 */
-		public double[] callDoubleArray(String method, Object...args) throws IOException, InterruptedException{
+		public double[] callDoubleArray(String method, Object...params ) throws IOException, InterruptedException{
 			
-			Double result[];
-			if( args != null )
-				result = call(method, transformParametersArrayIntoCollection(args), Double[].class);
-			else
-				result = call(method, Double[].class);
+			Double result[] = call(method, Double[].class, transformParametersArrayIntoCollection(params) );			
 			
 			double resultPrimitive[] = new double[result.length];
 			for(int i=0; i < result.length; i++)
@@ -189,30 +160,23 @@ public class Rpc {
 		/**
 		 * Calls the remote procedure with float as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as float.
 		 */
-		public float callFloat( String method, Object... args ) throws IOException, InterruptedException{
+		public float callFloat( String method, Object... params ) throws IOException, InterruptedException{
 			
-			if( args != null )
-				return call(method, transformParametersArrayIntoCollection(args), Float.class);
-			else
-				return call(method, Float.class);
+			return call(method, Float.class, transformParametersArrayIntoCollection(params) );			
 		}		
 		
 		/**
 		 * Calls the remote procedure with an array of floats as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as an array of floats.
 		 */
-		public float[] callFloatArray(String method, Object...args) throws IOException, InterruptedException{
+		public float[] callFloatArray(String method, Object...params ) throws IOException, InterruptedException{
 			
-			Float result[];
-			if( args != null)
-				result = call(method, transformParametersArrayIntoCollection(args), Float[].class);
-			else
-				result = call(method, Float[].class);
+			Float result[] = call(method, Float[].class, transformParametersArrayIntoCollection(params) );			
 			
 			float resultPrimitive[] = new float[result.length];
 			for(int i=0; i < result.length; i++)
@@ -224,59 +188,46 @@ public class Rpc {
 		/**
 		 * Calls the remote procedure with String as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as String.
 		 */
-		public String callString( String method, Object... args ) throws IOException, InterruptedException{
+		public String callString( String method, Object... params ) throws IOException, InterruptedException{
 			
-			if(args != null)
-				return call(method,transformParametersArrayIntoCollection(args), String.class);
-			else
-				return call(method, String.class);
+			return call(method, String.class, transformParametersArrayIntoCollection(params) );			
 		}
 			
 		
 		/**
 		 * Calls the remote procedure with an array of Strings as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as an array of Strings.
 		 */
-		public String[] callStringArray(String method, Object... args) throws IOException, InterruptedException{
+		public String[] callStringArray(String method, Object... params ) throws IOException, InterruptedException{
 			
-			if( args != null )
-				return call(method, transformParametersArrayIntoCollection(args), String[].class);
-			else
-				return call(method, String[].class);
+			return call(method, String[].class, transformParametersArrayIntoCollection(params) );			
 		}
 				
 		/**
 		 * Calls the remote procedure with boolean as result and with no params.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as boolean.
 		 */
-		public boolean callBoolean( String method, Object... args ) throws IOException, InterruptedException{
+		public boolean callBoolean( String method, Object... params ) throws IOException, InterruptedException{
 			
-			if( args != null)
-				return call(method, transformParametersArrayIntoCollection(args), Boolean.class);
-			else
-				return call(method, Boolean.class);	
+			return call(method, Boolean.class, transformParametersArrayIntoCollection(params) );			
 		}
 		
 		/**
 		 * Calls the remote procedure with boolean as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as an array of booleans.
 		 */
-		public boolean[] callBooleanArray( String method, Object... args ) throws IOException, InterruptedException{
+		public boolean[] callBooleanArray( String method, Object... params ) throws IOException, InterruptedException{
 			
-			Boolean[] result;
-			if( args != null)
-				result = call(method, transformParametersArrayIntoCollection(args), Boolean[].class);
-			else
-				result = call(method, Boolean[].class);
+			Boolean[] result = call(method, Boolean[].class, transformParametersArrayIntoCollection(params) );			
 			
 			boolean resultPrimitive[] = new boolean[result.length];
 			for(int i=0; i < result.length; i++)
@@ -288,30 +239,23 @@ public class Rpc {
 		/**
 		 * Calls the remote procedure with short as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as short.
 		 */
-		public short callShort( String method, Object... args ) throws IOException, InterruptedException{
+		public short callShort( String method, Object... params ) throws IOException, InterruptedException{
 			
-			if( args != null )
-				return call(method, transformParametersArrayIntoCollection(args), Short.class);
-			else
-				return call(method, Short.class);
+			return call(method, Short.class, transformParametersArrayIntoCollection(params) );			
 		}
 				
 		/**
 		 * Calls the remote procedure with boolean as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as an array of shorts.
 		 */
-		public short[] callShortArray( String method, Object... args ) throws IOException, InterruptedException{
+		public short[] callShortArray( String method, Object... params ) throws IOException, InterruptedException{
 			
-			Short[] result;
-			if( args != null )
-				result = call(method, transformParametersArrayIntoCollection(args), Short[].class);
-			else
-				result = call(method, Short[].class);
+			Short[] result = call(method, Short[].class, transformParametersArrayIntoCollection(params) );			
 			
 			short resultPrimitive[] = new short[result.length];
 			for(int i=0; i < result.length; i++)
@@ -323,30 +267,23 @@ public class Rpc {
 		/**
 		 * Calls the remote procedure with long as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as long.
 		 */
-		public long callLong( String method, Object... args ) throws IOException, InterruptedException{
+		public long callLong( String method, Object... params ) throws IOException, InterruptedException{
 			
-			if( args != null )
-				return call(method, transformParametersArrayIntoCollection(args), Long.class);
-			else
-				return call(method, Long.class);
+			return call(method, Long.class, transformParametersArrayIntoCollection(params) );			
 		}
 			
 		/**
 		 * Calls the remote procedure with long as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as an array of longs.
 		 */
-		public long[] callLongArray( String method, Object... args ) throws IOException, InterruptedException{
+		public long[] callLongArray( String method, Object... params ) throws IOException, InterruptedException{
 			
-			Long[] result;
-			if( args != null )
-				result = call(method, transformParametersArrayIntoCollection(args), Long[].class);
-			else
-				result = call(method, Long[].class);
+			Long[] result = call(method, Long[].class, transformParametersArrayIntoCollection(params) );			
 			
 			long resultPrimitive[] = new long[result.length];
 			for(int i=0; i < result.length; i++)
@@ -359,31 +296,24 @@ public class Rpc {
 		/**
 		 * Calls the remote procedure with char as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as char.
 		 */
-		public char callChar( String method, Object... args ) throws IOException, InterruptedException{
+		public char callChar( String method, Object... params ) throws IOException, InterruptedException{
 			
-			if( args != null )
-				return call(method, transformParametersArrayIntoCollection(args), Character.class);
-			else
-				return call(method, Character.class);
+			return call(method, Character.class, transformParametersArrayIntoCollection(params) );			
 		}
 		
 		
 		/**
 		 * Calls the remote procedure with char as result.
 		 * @param method The remote procedure name to be invoked.
-		 * @param args The arguments to get into the remote procedure serialized as an ordered list.
+		 * @param params The arguments to get into the remote procedure serialized as an ordered list.
 		 * @return The procedure return value as an array of chars.
 		 */
-		public char[] callCharArray( String method, Object... args ) throws IOException, InterruptedException{
+		public char[] callCharArray( String method, Object... params ) throws IOException, InterruptedException{
 			
-			Character[] result;
-			if( args != null )
-				result = call(method, transformParametersArrayIntoCollection(args), Character[].class);
-			else
-				result = call(method, Character[].class);
+			Character[] result = call(method, Character[].class, transformParametersArrayIntoCollection(params) );			
 			
 			char resultPrimitive[] = new char[result.length];
 			for(int i=0; i < result.length; i++)
@@ -457,7 +387,7 @@ public class Rpc {
 																			
 							RemoteProcName annotation = method.getAnnotation(RemoteProcName.class);
 							String remoteProcName = (annotation != null)?annotation.value():method.getName();												
-							return call( remoteProcName, params, method.getReturnType() );
+							return call( remoteProcName, method.getReturnType(), params );
 						}
 			});
 			
@@ -487,11 +417,68 @@ public class Rpc {
 			
 		}
 		
-		public void call(String method, Object... params){
+		public <T> void call(final String method, final Class<T> clazz, final Object... params){
+			Thread t = new Thread(new Runnable(){
+				
+				@Override
+				public void run(){
+					try{
+						T returnValue = call(method, clazz, transformParametersArrayIntoCollection(params) );
+						//TODO: broadcast returnValue through the bus.
+					}catch(InterruptedException ie){
+						//TODO: broadcast interrupted exception through the bus.
+					}catch(IOException ioe){
+						//TODO: broadcast io exception through the bus.
+					}catch(Exception ex){
+						//TODO: broadcast other exceptions through the bus.
+					}
+				}
+			});
+			t.start();
+		}
+		
+		public void callVoid( String method, Object... params ){
 			
+			call(method, Void.class, params);
+		}
+		
+		public void callInteger( String method, Object... params ){
+			
+			call(method, Integer.class, params);
+		}
+		
+		public void callIntegerArray( String method, Object... params ){
+			
+			call(method, Integer[].class, params);
 		}
 	}
 	
+	/**
+	 * Return the parameters bundled in a apropiate container, List or HashMap depending on how these
+	 * were passed in.
+	 * @return Parameters container.
+	 */
+	private static Object transformParametersArrayIntoCollection( Object...params ){
+		
+		if(params == null)
+			return null;
+		
+		if( TypesUtil.all(params).haveType(Map.Entry.class) ){
+			
+			Map<String,Object> mapParams = new LinkedHashMap<String, Object>();//preserve same order of named parameters as in the args array.
+			for( Object arg: params){
+				
+				@SuppressWarnings("unchecked")
+				Map.Entry<String, Object> entry = (Map.Entry<String, Object>)arg;
+				mapParams.put(entry.getKey(), entry.getValue());				
+			}
+			return mapParams;
+		}else if( TypesUtil.any(params).haveType(Map.Entry.class) ){
+			
+			throw new IllegalArgumentException("Must pass ALL parameters as named parameters or NONE.");
+		}else	
+			return Arrays.asList(params);
+	}
 	
 	/**
 	 * Helper factory method to create a parameter (name, value) pair.

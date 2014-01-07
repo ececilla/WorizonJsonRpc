@@ -1,23 +1,11 @@
 package com.worizon.jsonrpc;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
-import java.util.AbstractMap;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.worizon.jsonrpc.annotations.LocalException;
-import com.worizon.jsonrpc.annotations.LocalExceptions;
-import com.worizon.jsonrpc.annotations.Remote;
-import com.worizon.jsonrpc.annotations.RemoteParams;
-import com.worizon.jsonrpc.annotations.RemoteProcName;
 import com.worizon.net.HttpRequest;
 import com.worizon.net.HttpRequestBuilder;
 
@@ -140,7 +128,7 @@ import com.worizon.net.HttpRequestBuilder;
  * @since 1.0.0
  *
  */
-public class RpcImpl{
+public abstract class RpcImpl{
 			
 	/**
 	 * Builder to create http requests.
@@ -151,7 +139,7 @@ public class RpcImpl{
 	 * Map that maps from int to Throwable.
 	 */
 	protected Map<Integer, Class<? extends RuntimeException>> exceptions = new HashMap<Integer, Class<? extends RuntimeException>>();
-	
+		
 	/**
 	 * Instantiates a new facade Rpc object.
 	 * @param endpoint Remote procedure endpoint String.
@@ -170,6 +158,15 @@ public class RpcImpl{
 		
 		this.builder = builder;
 	}
+	
+	/**
+	 * Factory method to support in the creation of a new CallHandler.
+	 * @return Call handler new instance.
+	 */
+	protected CallHandler createNewCallHandler() throws MalformedURLException{
+				
+		return new CallHandler( builder.build() );		
+	}
 						
 	/**
 	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz. Generic call.
@@ -178,14 +175,19 @@ public class RpcImpl{
 	 * @param params remote parameters supplied to the remote procedure.
 	 * @return returned object from the remote procedure.
 	 */
-	protected <T> T call(String method, Class<T> clazz, Object params  ) throws IOException, InterruptedException {
+	protected <T> T call( CallHandler handler, String method, Class<T> clazz, Object params  ) throws IOException, InterruptedException {
 		
+		//JsonRpcRequest req = new JsonRpcRequest(method, params);
+		//HttpRequest http = builder.build();	
+		//handler.setHttpRequest(http);
+		//String respStr = handler.perform( req.toString() );//blocking call				
+		//JsonRpcResponse<T> res =  new JsonRpcResponse<T>( respStr, clazz );		
 		JsonRpcRequest req = new JsonRpcRequest(method, params);
-		HttpRequest request = builder.build();
-		String respStr = request.perform( req.toString() );//blocking call
-		//String respStr = http.perform( req.toString() );//blocking call
-		JsonRpcResponse<T> res =  new JsonRpcResponse<T>( respStr, clazz );		
+		JsonRpcResponse<T> res = handler.perform( req, clazz );//blocking call
+				
+		
 		if(res.getError() != null){
+			handler.setState( HttpRequest.State.FAILED );
 			if(res.getError().isCustomError()){
 				Class<? extends RuntimeException> exceptionClass = exceptions.get(res.getError().getCode());
 				if( exceptionClass != null ){
@@ -205,44 +207,11 @@ public class RpcImpl{
 					throw new RemoteException( res.getError() );
 			}else
 				throw new JsonRpcException( res.getError() );			
-		}else
-			return res.getResult();	
+		}
+		handler.setState(HttpRequest.State.COMPLETE);
+		return res.getResult();	
 	}
-	
-	/**
-	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz.
-	 * @param method The remote procedure name to be invoked.
-	 * @param params The params that will be passed into the remote procedure as a JSON object.
-	 * @param clazz The class to turn itno the result field.
-	 * @return The result field deserialized as a T object.
-	 */
-	protected <T> T call(String method,Class<T> clazz,  Map<String, Object> params ) throws IOException, InterruptedException {
-		
-		return call(method, clazz, (Object)params );
-	}
-	
-	/**
-	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz.
-	 * @param method The remote procedure name to be invoked.
-	 * @param params The params that will be passed into the remote procedure as a JSON array.
-	 * @param clazz The class to turn into the result field.
-	 * @return The result field deserialized as a T object.
-	 */
-	protected <T> T call(String method, Class<T> clazz, List<Object> params  ) throws IOException, InterruptedException{
-		
-		return call(method, clazz, (Object)params );
-	}
-	
-	/**
-	 * Calls the remote procedure and serializes the result JSONRPC field into an object of the class clazz.
-	 * @param method The remote procedure name to be invoked.
-	 * @param clazz The class to turn into the result field.
-	 * @return The result field deserialized as a T object.
-	 */
-	protected <T> T call(String method, Class<T> clazz ) throws IOException, InterruptedException{
-		
-		return call(method, clazz, (Object)null );
-	}
+			
 		
 	/**
 	 * Adds a mapping between exception class and error code. When the code error <i>code</i> arrives the 

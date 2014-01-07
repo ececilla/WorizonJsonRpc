@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -34,10 +35,10 @@ public class HttpRequest {
 	private int nRetries = DEFAULT_CONNECT_RETRIES;	
 	private int readTimeout = DEFAULT_READ_TIMEOUT;	
 	private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
-	private HttpURLConnection conn = null;
+	private Thread performThread = null;
+	private HttpURLConnection conn = null;	
 	private TransformerContext ctx = this.new TransformerContext();
-	private List<ITransformer> transformers = new LinkedList<ITransformer>();	
-	
+	private List<ITransformer> transformers = new LinkedList<ITransformer>();		
 	
 	public HttpRequest(){}
 	
@@ -150,12 +151,15 @@ public class HttpRequest {
 	}
 	
 	/**
-	 * Diconnects from endpoint.
+	 * Stops request of being further processed.
 	 */
-	public void disconnect(){
+	public void stop(){
 				
-		conn.disconnect();
-		conn = null;
+		if( conn != null ){
+			performThread.interrupt();
+			conn.disconnect();
+			conn = null;
+		}
 	}
 	
 	/**
@@ -173,12 +177,18 @@ public class HttpRequest {
 	 * @return The body response from the server.
 	 */
 	public String perform( String body  ) throws InterruptedException, IOException{
-							    
+		
+		performThread = Thread.currentThread();
 	    try{
 	    	return readResponse( connectAndWriteRequest(body) );
+	    }catch(SocketException se){	
+	    		//se.printStackTrace();
+	    		if( performThread.isInterrupted() )
+	    			throw new InterruptedException();
+	    		else
+	    			throw se;
 	    }catch(IOException ex){
-	    	
-	    	disconnect();
+	    	//ex.printStackTrace();	    	
 	    	if( !Thread.interrupted() ){
 		    	if(nRetries-- > 0)
 		    		return perform(body);
@@ -221,7 +231,7 @@ public class HttpRequest {
 			throw new IllegalStateException("body not set");
 		
 		//Prepare connection		
-		conn = (HttpURLConnection)endpoint.openConnection();				
+		conn = (HttpURLConnection)endpoint.openConnection();		
 		conn.setDoOutput( true );		
 		conn.setUseCaches(false);
 		conn.setAllowUserInteraction(false);
@@ -381,17 +391,10 @@ public class HttpRequest {
 		
 		public void transform( TransformerContext ctx ) throws Throwable;
 		
-	}
-	
-	public static class Factory{
+	}	
 		
-		private URL endpoint;
-		private int nretries = DEFAULT_CONNECT_RETRIES;	
-		private int readTimeout = DEFAULT_READ_TIMEOUT;	
-		private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;			
-		private List<ITransformer> transformers = new LinkedList<ITransformer>();
-		
-		
+	public enum State {
+		RUNNING, FAILED, COMPLETE;
 	}
 		
 }

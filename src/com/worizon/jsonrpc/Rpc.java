@@ -7,9 +7,12 @@ import java.net.MalformedURLException;
 
 import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.worizon.jsonrpc.annotations.LocalException;
 import com.worizon.jsonrpc.annotations.LocalExceptions;
@@ -34,7 +37,9 @@ public class Rpc {
 	 * Synchronous interface to call remote procedures.
 	 */	
 	public static class Sync extends RpcImpl {
-					
+				
+		private Set<CallHandler> handlers = Collections.synchronizedSet(new HashSet<CallHandler>());
+		
 		public Sync( String endpoint ) throws MalformedURLException {
 			
 			super(endpoint);
@@ -43,38 +48,54 @@ public class Rpc {
 		public Sync( HttpRequestBuilder builder ){
 			
 			super(builder);
-		}				
-		
-		/**
-		 * Makes parent's call method public through the Sync api.
-		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.util.Map, java.lang.Class)
-		 */
-		@Override
-		public <T> T call(String method, Class<T> clazz, Map<String, Object> params ) throws IOException, InterruptedException {
-			
-			return super.call(method, clazz, params );
 		}
 		
-		/**
-		 * Makes parent's call method public through the Sync api.
-		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.lang.Class)
-		 */
-		@Override
-		public <T> T call(String method, Class<T> clazz ) throws IOException, InterruptedException{
+		public int runningCalls(){
 			
-			return super.call(method, clazz);
+			return handlers.size();
+		}
+		
+		public void stop(){
+			
+			for(CallHandler handler : handlers)
+				handler.stop();							
+			handlers.clear();
 		}
 		
 		/**
 		 * Makes parent's call method public through the Sync api. 
 		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.util.List, java.lang.Class)
-		 */
-		@Override
-		public <T> T call(String method, Class<T> clazz, List<Object> params  ) throws IOException, InterruptedException{
+		 */		
+		protected <T> T call( String method, Class<T> clazz, Object params  ) throws IOException, InterruptedException {
 			
-			return super.call(method, clazz, params );
+			CallHandler handler = createNewCallHandler();
+			handlers.add(handler);
+			try{
+				
+				return super.call(handler, method, clazz, params);
+			}finally{
+				handlers.remove(handler);
+			}
 		}
 		
+		/**
+		 * Makes parent's call method public through the Sync api.
+		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.util.Map, java.lang.Class)
+		 */		
+		public <T> T call( String method, Class<T> clazz, Map<String, Object> params ) throws IOException, InterruptedException {
+						
+			return call(method, clazz, (Object)params );			
+		}
+		
+		/**
+		 * Makes parent's call method public through the Sync api. 
+		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.util.List, java.lang.Class)
+		 */		
+		public <T> T call(String method, Class<T> clazz, List<Object> params  ) throws IOException, InterruptedException{
+			
+			return call(method, clazz, (Object)params );
+		}
+														
 		/**
 		 *  Calls the remote procedure with varargs parameters.
 		 *  @param method The remote procedure name.
@@ -82,9 +103,18 @@ public class Rpc {
 		 *  @param params The remote parameters supplied to the remote procedure.
 		 *  @return T An object of the remote procedure return type.
 		 */
-		public <T> T call(String method, Class<T> clazz, Object... params )throws IOException, InterruptedException{
+		public <T> T call( String method, Class<T> clazz, Object... params )throws IOException, InterruptedException{
 			
-			return super.call(method, clazz, transformParametersArrayIntoCollection(params) );
+			return call(method, clazz, transformParametersArrayIntoCollection(params) );
+		}
+		
+		/**
+		 * Makes parent's call method public through the Sync api.
+		 * @see com.worizon.jsonrpc.RpcImpl#call(java.lang.String, java.lang.Class)
+		 */		
+		public <T> T call( String method, Class<T> clazz ) throws IOException, InterruptedException{
+			
+			return call(method, clazz, (Object)null);
 		}
 			
 		
@@ -386,8 +416,9 @@ public class Rpc {
 							}
 																			
 							RemoteProcName annotation = method.getAnnotation(RemoteProcName.class);
-							String remoteProcName = (annotation != null)?annotation.value():method.getName();												
-							return call( remoteProcName, method.getReturnType(), params );
+							String remoteProcName = (annotation != null)?annotation.value():method.getName();
+							CallHandler handler = createNewCallHandler();
+							return call( handler, remoteProcName, method.getReturnType(), params );
 						}
 			});
 			
@@ -415,15 +446,17 @@ public class Rpc {
 		
 		public void unRegister( Object registree ){
 			
-		}
+		}				
 		
-		public <T> void call(final String method, final Class<T> clazz, final Object... params){
+		public <T> CallHandler call(final String method, final Class<T> clazz, final Object... params)  throws IOException, InterruptedException{
+			
+			final CallHandler handler = createNewCallHandler();
 			Thread t = new Thread(new Runnable(){
 				
 				@Override
 				public void run(){
 					try{
-						T returnValue = call(method, clazz, transformParametersArrayIntoCollection(params) );
+						T returnValue = call(handler, method, clazz, transformParametersArrayIntoCollection(params) );
 						//TODO: broadcast returnValue through the bus.
 					}catch(InterruptedException ie){
 						//TODO: broadcast interrupted exception through the bus.
@@ -434,23 +467,26 @@ public class Rpc {
 					}
 				}
 			});
-			t.start();
+			t.start();			
+			return handler;
 		}
 		
-		public void callVoid( String method, Object... params ){
+		public void callVoid( String method, Object... params )  throws IOException, InterruptedException{
 			
 			call(method, Void.class, params);
 		}
 		
-		public void callInteger( String method, Object... params ){
+		public void callInteger( String method, Object... params )  throws IOException, InterruptedException{
 			
 			call(method, Integer.class, params);
 		}
 		
-		public void callIntegerArray( String method, Object... params ){
+		public void callIntegerArray( String method, Object... params )  throws IOException, InterruptedException{
 			
 			call(method, Integer[].class, params);
 		}
+		
+		
 	}
 	
 	/**
@@ -489,6 +525,6 @@ public class Rpc {
 	public static Map.Entry<String, Object> RemoteParam(String paramName, Object  paramValue){
 		
 		return new AbstractMap.SimpleEntry<String, Object>(paramName,paramValue);
-	}
+	}				
 
 }

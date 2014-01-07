@@ -12,6 +12,9 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.util.Log;
+
+import com.worizon.jsonrpc.CallHandler;
 import com.worizon.jsonrpc.IDGenerator;
 import com.worizon.jsonrpc.JsonRpcRequest;
 import com.worizon.jsonrpc.gson.NonExpose;
@@ -48,12 +51,12 @@ public class JsonRpcRequestTest {
 
 	@Test
 	public void testConstructor2() {
-
+		
 		JsonRpcRequest request = new JsonRpcRequest("test");
-
+		
 		assertThat(request.getId(), is(notNullValue()));
 		assertThat(request.getVersion(), is(equalTo("2.0")));
-		assertThat(request.getMethod(), is(equalTo("test")));
+		assertThat(request.getMethod(), is(equalTo("test")));		
 		assertThat(request.toString(), is(equalTo("{\"method\":\"test\",\"jsonrpc\":\"2.0\",\"id\":1}")));
 	}
 

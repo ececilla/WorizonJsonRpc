@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import org.hamcrest.core.IsNot;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.worizon.jsonrpc.JsonRpcRequest;
@@ -43,8 +44,7 @@ public class HttpRequestTest {
 					}
 				}
 				.endpoint(endpoint)
-				.build();
-				//myRequest.setEndpoint(endpoint);//my particular method to set the endpoint
+				.build();				
 			}
 			
 			@Override
@@ -153,7 +153,7 @@ public class HttpRequestTest {
 	public void testRequestConnectionFailed() throws Exception{
 		
 		HttpRequestBuilder builder = new HttpRequestBuilder()
-											.endpoint("http://localhost:5555")
+											.endpoint("http://localhost:5678")
 											.requestRetries(1)
 											.connectTimeout(1000);
 		HttpRequest request = builder.build();
@@ -178,7 +178,57 @@ public class HttpRequestTest {
 										.readTimeout(1000);
 		HttpRequest request = builder.build();				
 		request.perform("test");			
-	}		
+	}
+	
+	@Test(expected=InterruptedException.class)
+	public void testRequestDisconnect() throws Exception{
+		
+		server.setIdleTime(2000);		
+		final HttpRequest request = new HttpRequestBuilder()
+		.endpoint("http://localhost:4444")
+		.requestRetries(0)
+		.build();	
+		new Thread( new Runnable() {
+			
+			@Override
+			public void run(){
+				
+				try{
+					Thread.sleep(1000);					
+					request.stop();					
+				}catch(InterruptedException ex){ 
+					
+				}
+			}
+		}).start();								
+		request.perform("test");					
+	}	
+	
+	@Ignore
+	@Test
+	public void testRequestInterrupted() throws Exception{
+		
+		server.setIdleTime(2000);
+		final Thread t = Thread.currentThread(); 
+		new Thread( new Runnable() {
+			
+			@Override
+			public void run(){
+				
+				try{
+					Thread.sleep(1000);
+					t.interrupt();					
+				}catch(InterruptedException ex){ 
+					
+				}
+			}
+		}).start();		
+		HttpRequest request = new HttpRequestBuilder()
+			.endpoint("http://localhost:4444")
+			.requestRetries(0)
+			.build();					
+		request.perform("test");					
+	}
 					
 	/*
 	@Test

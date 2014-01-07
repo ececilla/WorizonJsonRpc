@@ -3,6 +3,7 @@ package com.worizon.junit.rpc;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.worizon.jsonrpc.IDGenerator;
@@ -2149,6 +2151,7 @@ public class RpcTest {
 				
 				String request = requestCapture.getValue();				
 				assertThat(request.toString(), startsWith("{\"method\":\"op\",\"params\":{},\"jsonrpc\":\"2.0\",\"id\":"));
+				Thread.sleep(1000);
 				return "{\"jsonrpc\": \"2.0\", \"result\": {}, \"id\": 2}";
 				
 			}
@@ -2169,7 +2172,7 @@ public class RpcTest {
 				
 				@Override
 				public void run() {				
-					try{
+					try{						
 						rpc.callVoid("op");
 					}catch(Exception ex){
 						
@@ -2178,10 +2181,72 @@ public class RpcTest {
 			});
 			threads[i].start();
 		}
-		
+		Thread.sleep(50);
+		assertThat(rpc.runningCalls(),is(5));
 		for(Thread t: threads)
 			t.join();
 				
+	}
+	
+	@Ignore
+	@Test
+	public void testStop() throws Exception{
+						
+		TestServer server = new TestServer(4444);
+		server.setIdleTime(4000);
+		HttpRequestBuilder builder = new HttpRequestBuilder()
+										.endpoint("http://localhost:4444")
+										.requestRetries(0);
+		final Rpc.Sync rpc = new Rpc.Sync(builder);									
+		Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {				
+				try{									
+					rpc.callVoid("op");
+					System.out.println("After call void");					
+				}catch(InterruptedException ex){
+					
+				}catch(IOException ioe){
+					System.out.println("io ex");					
+				}catch(Exception ex){
+					ex.printStackTrace();					
+				}
+			}
+		});
+		t.start();
+		Thread.sleep(1000);
+		t.interrupt();
+		t.join();
+		System.out.println("after stop");
+	}
+	
+	@Ignore
+	@Test
+	public void testStop2() throws Exception{
+						
+		TestServer server = new TestServer(4444);
+		server.setIdleTime(3000);
+		HttpRequestBuilder builder = new HttpRequestBuilder()
+										.endpoint("http://localhost:4444")
+										.requestRetries(0);
+		final Rpc.Sync rpc = new Rpc.Sync(builder);							
+		final Thread mThread = Thread.currentThread();
+		Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {				
+				try{
+					Thread.sleep(1000);
+					//rpc.stop();
+					mThread.interrupt();
+					Thread.sleep(1000);
+				}catch(InterruptedException iex){}
+			}
+		});
+		t.start();
+		rpc.callVoid("op");
+							
 	}
 	
 	@Test

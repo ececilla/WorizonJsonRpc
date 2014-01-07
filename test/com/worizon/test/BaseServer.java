@@ -22,7 +22,6 @@ public abstract class BaseServer extends Thread {
 	protected ServerSocket serverSocket = null;
 	protected Socket clientSocket  = null;	
 	
-	
 	public BaseServer( int port ) throws IOException {
 				
 		serverSocket = new ServerSocket( port, 0 );		
@@ -45,7 +44,7 @@ public abstract class BaseServer extends Thread {
 		serverSocket.close();
 		if(isAlive())
 			try{ join(); }catch(InterruptedException ie){}
-	}	
+	}
 	
 	/**
 	 * Provide a particular implementation of this method to suit your needs.
@@ -56,6 +55,7 @@ public abstract class BaseServer extends Thread {
 	 * Provide a particular implementation of this method to suit your needs.
 	 */
 	protected abstract void handleException( Exception ex );
+		
 	
 	/**
 	 * Server loop, process one request at a time.
@@ -64,7 +64,8 @@ public abstract class BaseServer extends Thread {
 	@Override
 	public void run(){
 		try{														
-			while( !isInterrupted() ){							
+			while( !isInterrupted() ){
+								
 				clientSocket = serverSocket.accept();				
 				if( clientSocket != null )																																				
 					readStream(  clientSocket.getInputStream()  );				

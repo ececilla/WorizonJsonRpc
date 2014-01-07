@@ -6,6 +6,7 @@
 	import java.io.InputStreamReader;
 	import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.net.Socket;
 	import java.util.LinkedHashMap;
 	import java.util.Map;
 	import java.util.Map.Entry;
@@ -80,7 +81,7 @@ import org.springframework.aop.framework.ProxyFactory;
 		private IRequester adapter;
 		private String body;
 		private String command;
-		private int idleTime;
+		private int idleTime;			
 		private IMapper mapper = new IMapper() {
 			
 			@Override
@@ -105,7 +106,7 @@ import org.springframework.aop.framework.ProxyFactory;
 		public void setIdleTime( int idleTime ){
 			
 			this.idleTime = idleTime;
-		}
+		}			
 		
 		/**
 		 * Gets the request's body payload sent.
@@ -161,8 +162,7 @@ import org.springframework.aop.framework.ProxyFactory;
 		public void setAdapter( IRequester adapter ){
 			
 			this.adapter = adapter;
-		}
-		
+		}					
 					
 		/**
 		 * Builds the wrapped version of the adapter to make the request.
@@ -222,7 +222,7 @@ import org.springframework.aop.framework.ProxyFactory;
 		@Override
 		protected void handleException( Exception ex ){
 			
-		}
+		}			
 			
 		/**
 		 * Reads the request and stores the different parts.

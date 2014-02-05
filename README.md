@@ -31,7 +31,7 @@ public interface MyCalculator{
 
 HttpRequestBuilder builder = new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc");
 Rpc.Proxy rpc = new Rpc.Proxy(builder);
-MyCalculator calculator = rpc.createProxy(Myservice.class);
+MyCalculator calculator = rpc.createProxy(MyCalculator.class);
 int result = calculator.sum(4,5);//Remote blocking call
 ```
 The previous code snippet generates a remote call which passes arguments as an ordered list :
@@ -51,7 +51,7 @@ public interface MyCalculator{
 
 HttpRequestBuilder builder = new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc");
 Rpc.Proxy rpc = new Rpc.Proxy(builder);
-MyCalculator calculator = rpc.createProxy(Myservice.class);
+MyCalculator calculator = rpc.createProxy(MyCalculator.class);
 int result = calculator.substract(4,5);//Remote blocking call
 ```
 The remote call generated from the last example is as follows:
@@ -71,7 +71,7 @@ public interface MyCalculator{
 
 HttpRequestBuilder builder = new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc");
 Rpc.Proxy rpc = new Rpc.Proxy(builder);
-MyCalculator calculator = rpc.createProxy(Myservice.class);
+MyCalculator calculator = rpc.createProxy(MyCalculator.class);
 int result = calculator.multiply(4,5);//Remote blocking call
 ```
 The json object generated from this last example is as follows:
@@ -90,7 +90,7 @@ public interface MyCalculator{
 
 HttpRequestBuilder builder = new HttpRequestBuilder("http://myhost.mydomain.com:4444/rpc");
 Rpc.Proxy rpc = new Rpc.Proxy(builder);
-MyCalculator calculator = rpc.createProxy(Myservice.class);
+MyCalculator calculator = rpc.createProxy(MyCalculator.class);
 double result = calculator.divide(4,0);//Remote blocking call
 ```
 
